@@ -1,0 +1,354 @@
+{
+ "academicYear": "2026–2027",
+ "builtFrom": "Handbooks folder",
+ "builtAt": "2026-10-28",
+ "months": [
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun"
+ ],
+ "readinessHtml": "<div class=\"callout callout-warn\">\n<p><strong>INPATIENT ROTATION READINESS</strong></p>\n<p>For all inpatient rotations, it is highly recommended that you spend <strong>½ day shadowing your predecessor</strong> before starting, as you are generally expected to hit the ground running on day one.</p>\n<p><strong>Shadowing is not an excused absence from your current rotation.</strong> Coordinate with your predecessor to shadow <strong>after hours or on a weekend</strong> to gain exposure to the service without interfering with your current rotation responsibilities.</p>\n<p>Complete all required <strong>credentialing, EMR access, and facility access in advance</strong> of your start date.</p>\n<p>Although PC/Chiefs are here to help and navigate, it is the <strong>incoming resident’s responsibility</strong> to ensure they are ready to begin the service. Confirm your readiness and any outstanding requirements with the <strong>program coordinator, chief residents, and service attending</strong> before the rotation begins, if needed.</p>\n</div>",
+ "templates": [
+  {
+   "id": "irf-admission-handp-template",
+   "title": "IRF Admission H&P Template",
+   "html": "<p>Use this template for all inpatient rehabilitation facility admissions. Adapt to the patient and site-specific requirements.</p>\n<div class=\"callout callout-warn\">\n<p>H&amp;P must be completed within 24 hours of admission. Attending must co-sign.</p>\n</div>\n<hr/>\n<pre><code>INPATIENT REHABILITATION ADMISSION H&amp;P\nDate: ___________  Time: ___________\nAttending: ___________  Resident: ___________\nSite: ___________\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nIDENTIFYING INFORMATION\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nName: ___________  MRN: ___________\nDOB: ___________  Age: ___________\nAdmit Date: ___________  Referring Dx: ___________\nPrimary Language: ___________  Interpreter Needed: Y / N\nCode Status: Full / DNR / DNI / Other: ___________\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nCHIEF COMPLAINT / REASON FOR ADMISSION\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[Describe the primary reason for IRF admission in 1-2 sentences]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nHISTORY OF PRESENT ILLNESS\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[Detailed narrative: onset, prior level of function, acute hospitalization course, functional deficits, comorbidities relevant to rehab, social history, goals of care]\n\nPrior Level of Function (PLOF):\n- Ambulation: [Independent / Assist level / Non-ambulatory]\n- ADLs: [Independent / Min Assist / Mod Assist / Max Assist / Dependent]\n- Living situation: [Home alone / With family / ALF / SNF]\n- Assistive device: [None / Cane / Walker / Wheelchair]\n- Prior hospitalizations/rehab: [Yes / No — describe]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nPAST MEDICAL HISTORY\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n1.\n2.\n3.\n\nPAST SURGICAL HISTORY\n1.\n2.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nMEDICATIONS (Home / Admission)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[List all current medications with doses]\n\nALLERGIES: ___________\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nSOCIAL HISTORY\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nLiving situation: ___________\nFamily/caregiver support: ___________\nOccupation: ___________\nTobacco: ___________  ETOH: ___________  Substances: ___________\nDischarge goal: [Home / Home with services / ALF / SNF]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nREVIEW OF SYSTEMS\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nPain: [Location / severity 0-10 / quality / aggravating-relieving factors]\nBowel: [Continent / Incontinence / Constipation / Program]\nBladder: [Continent / Incontinence / Catheter — type]\nSkin: [Intact / Wounds — describe]\nNutrition: [PO adequate / NPO / Tube feeds / Dysphagia]\nMobility complaints: ___________\nCognitive complaints: ___________\nOther: ___________\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nPHYSICAL EXAMINATION\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nVitals: BP ___ HR ___ RR ___ Temp ___ SpO2 ___ Weight ___\n\nGeneral: [Alert, oriented, NAD / describe]\nCardiovascular: [RRR, no murmurs / describe]\nRespiratory: [CTAB / describe]\nAbdomen: [Soft, NT/ND / describe]\nSkin: [Intact / wounds — location, size, stage, depth]\n\nNEUROLOGICAL:\n- Cognition: [A&amp;Ox___ / MMSE or MoCA score if done]\n- Speech/Language: [Fluent / Aphasia type / Dysarthria]\n- Cranial Nerves: [II-XII intact / deficits]\n- Motor: [describe strength by region or use MRC grading]\n  UE R: ___ / UE L: ___\n  LE R: ___ / LE L: ___\n- Sensation: [Intact / Deficits — describe]\n- Tone: [Normal / Spastic — distribution / grade (Ashworth)]\n- Reflexes: [2+ throughout / describe asymmetries]\n- Cerebellar: [No dysmetria / describe]\n- Gait: [Not assessed / describe]\n\nFUNCTIONAL STATUS (FIM — Admission):\nSelf-Care:    Eating ___ Grooming ___ Bathing ___ UB Dress ___ LB Dress ___ Toileting ___\nSphincter:    Bladder ___ Bowel ___\nTransfers:    Bed-Chair ___ Toilet ___ Tub/Shower ___\nLocomotion:   Walk/WC ___ Stairs ___\nCommunication: Comprehension ___ Expression ___\nSocial Cognition: Social Interaction ___ Problem Solving ___ Memory ___\nTotal FIM: ___ / 126\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nDIAGNOSTIC DATA\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nLabs: ___________\nImaging: ___________\nOther relevant data: ___________\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nASSESSMENT &amp; PLAN\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nPrimary Rehab Diagnosis: ___________\nSecondary Diagnoses:\n1.\n2.\n3.\n\nFunctional Goals (Short-term — 2 weeks):\n-\n-\n\nFunctional Goals (Long-term — discharge):\n-\n-\n\nTherapy Orders:\n- PT: [Gait training / Strengthening / Balance / Transfers / Other]\n- OT: [ADL training / UE rehab / Cognitive / Splinting / Other]\n- SLP: [Swallow eval / Communication / Cognitive-communication / Other]\n- Recreation Therapy: [Yes / No]\n- Psychology/Neuropsychology: [Yes / No]\n\nMedical Management:\n- Pain: ___________\n- Spasticity: ___________\n- Bowel program: ___________\n- Bladder program: ___________\n- DVT prophylaxis: ___________\n- Other: ___________\n\nDischarge Planning:\n- Anticipated discharge date: ___________\n- Discharge destination: [Home / Home with services / ALF / SNF]\n- Equipment needs: ___________\n- Home modification needs: ___________\n- Caregiver training: ___________\n\nPatient/Family educated on rehab goals: Y / N\nConsent for treatment obtained: Y / N\n\nResident: ___________  Date/Time: ___________\nAttending: ___________  Date/Time: ___________\n</code></pre>"
+  },
+  {
+   "id": "irf-daily-progress-note-soap",
+   "title": "IRF Daily Progress Note (SOAP)",
+   "html": "<p>Use this template for daily progress notes at all IRF sites (Larkin, West Gables, St. Catherine's, Encompass, St. Anthony's).</p>\n<hr/>\n<pre><code>INPATIENT REHABILITATION DAILY PROGRESS NOTE\nDate: ___________  Day of Stay: ___________\nAttending: ___________  Resident: ___________\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nSUBJECTIVE\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[Patient's report of overnight course, pain, symptoms, complaints]\nPatient reports: ___________\nPain: ___ / 10, location: ___, quality: ___\nOvernight events per nursing: ___________\nTherapy participation: [Excellent / Good / Fair / Poor / Refused — reason]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nOBJECTIVE\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nVitals (24h): BP range ___ HR range ___ Temp ___ SpO2 ___\nIntake/Output (if relevant): ___________\nWeight: ___ (change from admission: ___)\n\nPhysical Exam:\nGeneral: [Alert, cooperative, NAD / describe]\nCardiovascular: [RRR / describe]\nRespiratory: [CTAB / describe]\nSkin: [Intact / Wound update: location, size, appearance]\n\nNeuro/Functional:\n- Mental status: [A&amp;Ox___ / baseline / improved / declined]\n- Motor: [Unchanged / Improved — describe changes]\n- Tone: [Unchanged / Spasticity change — describe]\n- Ambulation: [Distance ___ / Assist level ___ / Device ___]\n- Transfers: [Assist level ___]\n\nFIM Changes (if applicable):\n[Note any FIM category changes from admission]\n\nLabs/Imaging Today: ___________\nMedication changes: ___________\n\nTherapy Notes Summary:\n- PT: ___________\n- OT: ___________\n- SLP: ___________\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nASSESSMENT\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[Patient's overall rehab progress, medical stability, clinical impression]\n\n___ y/o with [primary dx] on day ___ of IRF admission, [progressing well / at goal / below expectations — explain]. Medically [stable / improving / with new concern — describe].\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nPLAN\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n1. Rehabilitation: [Continue PT/OT/SLP / Modify goals / Add modality]\n2. Pain management: ___________\n3. Spasticity: ___________\n4. Bowel program: ___________\n5. Bladder: ___________\n6. Medical issues: ___________\n7. Discharge planning:\n   - Anticipated discharge: ___________\n   - Discharge destination: ___________\n   - Pending before discharge: ___________\n   - Equipment ordered: Y / N\n   - Home eval: Y / N\n   - Family training: ___________\n\nPatient/Family updated on progress and plan: Y / N\n\nResident: ___________\nAttending: ___________\n</code></pre>\n<hr/>\n<h2>💡 Documentation Tips</h2>\n<ul>\n<li><strong>Therapy participation</strong> must be documented — CMS auditors look for this</li>\n<li><strong>3-hour therapy rule</strong>: If a patient received &lt;3 hours, document the medical reason</li>\n<li><strong>FIM scores</strong>: Update when you observe a functional change — don't copy therapy FIM</li>\n<li><strong>Discharge planning</strong>: Must appear in every note starting from day of admission</li>\n<li><strong>Medical stability</strong>: Document that patient is medically stable enough for therapy</li>\n</ul>"
+  },
+  {
+   "id": "outpatient-soap-note",
+   "title": "Outpatient SOAP Note",
+   "html": "<h2>Purpose</h2>\n<p>Standard SOAP note format for outpatient PM&amp;R clinic visits at ISS and other outpatient settings.</p>\n<hr/>\n<h2>🗂️ Template</h2>\n<h3>S — Subjective</h3>\n<p><strong>CC:</strong> [Chief complaint in patient's words]</p>\n<p><strong>HPI:</strong></p>\n<ul>\n<li>Onset:</li>\n<li>Location:</li>\n<li>Duration:</li>\n<li>Character:</li>\n<li>Aggravating factors:</li>\n<li>Relieving factors:</li>\n<li>Severity (0–10):</li>\n<li>Associated symptoms:</li>\n<li>Prior treatment/response:</li>\n</ul>\n<p><strong>Medications:</strong> [List current medications + doses]</p>\n<p><strong>Allergies:</strong> [NKDA / List]</p>\n<p><strong>PMH / PSH:</strong> [Relevant history]</p>\n<p><strong>Social History:</strong> [Occupation, activity level, living situation]</p>\n<p><strong>Review of Systems:</strong> [Pertinent positives and negatives]</p>\n<hr/>\n<h3>O — Objective</h3>\n<p><strong>Vitals:</strong> BP: ___ / ___ HR: ___ RR: ___ SpO2: ___ Wt: ___</p>\n<p><strong>General:</strong> [Alert, NAD, well-appearing, etc.]</p>\n<p><strong>MSK / Neuro Exam:</strong></p>\n<ul>\n<li>Inspection:</li>\n<li>Palpation:</li>\n<li>ROM (active/passive):</li>\n<li>Strength (MMT):</li>\n<li>Sensation:</li>\n<li>Reflexes:</li>\n<li>Special tests:</li>\n</ul>\n<p><strong>Functional Status:</strong> [Ambulation, ADLs, assistive devices]</p>\n<p><strong>Imaging / Labs reviewed:</strong> [Results and dates]</p>\n<hr/>\n<h3>A — Assessment</h3>\n<p><strong>Diagnoses (with ICD-10 codes):</strong></p>\n<ol>\n<li>[Primary diagnosis] — [ICD-10]</li>\n<li>[Secondary diagnosis] — [ICD-10]</li>\n</ol>\n<p><strong>Clinical Impression:</strong> [Brief narrative of clinical status and response to treatment]</p>\n<hr/>\n<h3>P — Plan</h3>\n<p><strong>Medications:</strong></p>\n<ul>\n<li>Continue:</li>\n<li>New:</li>\n<li>Discontinue:</li>\n</ul>\n<p><strong>Procedures performed today:</strong></p>\n<ul>\n<li>[Procedure name] — [Site] — [Technique] — [Response]</li>\n</ul>\n<p><strong>Therapy / Rehab orders:</strong></p>\n<ul>\n<li>PT: [Frequency / focus]</li>\n<li>OT: [Frequency / focus]</li>\n<li>SLP: [If applicable]</li>\n</ul>\n<p><strong>Imaging / Labs ordered:</strong></p>\n<ul>\n<li><strong>Patient education provided:</strong> [Topics discussed]</li>\n</ul>\n<p><strong>Follow-up:</strong> [Timeframe and reason]</p>\n<p><strong>Electronically signed:</strong> [Resident name, PGY level] — Reviewed and co-signed by [Attending name]</p>\n<hr/>\n<h2>💡 Tips</h2>\n<ul>\n<li>Complete notes same day — EMR auto-locks after 24–48h at some sites</li>\n<li>Include laterality in all diagnoses (e.g., right shoulder)</li>\n<li>Document informed consent for any procedure performed</li>\n<li>Use WRS smartphrases/templates if available at ISS</li>\n</ul>"
+  },
+  {
+   "id": "pediatric-pmandr-handp",
+   "title": "Pediatric PM&R H&P",
+   "html": "<h2>Purpose</h2>\n<p>History &amp; Physical template for pediatric PM&amp;R inpatient and consultation evaluations.</p>\n<hr/>\n<h2>🗂️ Template</h2>\n<h3>Identifying Information</h3>\n<ul>\n<li><strong>Patient:</strong> [Name], [Age], [Sex]</li>\n<li><strong>DOB:</strong></li>\n<li><strong>MRN:</strong></li>\n<li><strong>Date of Evaluation:</strong></li>\n<li><strong>Referring Provider:</strong></li>\n<li><strong>Reason for Referral / CC:</strong></li>\n<li><strong>Historian:</strong> [ ] Patient [ ] Parent [ ] Guardian [ ] Other: ___</li>\n</ul>\n<hr/>\n<h3>History of Present Illness</h3>\n<ul>\n<li><strong>Diagnosis prompting referral:</strong></li>\n<li><strong>Date of onset / injury / diagnosis:</strong></li>\n<li><strong>Functional status at baseline:</strong></li>\n<li><strong>Current functional deficits:</strong></li>\n<li><strong>Recent hospitalizations / surgeries:</strong></li>\n<li><strong>Current therapies (PT/OT/SLP):</strong></li>\n<li><strong>Goals of family / patient:</strong></li>\n</ul>\n<hr/>\n<h3>Birth &amp; Developmental History</h3>\n<ul>\n<li><strong>Gestational age at birth:</strong> ___ weeks [ ] Full term [ ] Premature</li>\n<li><strong>Birth complications:</strong></li>\n<li><strong>NICU stay:</strong> [ ] Yes — duration: ___ [ ] No</li>\n<li><strong>Developmental milestones:</strong><ul>\n<li>Rolled:</li>\n<li>Sat independently:</li>\n<li>Walked:</li>\n<li>First words:</li>\n<li>Current gross motor level (GMFCS):</li>\n</ul>\n</li>\n</ul>\n<hr/>\n<h3>Past Medical / Surgical History</h3>\n<ul>\n<li><strong>Diagnoses:</strong></li>\n<li><strong>Prior surgeries:</strong> [Include orthopedic, neurologic, SDR, etc.]</li>\n<li><strong>Hospitalizations:</strong></li>\n</ul>\n<hr/>\n<h3>Medications &amp; Allergies</h3>\n<ul>\n<li><strong>Medications:</strong> [Include spasticity medications, seizure meds, vitamins]</li>\n<li><strong>Allergies:</strong> [NKDA / List]</li>\n</ul>\n<hr/>\n<h3>Family &amp; Social History</h3>\n<ul>\n<li><strong>Living situation:</strong> [Home, school level, caregivers]</li>\n<li><strong>School:</strong> [ ] General education [ ] IEP [ ] Special education [ ] Not in school</li>\n<li><strong>Assistive devices:</strong> [Wheelchair, walker, AFO, communication device]</li>\n<li><strong>Family history:</strong> [Relevant neuromuscular / genetic conditions]</li>\n</ul>\n<hr/>\n<h3>Review of Systems</h3>\n<ul>\n<li><strong>Neurologic:</strong> Seizures, headaches, vision/hearing changes</li>\n<li><strong>MSK:</strong> Pain, contractures, scoliosis, hip dysplasia</li>\n<li><strong>Respiratory:</strong> Recurrent infections, ventilator use</li>\n<li><strong>GI:</strong> Feeding difficulties, GERD, constipation, G-tube</li>\n<li><strong>Bladder/Bowel:</strong> Continence, catheterization, bowel program</li>\n<li><strong>Skin:</strong> Pressure injuries, wounds</li>\n<li><strong>Behavioral/Cognitive:</strong> Attention, behavior, communication</li>\n</ul>\n<hr/>\n<h3>Physical Examination</h3>\n<p><strong>Vitals:</strong> BP: ___ HR: ___ RR: ___ SpO2: ___ Wt: ___ Ht: ___ BMI: ___</p>\n<p><strong>General:</strong> [Appearance, cooperation, level of alertness]</p>\n<p><strong>Neurologic:</strong></p>\n<ul>\n<li>Mental status / cognition:</li>\n<li>Cranial nerves:</li>\n<li>Motor: [Tone — hyper/hypotonic/normal; distribution]</li>\n<li>Sensation:</li>\n<li>Reflexes: [DTRs, pathologic reflexes — Babinski, clonus]</li>\n<li>Coordination:</li>\n<li>Gait: [If ambulatory — pattern, assistive device, bracing]</li>\n</ul>\n<p><strong>MSK:</strong></p>\n<ul>\n<li>ROM (key joints): Hip abduction / popliteal angle / ankle DF / shoulder</li>\n<li>Strength (MMT):</li>\n<li>Spasticity (MAS):</li>\n<li>Contractures / deformities:</li>\n<li>Spine: [Scoliosis — Cobb angle if known, rib hump]</li>\n<li>Hip stability: [Subluxation / dislocation risk]</li>\n</ul>\n<p><strong>Functional:</strong></p>\n<ul>\n<li>Gross motor (GMFCS Level I–V):</li>\n<li>Manual ability (MACS Level I–V):</li>\n<li>Communication (CFCS Level I–V):</li>\n<li>Self-care / ADLs:</li>\n<li>Mobility: [Community, household, non-ambulatory]</li>\n</ul>\n<hr/>\n<h3>Assessment</h3>\n<p><strong>Diagnoses (with ICD-10 codes):</strong></p>\n<ol>\n<li>[Primary diagnosis] — [ICD-10]</li>\n<li>[Secondary / comorbid] — [ICD-10]</li>\n</ol>\n<p><strong>Functional summary:</strong> [Brief narrative of current status and key deficits]</p>\n<p><strong>Rehabilitation potential:</strong> [ ] Good [ ] Fair [ ] Poor — Rationale:</p>\n<hr/>\n<h3>Plan</h3>\n<p><strong>Therapies:</strong></p>\n<ul>\n<li>PT: [Goals, frequency]</li>\n<li>OT: [Goals, frequency]</li>\n<li>SLP: [Goals, frequency]</li>\n</ul>\n<p><strong>Spasticity management:</strong></p>\n<ul>\n<li>Continue current regimen</li>\n<li>Initiate / adjust oral agent:</li>\n<li>Botulinum toxin clinic referral</li>\n<li>Intrathecal baclofen (ITB) evaluation</li>\n</ul>\n<p><strong>Orthotics / Equipment:</strong></p>\n<ul>\n<li>AFOs: [Type, side]</li>\n<li>Wheelchair / seating evaluation</li>\n<li>Other adaptive equipment:</li>\n</ul>\n<p><strong>Specialty referrals:</strong></p>\n<ul>\n<li>Orthopedic surgery</li>\n<li>Neurology</li>\n<li>Pulmonology</li>\n<li>Other:</li>\n</ul>\n<p><strong>Family education:</strong> [Topics discussed]</p>\n<p><strong>Follow-up:</strong> [Timeframe]</p>\n<p><strong>Electronically signed:</strong> [Resident name, PGY level] — Reviewed and co-signed by [Attending name]</p>\n<hr/>\n<h2>💡 Tips</h2>\n<ul>\n<li>Always speak to parents/guardians — they are the experts on their child's baseline</li>\n<li>GMFCS level guides prognosis AND therapy/equipment goals</li>\n<li>Botulinum toxin dosing is weight-based — confirm dosing with attending before administration</li>\n<li>Don't miss hip surveillance in CP patients — ask about last hip X-ray</li>\n<li>Screen for scoliosis in all non-ambulatory or low-GMFCS-level patients</li>\n</ul>"
+  },
+  {
+   "id": "va-consult-note-template",
+   "title": "VA Consult Note Template",
+   "html": "<p>Use this template for PM&amp;R consult notes at the West Palm Beach VA. Documentation is in CPRS (VistA).</p>\n<div class=\"callout callout-tip\">\n<p>Consult notes in CPRS use a structured template. This is a guide for the content — use the CPRS note template at the VA for actual entry.</p>\n</div>\n<hr/>\n<pre><code>PM&amp;R CONSULT NOTE — West Palm Beach VA Medical Center\nDate: ___________  Time: ___________\nAttending: ___________  Resident: ___________\nConsult Request From: ___________  Service: ___________\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nREASON FOR CONSULT\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[State the clinical question from the referring team in 1-2 sentences]\n\"PM&amp;R is consulted for [rehabilitation evaluation / functional assessment / equipment recommendation / pain management / other] of a [age] y/o veteran with [primary diagnosis].\"\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nHISTORY OF PRESENT ILLNESS\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[Brief, focused narrative relevant to the consult question]\n- Admission date and primary diagnosis\n- Relevant hospitalization events\n- Functional status prior to admission (PLOF)\n- Veteran-specific history: service branch, deployment history (if relevant), combat exposure, TBI screening result, PTSD screen\n\nPrior Level of Function:\n- Ambulation: ___________\n- ADLs: ___________\n- Assistive device: ___________\n- Living situation: ___________\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nPAST MEDICAL / SURGICAL HISTORY\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[Pull from CPRS — note key conditions relevant to rehab]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nMEDICATIONS / ALLERGIES\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[Pull from CPRS medication reconciliation]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nSOCIAL HISTORY\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nLiving situation: ___________\nSupport system: ___________\nVeteran Service-Connected Conditions: ___________\nVA benefits/rating: ___________\nSubstance use: ___________\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nPHYSICAL EXAMINATION\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nVitals: BP ___ HR ___ RR ___ Temp ___ SpO2 ___\n\nGeneral: ___________\nCardiovascular: ___________\nRespiratory: ___________\n\nNEUROLOGICAL / MUSCULOSKELETAL:\n- Mental status / Cognition: ___________\n- Motor strength: ___________\n- Sensation: ___________\n- Tone: ___________\n- Reflexes: ___________\n- MSK exam (if applicable): ___________\n- Functional Mobility Observed: ___________\n  - Transfers: ___________\n  - Ambulation: ___________\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nDIAGNOSTIC DATA\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nLabs: ___________\nImaging: ___________\nTBI Screening (DVBIC 4-item): ___________\nPTSD Screen (PC-PTSD-5): ___________\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nIMPRESSION\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[Direct, concise answer to the consult question]\n\nThis veteran presents with [diagnosis/functional deficit] and [does / does not] meet criteria for [IRF / outpatient rehab / home PT / other]. [Explain your reasoning in 2-3 sentences.]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nRECOMMENDATIONS\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n1. [Primary recommendation]\n2. Therapy: [PT / OT / SLP — goals]\n3. Equipment: [DME recommendations — VA prosthetics order]\n4. Pain management: ___________\n5. Follow-up: [Outpatient PM&amp;R / Prosthetics clinic / Other]\n6. Veteran resources: [VR&amp;E / Caregiver support / Other VA programs]\n\nThank you for this consult. Please feel free to reach us with any questions.\n\nResident: ___________\nAttending: ___________\n</code></pre>\n<hr/>\n<h2>💡 VA-Specific Tips</h2>\n<ul>\n<li>Always screen for TBI (DVBIC 4-item) and PTSD (PC-PTSD-5) if not already done</li>\n<li>Reference the veteran's <strong>service-connected conditions</strong> — affects VA benefit eligibility</li>\n<li><strong>Prosthetics orders</strong> go through VA supply — use proper CPRS order sets</li>\n<li>Veterans may qualify for <strong>caregiver support programs</strong> — flag for social work</li>\n</ul>"
+  },
+  {
+   "id": "va-edx-emg-ncs-templates-cprs",
+   "title": "VA EDX / EMG-NCS Templates (CPRS)",
+   "html": "<p>Templates for use in CPRS at the West Palm Beach VA during the EDX rotation. Copy and fill in the <code>x.xx</code> placeholders with actual values. All studies performed under direct attending supervision.</p>\n<hr/>\n<h2>1. Full UE EMG/NCS Procedure Note</h2>\n<pre><code class=\"language-jsx\">ELECTRODIAGNOSTIC STUDY REPORT - PM&amp;R SERVICE\n\nREQUESTING PROVIDER:\n\nREASON FOR REQUEST:\n___y/o ___-hand dominant [PATIENT SEX] patient referred for electrodiagnostic\nevaluation due to suspected ___.\nThe patient complains of ___.\n\nPatient Identifiers: Full Name / Full SSN\nPrior to NCS/EMG, patient ID, side and site verified.\nAfter verbal consent, patient elected to proceed.\n\n                        NERVE CONDUCTION STUDIES\n\nUPPER EXTREMITIES\nMOTOR NERVE CONDUCTION\nNERVE              DIST(cm)  LATENCY(ms)*  AMPL(mV)   CONDUCTION\n                                                       VELOCITY (m/s)\n                    L    R     L     R     L     R      L       R\nMEDIAN (APB)\n  wrist             8    8   x.xx  x.xx  xx.x  xx.x\n  forearm          xx   xx   x.xx  x.xx  xx.x  xx.x  xx.x    xx.x\n\nULNAR (ADM)!!\n  wrist             8    8   x.xx  x.xx  xx.x  xx.x\n  below elbow      xx   xx   x.xx  x.xx  xx.x  xx.x  xx.x    xx.x\n  above elbow      12   12   x.xx  x.xx  xx.x  xx.x  xx.x    xx.x\n\n*Latency values denote onset unless otherwise specified\n!! Elbow position: 90°\n\nSENSORY NERVE CONDUCTION\nNERVE              DIST(cm)  LATENCY(ms)**   AMPL(uV)\n                    L    R     L      R      L      R\nMEDIAN\n  Middle Finger    14   14   x.xx   x.xx  xx.xx  xx.xx\n  Thumb            10   10   x.xx   x.xx  xx.xx  xx.xx\n\nULNAR\n  Fifth Finger     14   14   x.xx   x.xx  xx.xx  xx.xx\n  Dorsal Hand(DUC) 10   10   x.xx   x.xx  xx.xx  xx.xx\n\nRADIAL\n  Wrist            10   10   x.xx   x.xx  xx.xx  xx.xx\n\nLAT ANTEBRACH CUT  10   10   x.xx   x.xx  xx.xx  xx.xx\n\n**Latency values denote Peak unless otherwise specified; antidromic stimulation\n\nLATE RESPONSES\n\nF-WAVES\n  NERVE    SITE  Min.Latency  Predicted  Persistence  Chronodispersion\n                  L      R    L     R    L      R       L       R\n  MEDIAN   APB\n  ULNAR    ADM\n\nH-REFLEX\n  NERVE    SITE  Min.Latency  Predicted\n                  L      R    L     R\n  MEDIAN   FCR\n\nINTERPRETATION:\nNerve Conduction Study (NCS) of the nerves listed above was performed.\n\nNCS Sensory Studies:\n\nR Median Nerve: Normal peak latency, normal amplitude\nR Ulnar Nerve: Normal peak latency, normal amplitude\nR Radial Nerve: Normal peak latency, normal amplitude\n\nL Median Nerve: Normal peak latency, normal amplitude\nL Ulnar Nerve: Normal peak latency, normal amplitude\nL Radial Nerve: Normal peak latency, normal amplitude\n\nNCS Motor Studies:\n\nR Median Nerve: Normal distal latency, normal amplitude and normal conduction velocity\nR Ulnar Nerve: Normal distal latency, normal amplitude and normal conduction velocities\n\nL Median Nerve: Normal distal latency, normal amplitude and normal conduction velocity\nL Ulnar Nerve: Normal distal latency, normal amplitude and normal conduction velocities\n\nReference values are recommended by the American Association of Neuromuscular and\nElectrodiagnostic Medicine (AANEM) 2016 for motor nerve reference values and 2020\nfor sensory nerve reference values.\n\n                        ELECTROMYOGRAPHY\n\nUPPER EXTREMITIES\nMUSCLE      Innervation    Insertion   Spont.Activity      Volition\nParaspinals   Post Rami\nL High Cerv.              NL              None              N/A\nL Mid Cerv.               NL              None              N/A\nL Low Cerv.               NL              None              N/A\n\nL Deltoid   Axillary/     NL              None          NL Recruit\n            C5,6                                         NL MUAP's\nL Biceps    Musculocut/   NL              None          NL Recruit\n            C5,6                                         NL MUAP's\nL Brachrad  Radial/       NL              None          NL Recruit\n            C5,6                                         NL MUAP's\nL Suprasp   Suprascapular/ NL             None          NL Recruit\n            C5,6                                         NL MUAP's\nL Infrasp   Suprascapular/ NL             None          NL Recruit\n            C5,6                                         NL MUAP's\nL Rhomb Maj Dors.Scap/    NL              None          NL Recruit\n            C5                                           NL MUAP's\nL Serratus  Long Thor/    NL              None          NL Recruit\n            C6-7                                         NL MUAP's\nL Triceps   Radial/       NL              None          NL Recruit\n            C7-8                                         NL MUAP's\nL EDR       Radial/       NL              None          NL Recruit\n            C6-7                                         NL MUAP's\nL Supinator Radial/       NL              None          NL Recruit\n            C5-6                                         NL MUAP's\nL FCR       Median/       NL              None          NL Recruit\n            C6-7-8                                       NL MUAP's\nL Pron.Ter  Median/       NL              None          NL Recruit\n            C6-7                                         NL MUAP's\nL FCU       Ulnar/        NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\nL APB       Median/       NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\nL Pron.Quad Median/       NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\nL FDI       Ulnar/        NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\nL ADM       Ulnar/        NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\nL diaphra   phrenic/      NL              None          NL Recruit\n            C3-C5                                        NL MUAP's\n\nINTERPRETATION:\nMonopolar needle EMG exam of the muscles listed above was performed.\nInsertional activity was normal in all the muscles tested. There were no\nabnormal spontaneous potentials detected with the muscles at rest.\nRecruitment of motor units with voluntary submaximal effort was within\nnormal limits and Motor Unit Action Potentials (MUAP's) had normal\namplitude, morphology, and duration. Interference pattern observed during\nmaximal voluntary effort was full.\n\nCONCLUSIONS:\nNormal study.\nThere is no electrodiagnostic evidence of\na focal median / ulnar neuropathy at the elbow / wrist\nperipheral polyneuropathy\n\nThere is no electrodiagnostic evidence of C___ motor radiculopathy.\n\nRecommendations/Plans:\n\n[SIGNATURE — see Section 6]\n</code></pre>\n<hr/>\n<h2>2. Full LE EMG/NCS Procedure Note</h2>\n<pre><code class=\"language-jsx\">ELECTRODIAGNOSTIC STUDY REPORT - PM&amp;R SERVICE\n\nREQUESTING PROVIDER:\n\nREASON FOR REQUEST:\n___y/o ___-hand dominant [FE/MALE] patient referred for electrodiagnostic\nevaluation due to suspected ___.\n\nPatient Identifiers: Full Name / Full SSN\nPrior to NCS/EMG, patient ID, side and site verified.\nAfter verbal consent, patient elected to proceed.\n\n                        NERVE CONDUCTION STUDIES\n\nLOWER EXTREMITIES\nMOTOR NERVE CONDUCTION\nNERVE              DIST(cm)  LATENCY(ms)*  AMPL(mV)   CONDUCTION\n                                                       VELOCITY (m/s)\n                    L    R     L     R     L     R      L       R\nPERONEAL (EDB)\n  ankle             8    8   x.xx  x.xx  xx.x  xx.x\n  below fib.head   xx   xx  xx.xx xx.xx  xx.x  xx.x  xx.x    xx.x\n  above fib.head   10   10  xx.xx xx.xx  xx.x  xx.x  xx.x    xx.x\n\nTIBIAL (AH)\n  ankle             8    8   x.xx  x.xx  xx.x  xx.x\n  popliteal fossa  xx   xx  xx.xx xx.xx  xx.x  xx.x  xx.x    xx.x\n\nFEMORAL (Quad)\n  pelvis            8    8   x.xx  x.xx  xx.x  xx.x\n\n*Latency values denote onset unless otherwise specified\n\nSENSORY NERVE CONDUCTION\nNERVE              DIST(cm)  LATENCY(ms)**   AMPL(uV)\n                    L    R     L      R      L      R\nSURAL\n  ankle            14   14   x.xx   x.xx  xx.xx  xx.xx\n\nTIBIAL\n  Medial Plantar   14   14   x.xx   x.xx  xx.xx  xx.xx\n  Lateral Plantar  14   14   x.xx   x.xx  xx.xx  xx.xx\n\nSUPERF.PERONEAL\n  Foot             14   14   x.xx   x.xx  xx.xx  xx.xx\n\n**Latency values denote Peak unless otherwise specified; antidromic stimulation\n\nLATE RESPONSES\n\nF-WAVES\n  NERVE    SITE  Min.Latency  Predicted  Persistence  Chronodispersion\n                  L      R    L     R    L      R       L       R\n  PERONEAL EDB\n  TIBIAL   AH\n\nH-REFLEX\n  NERVE    SITE  Min.Latency  Predicted\n                  L      R    L     R\n  TIBIAL   Sol\n\nINTERPRETATION:\nNerve Conduction Study (NCS) of the nerves listed above was performed.\n\nNCS Sensory Studies:\n\nR Superficial Peroneal Nerve: Normal peak latency, normal amplitude\nR Sural Nerve: Normal peak latency, normal amplitude\n\nL Superficial Peroneal Nerve: Normal peak latency, normal amplitude\nL Sural Nerve: Normal peak latency, normal amplitude\n\nNCS Motor Studies:\n\nR Peroneal Nerve: Normal distal latency, normal amplitude and normal conduction velocity\nR Tibial Nerve: Normal distal latency, normal amplitude and normal conduction velocity\n\nL Peroneal Nerve: Normal distal latency, normal amplitude and normal conduction velocity\nL Tibial Nerve: Normal distal latency, normal amplitude and normal conduction velocity\n\nReference values are recommended by the American Association of Neuromuscular and\nElectrodiagnostic Medicine (AANEM) 2016 for motor nerve reference values and 2020\nfor sensory nerve reference values.\n\n                        ELECTROMYOGRAPHY\n\nLOWER EXTREMITIES\nMUSCLE      Innervation    Insertion   Spont.Activity      Volition\nParaspinals   Post Rami\nL High Lumb.              NL              None              N/A\nL Mid Lumb.               NL              None              N/A\nL Low Lumb/Sacr.          NL              None              N/A\n\nL Vast.Lat  Femoral/      NL              None          NL Recruit\n            L2-4                                         NL MUAP's\nL Vast.Med  Femoral/      NL              None          NL Recruit\n            L2-4                                         NL MUAP's\nL Add.Long  Obturator/    NL              None          NL Recruit\n            L2-3                                         NL MUAP's\nL Tib.Ant   Deep Peroneal/ NL             None          NL Recruit\n            L4-5                                         NL MUAP's\nL Per.Long  Sup.Peroneal/  NL             None          NL Recruit\n            L5-S1                                        NL MUAP's\nL Tib.Post  Tibial/        NL             None          NL Recruit\n            L4-L5                                        NL MUAP's\nL EHL       Deep Peroneal/ NL             None          NL Recruit\n            L4-5,S1                                      NL MUAP's\nL Lat.Gastr Tibial/        NL             None          NL Recruit\n            L5,S1                                        NL MUAP's\nL Med.Gastr Tibial/        NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\nL Abd.Hal   Tibial/        NL             None          NL Recruit\n            S1-2                                         NL MUAP's\nL Glut.Max  Inf.Gluteal/   NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\nL Glut.Min  Sup.Gluteal/   NL             None          NL Recruit\n            L5,S1                                        NL MUAP's\nL TFL       Sup.Gluteal/   NL             None          NL Recruit\n            L5,S1                                        NL MUAP's\nL Bicep.Fem\n   Short    Sciatic-Peron/ NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\n   Long     Sciatic-Tib/   NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\n\nINTERPRETATION:\nMonopolar needle EMG exam of the muscles listed above was performed.\nInsertional activity was normal in all the muscles tested. There were no\nabnormal spontaneous potentials detected with the muscles at rest.\nRecruitment of motor units with voluntary submaximal effort was within\nnormal limits and Motor Unit Action Potentials (MUAP's) had normal\namplitude, morphology, and duration. Interference pattern observed during\nmaximal voluntary effort was full.\n\nCONCLUSIONS:\nNormal study.\nThere is no electrodiagnostic evidence of a focal median / ulnar\nneuropathy at the elbow / wrist / peripheral polyneuropathy.\n\nThere is no electrodiagnostic evidence of L___ motor radiculopathy.\n\nRecommendations/Plans:\n\n[SIGNATURE — see Section 6]\n</code></pre>\n<hr/>\n<h2>3. EMG — Upper Extremities (Bilateral)</h2>\n<pre><code class=\"language-jsx\">                        ELECTROMYOGRAPHY\n\nLEFT UPPER EXTREMITY\nMUSCLE      Innervation    Insertion   Spont.Activity      Volition\nParaspinals   Post Rami\nL High Cerv.              NL              None              N/A\nL Mid Cerv.               NL              None              N/A\nL Low Cerv.               NL              None              N/A\n\nL Deltoid   Axillary/     NL              None          NL Recruit\n            C5,6                                         NL MUAP's\n\nL Biceps    Musculocut/   NL              None          NL Recruit\n            C5,6                                         NL MUAP's\n\nL Brachrad  Radial/       NL              None          NL Recruit\n            C5,6                                         NL MUAP's\n\nL Suprasp   Suprascapular/ NL             None          NL Recruit\n            C5,6                                         NL MUAP's\n\nL Infrasp   Suprascapular/ NL             None          NL Recruit\n            C5,6                                         NL MUAP's\n\nL Rhomb Maj Dors.Scap/    NL              None          NL Recruit\n            C5                                           NL MUAP's\n\nL Serratus  Long Thor/    NL              None          NL Recruit\n            C6-7                                         NL MUAP's\n\nL Triceps   Radial/       NL              None          NL Recruit\n            C7-8                                         NL MUAP's\n\nL EDR       Radial/       NL              None          NL Recruit\n            C6-7                                         NL MUAP's\n\nL Supinator Radial/       NL              None          NL Recruit\n            C5-6                                         NL MUAP's\n\nL FCR       Median/       NL              None          NL Recruit\n            C6-7-8                                       NL MUAP's\n\nL Pron.Ter  Median/       NL              None          NL Recruit\n            C6-7                                         NL MUAP's\n\nL FCU       Ulnar/        NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\n\nL APB       Median/       NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\n\nL Pron.Quad Median/       NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\n\nL FDI       Ulnar/        NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\n\nL ADM       Ulnar/        NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\n\nL diaphra   phrenic/      NL              None          NL Recruit\n            C3-C5                                        NL MUAP's\n\n                        ELECTROMYOGRAPHY\n\nRIGHT UPPER EXTREMITY\nMUSCLE      Innervation    Insertion   Spont.Activity      Volition\nParaspinals   Post Rami\nR High Cerv.              NL              None              N/A\nR Mid Cerv.               NL              None              N/A\nR Low Cerv.               NL              None              N/A\n\nR Deltoid   Axillary/     NL              None          NL Recruit\n            C5,6                                         NL MUAP's\n\nR Biceps    Musculocut/   NL              None          NL Recruit\n            C5,6                                         NL MUAP's\n\nR Brachrad  Radial/       NL              None          NL Recruit\n            C5,6                                         NL MUAP's\n\nR Suprasp   Suprascapular/ NL             None          NL Recruit\n            C5,6                                         NL MUAP's\n\nR Infrasp   Suprascapular/ NL             None          NL Recruit\n            C5,6                                         NL MUAP's\n\nR Rhomb Maj Dors.Scap/    NL              None          NL Recruit\n            C5                                           NL MUAP's\n\nR Serratus  Long Thor/    NL              None          NL Recruit\n            C6-7                                         NL MUAP's\n\nR Triceps   Radial/       NL              None          NL Recruit\n            C7-8                                         NL MUAP's\n\nR EDR       Radial/       NL              None          NL Recruit\n            C6-7                                         NL MUAP's\n\nR Supinator Radial/       NL              None          NL Recruit\n            C5-6                                         NL MUAP's\n\nR FCR       Median/       NL              None          NL Recruit\n            C6-7-8                                       NL MUAP's\n\nR Pron.Ter  Median/       NL              None          NL Recruit\n            C6-7                                         NL MUAP's\n\nR FCU       Ulnar/        NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\n\nR APB       Median/       NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\n\nR Pron.Quad Median/       NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\n\nR FDI       Ulnar/        NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\n\nR ADM       Ulnar/        NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\n\nR diaphra   phrenic/      NL              None          NL Recruit\n            C3-C5                                        NL MUAP's\n</code></pre>\n<hr/>\n<h2>4. EMG — Lower Extremities (Bilateral)</h2>\n<pre><code class=\"language-jsx\">LEFT LOWER EXTREMITY\nMUSCLE      Innervation    Insertion   Spont.Activity      Volition\nParaspinals   Post Rami\nL High Lumb.              NL              None              N/A\nL Mid Lumb.               NL              None              N/A\nL Low Lumb/Sacr.          NL              None              N/A\n\nL Vast.Lat  Femoral/      NL              None          NL Recruit\n            L2-4                                         NL MUAP's\n\nL Vast.Med  Femoral/      NL              None          NL Recruit\n            L2-4                                         NL MUAP's\n\nL Add.Long  Obturator/    NL              None          NL Recruit\n            L2-3                                         NL MUAP's\n\nL Tib.Ant   Deep Peroneal/ NL             None          NL Recruit\n            L4-5                                         NL MUAP's\n\nL Per.Long  Sup.Peroneal/  NL             None          NL Recruit\n            L5-S1                                        NL MUAP's\n\nL Tib.Post  Tibial/        NL             None          NL Recruit\n            L4-L5                                        NL MUAP's\n\nL EHL       Deep Peroneal/ NL             None          NL Recruit\n            L4-5,S1                                      NL MUAP's\n\nL Lat.Gastr Tibial/        NL             None          NL Recruit\n            L5,S1                                        NL MUAP's\n\nL Med.Gastr Tibial/        NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\n\nL Abd.Hal   Tibial/        NL             None          NL Recruit\n            S1-2                                         NL MUAP's\n\nL Glut.Max  Inf.Gluteal/   NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\n\nL Glut.Min  Sup.Gluteal/   NL             None          NL Recruit\n            L5,S1                                        NL MUAP's\n\nL TFL       Sup.Gluteal/   NL             None          NL Recruit\n            L5,S1                                        NL MUAP's\n\nL Bicep.Fem\n   Short    Sciatic-Peron/ NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\n\n   Long     Sciatic-Tib/   NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\n\nRIGHT LOWER EXTREMITY\nMUSCLE      Innervation    Insertion   Spont.Activity      Volition\nParaspinals   Post Rami\nR High Lumb.              NL              None              N/A\nR Mid Lumb.               NL              None              N/A\nR Low Lumb/Sacr.          NL              None              N/A\n\nR Vast.Lat  Femoral/      NL              None          NL Recruit\n            L2-4                                         NL MUAP's\n\nR Vast.Med  Femoral/      NL              None          NL Recruit\n            L2-4                                         NL MUAP's\n\nR Add.Long  Obturator/    NL              None          NL Recruit\n            L2-3                                         NL MUAP's\n\nR Tib.Ant   Deep Peroneal/ NL             None          NL Recruit\n            L4-5                                         NL MUAP's\n\nR Per.Long  Sup.Peroneal/  NL             None          NL Recruit\n            L5-S1                                        NL MUAP's\n\nR Tib.Post  Tibial/        NL             None          NL Recruit\n            L4-L5                                        NL MUAP's\n\nR EHL       Deep Peroneal/ NL             None          NL Recruit\n            L4-5,S1                                      NL MUAP's\n\nR Lat.Gastr Tibial/        NL             None          NL Recruit\n            L5,S1                                        NL MUAP's\n\nR Med.Gastr Tibial/        NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\n\nR Abd.Hal   Tibial/        NL             None          NL Recruit\n            S1-2                                         NL MUAP's\n\nR Glut.Max  Inf.Gluteal/   NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\n\nR Glut.Min  Sup.Gluteal/   NL             None          NL Recruit\n            L5,S1                                        NL MUAP's\n\nR TFL       Sup.Gluteal/   NL             None          NL Recruit\n            L5,S1                                        NL MUAP's\n\nR Bicep.Fem\n   Short    Sciatic-Peron/ NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\n\n   Long     Sciatic-Tib/   NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\n</code></pre>\n<hr/>\n<h2>5. NCS + EMG Component Blocks (Mix &amp; Match)</h2>\n<p>Use these modular blocks to build custom notes. Combine UE or LE NCS with UE or LE EMG as needed.</p>\n<h3>UE NCS Block</h3>\n<pre><code>________________________________________________________________\n                    NERVE CONDUCTION STUDIES\n\nUPPER EXTREMITIES\nMOTOR NERVE CONDUCTION\nNERVE              DIST(cm)  LATENCY(ms)*  AMPL(mV)   CONDUCTION\n                                                       VELOCITY (m/s)\n                    L    R     L     R     L     R      L       R\nMEDIAN (APB)\n  wrist             8    8   x.xx  x.xx  xx.x  xx.x\n  forearm          xx   xx   x.xx  x.xx  xx.x  xx.x  xx.x    xx.x\n\nULNAR (ADM)!!\n  wrist             8    8   x.xx  x.xx  xx.x  xx.x\n  below elbow      xx   xx   x.xx  x.xx  xx.x  xx.x  xx.x    xx.x\n  above elbow      12   12   x.xx  x.xx  xx.x  xx.x  xx.x    xx.x\n\n*Latency values denote onset unless otherwise specified\n!! Elbow position: 90°\n\nSENSORY NERVE CONDUCTION\nNERVE              DIST(cm)  LATENCY(ms)**   AMPL(uV)\n                    L    R     L      R      L      R\nMEDIAN\n  Middle Finger    14   14   x.xx   x.xx  xx.xx  xx.xx\n  Thumb            10   10   x.xx   x.xx  xx.xx  xx.xx\nULNAR\n  Fifth Finger     14   14   x.xx   x.xx  xx.xx  xx.xx\n  Dorsal Hand(DUC) 10   10   x.xx   x.xx  xx.xx  xx.xx\nRADIAL\n  Wrist            10   10   x.xx   x.xx  xx.xx  xx.xx\nLAT ANTEBRACH CUT  10   10   x.xx   x.xx  xx.xx  xx.xx\n\n**Latency values denote Peak unless otherwise specified; antidromic stimulation\n\nLATE RESPONSES\nF-WAVES\n  NERVE    SITE  Min.Latency  Predicted  Persistence  Chronodispersion\n                  L      R    L     R    L      R       L       R\n  MEDIAN   APB\n  ULNAR    ADM\nH-REFLEX\n  NERVE    SITE  Min.Latency  Predicted\n                  L      R    L     R\n  MEDIAN   FCR\n\nINTERPRETATION:\nNerve Conduction Study (NCS) of the nerves listed above was performed.\n\nNCS Sensory Studies:\nR Median Nerve: Normal peak latency, normal amplitude\nR Ulnar Nerve: Normal peak latency, normal amplitude\nR Radial Nerve: Normal peak latency, normal amplitude\nL Median Nerve: Normal peak latency, normal amplitude\nL Ulnar Nerve: Normal peak latency, normal amplitude\nL Radial Nerve: Normal peak latency, normal amplitude\n\nNCS Motor Studies:\nR Median Nerve: Normal distal latency, normal amplitude and normal conduction velocity\nR Ulnar Nerve: Normal distal latency, normal amplitude and normal conduction velocity\nL Median Nerve: Normal distal latency, normal amplitude and normal conduction velocity\nL Ulnar Nerve: Normal distal latency, normal amplitude and normal conduction velocity\n\nReference values are recommended by the American Association of Neuromuscular\nand Electrodiagnostic Medicine (AANEM) 2016.\n________________________________________________________________\n</code></pre>\n<h3>UE EMG Block</h3>\n<pre><code>        ELECTROMYOGRAPHY\n\nUPPER EXTREMITIES\nMUSCLE      Innervation    Insertion   Spont.Activity      Volition\nParaspinals   Post Rami\n  High Cerv.              NL              None              N/A\n  Mid Cerv.               NL              None              N/A\n  Low Cerv.               NL              None              N/A\n\nL Deltoid   Axillary/     NL              None          NL Recruit\n            C5,6                                         NL MUAP's\nL Biceps    Musculocut/   NL              None          NL Recruit\n            C5,6                                         NL MUAP's\nL Brachrad  Radial/       NL              None          NL Recruit\n            C5,6                                         NL MUAP's\nL Suprasp   Suprascapular/ NL             None          NL Recruit\n            C5,6                                         NL MUAP's\nL Infrasp   Suprascapular/ NL             None          NL Recruit\n            C5,6                                         NL MUAP's\nL Rhomb Maj Dors.Scap/    NL              None          NL Recruit\n            C5                                           NL MUAP's\nL Serratus  Long Thor/    NL              None          NL Recruit\n            C6-7                                         NL MUAP's\nL Triceps   Radial/       NL              None          NL Recruit\n            C7-8                                         NL MUAP's\nL EDR       Radial/       NL              None          NL Recruit\n            C6-7                                         NL MUAP's\nL Supinator Radial/       NL              None          NL Recruit\n            C5-6                                         NL MUAP's\nL FCR       Median/       NL              None          NL Recruit\n            C6-7-8                                       NL MUAP's\nL Pron.Ter  Median/       NL              None          NL Recruit\n            C6-7                                         NL MUAP's\nL FCU       Ulnar/        NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\nL APB       Median/       NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\nL Pron.Quad Median/       NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\nL FDI       Ulnar/        NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\nL ADM       Ulnar/        NL              None          NL Recruit\n            C8-T1                                        NL MUAP's\nL diaphra   phrenic/      NL              None          NL Recruit\n            C3-C5                                        NL MUAP's\n\nINTERPRETATION:\nMonopolar needle EMG exam of the muscles listed above was performed.\nInsertional activity was normal in all the muscles tested. There were no\nabnormal spontaneous potentials detected with the muscles at rest.\nRecruitment of motor units with voluntary submaximal effort was within\nnormal limits and Motor Unit Action Potentials (MUAP's) had normal\namplitude, morphology, and duration. Interference pattern observed during\nmaximal voluntary effort was full.\n________________________________________________________________\n</code></pre>\n<h3>LE NCS Block</h3>\n<pre><code>________________________________________________________________\n                    NERVE CONDUCTION STUDIES\n\nLOWER EXTREMITIES\nMOTOR NERVE CONDUCTION\nNERVE              DIST(cm)  LATENCY(ms)*  AMPL(mV)   CONDUCTION\n                                                       VELOCITY (m/s)\n                    L    R     L     R     L     R      L       R\nPERONEAL (EDB)\n  ankle             8    8   x.xx  x.xx  xx.x  xx.x\n  below fib.head   xx   xx  xx.xx xx.xx  xx.x  xx.x  xx.x    xx.x\n  above fib.head   10   10  xx.xx xx.xx  xx.x  xx.x  xx.x    xx.x\nTIBIAL (AH)\n  ankle             8    8   x.xx  x.xx  xx.x  xx.x\n  popliteal fossa  xx   xx  xx.xx xx.xx  xx.x  xx.x  xx.x    xx.x\nFEMORAL (Quad)\n  pelvis            8    8   x.xx  x.xx  xx.x  xx.x\n\n*Latency values denote onset unless otherwise specified\n\nSENSORY NERVE CONDUCTION\nNERVE              DIST(cm)  LATENCY(ms)**   AMPL(uV)\n                    L    R     L      R      L      R\nSURAL\n  ankle            14   14   x.xx   x.xx  xx.xx  xx.xx\nTIBIAL\n  Medial Plantar   14   14   x.xx   x.xx  xx.xx  xx.xx\n  Lateral Plantar  14   14   x.xx   x.xx  xx.xx  xx.xx\nSUPERF.PERONEAL\n  Foot             14   14   x.xx   x.xx  xx.xx  xx.xx\n\n**Latency values denote Peak unless otherwise specified; antidromic stimulation\n\nLATE RESPONSES\nF-WAVES\n  NERVE    SITE  Min.Latency  Predicted  Persistence  Chronodispersion\n                  L      R    L     R    L      R       L       R\n  PERONEAL EDB\n  TIBIAL   AH\nH-REFLEX\n  NERVE    SITE  Min.Latency  Predicted\n                  L      R    L     R\n  TIBIAL   Soleus\n\nINTERPRETATION:\nNerve Conduction Study (NCS) of the nerves listed above was performed.\n\nNCS Sensory Studies:\nR Superficial Peroneal Nerve: Normal peak latency, normal amplitude\nR Sural Nerve: Normal peak latency, normal amplitude\nL Superficial Peroneal Nerve: Normal peak latency, normal amplitude\nL Sural Nerve: Normal peak latency, normal amplitude\n\nNCS Motor Studies:\nR Peroneal Nerve: Normal distal latency, normal amplitude and normal conduction velocity\nR Tibial Nerve: Normal distal latency, normal amplitude and normal conduction velocity\nL Peroneal Nerve: Normal distal latency, normal amplitude and normal conduction velocity\nL Tibial Nerve: Normal distal latency, normal amplitude and normal conduction velocity\n\nReference values are recommended by the American Association of Neuromuscular\nand Electrodiagnostic Medicine (AANEM) 2016.\n________________________________________________________________\n</code></pre>\n<h3>LE EMG Block</h3>\n<pre><code>                        ELECTROMYOGRAPHY\n\nEMG LOWER EXTREMITIES\nMUSCLE      Innervation    Insertion   Spont.Activity      Volition\nParaspinals   Post Rami\n  High Lumb.              NL              None              N/A\n  Mid Lumb.               NL              None              N/A\n  Low Lumb/Sacr.          NL              None              N/A\n\nL Vast.Lat  Femoral/      NL              None          NL Recruit\n            L2-4                                         NL MUAP's\nL Vast.Med  Femoral/      NL              None          NL Recruit\n            L2-4                                         NL MUAP's\nL Add.Long  Obturator/    NL              None          NL Recruit\n            L2-3                                         NL MUAP's\nL Tib.Ant   Deep Peroneal/ NL             None          NL Recruit\n            L4-5                                         NL MUAP's\nL Per.Long  Sup.Peroneal/  NL             None          NL Recruit\n            L5-S1                                        NL MUAP's\nL Tib.Post  Tibial/        NL             None          NL Recruit\n            L4-L5                                        NL MUAP's\nL EHL       Deep Peroneal/ NL             None          NL Recruit\n            L4-5,S1                                      NL MUAP's\nL Lat.Gastr Tibial/        NL             None          NL Recruit\n            L5,S1                                        NL MUAP's\nL Med.Gastr Tibial/        NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\nL Abd.Hal   Tibial/        NL             None          NL Recruit\n            S1-2                                         NL MUAP's\nL Glut.Max  Inf.Gluteal/   NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\nL Glut.Min  Sup.Gluteal/   NL             None          NL Recruit\n            L5,S1                                        NL MUAP's\nL TFL       Sup.Gluteal/   NL             None          NL Recruit\n            L5,S1                                        NL MUAP's\nL Bicep.Fem\n   Short    Sciatic-Peron/ NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\n   Long     Sciatic-Tib/   NL             None          NL Recruit\n            L5,S1-2                                      NL MUAP's\n\nINTERPRETATION:\nMonopolar needle EMG exam of the muscles listed above was performed.\nInsertional activity was normal in all the muscles tested. There were no\nabnormal spontaneous potentials detected with the muscles at rest.\nRecruitment of motor units with voluntary submaximal effort was within\nnormal limits and Motor Unit Action Potentials (MUAP's) had normal\namplitude, morphology, and duration. Interference pattern observed during\nmaximal voluntary effort was full.\n</code></pre>\n<hr/>\n<h2>6. Signature Block</h2>\n<pre><code>This study was performed by Hashir Ahmed, DO (Larkin PM&amp;R PGY4 Resident),\nPatton Brady, DO (Larkin PM&amp;R PGY4 Resident),\nDavid Yusupov, DO (Broward PM&amp;R PGY4 Resident),\nSomaye Younesian, MD (Broward PM&amp;R PGY3 Resident),\nJavier Jusino, MD (Larkin PM&amp;R PGY3 Resident)\nunder the direct supervision of Dr. ___.\n\n[Supervising attendings: Dr. Jeremy Fitzig / Dr. Francisco Garcia /\nDr. Reid-Artist / Dr. Reddy / Dr. Garcia-Negron /\nDr. Ramon Cuevas-Trisan / Dr. Woo]\n</code></pre>"
+  }
+ ],
+ "rotations": [
+  {
+   "id": "scw",
+   "title": "St. Catherine's West Rehabilitation Hospital",
+   "short": "St. Catherine's West",
+   "codes": [
+    "SCW"
+   ],
+   "handbookMatch": "catherine",
+   "category": "Inpatient Rehab",
+   "pgy": "PGY-2",
+   "type": "Core",
+   "location": "St. Catherine's West, West Miami area",
+   "html": "",
+   "handbookHtml": "",
+   "attachments": [],
+   "source": "handbook"
+  },
+  {
+   "id": "encompass",
+   "title": "Encompass Health Rehabilitation  Hospital - Sunrise",
+   "short": "Encompass Sunrise",
+   "codes": [
+    "ENCOMPASS"
+   ],
+   "handbookMatch": "encompass",
+   "category": "Inpatient Rehab",
+   "pgy": "PGY-2",
+   "type": "Core",
+   "location": "Encompass Health Rehabilitation Hospital of Sunrise, FL",
+   "html": "",
+   "handbookHtml": "",
+   "attachments": [],
+   "source": "handbook"
+  },
+  {
+   "id": "consults",
+   "title": "Larkin South Consults / Waterford SNF",
+   "short": "Larkin South / Waterford",
+   "codes": [
+    "WF/C",
+    "WF/CONSULTS",
+    "WF",
+    "C",
+    "CONSULTS",
+    "WATERFORD"
+   ],
+   "handbookMatch": "larkin south|waterford",
+   "category": "Consult Service",
+   "pgy": "PGY-2",
+   "type": "Core",
+   "location": "Larkin Community Hospital South, Waterford Campus",
+   "html": "",
+   "handbookHtml": "",
+   "attachments": [],
+   "source": "handbook"
+  },
+  {
+   "id": "wgrh",
+   "title": "West Gables Rehabilitation Hospital",
+   "short": "West Gables",
+   "codes": [
+    "WGRH",
+    "WG"
+   ],
+   "handbookMatch": "west gables",
+   "category": "Inpatient Rehab",
+   "pgy": "PGY-2, PGY-3",
+   "type": "Core",
+   "location": "West Gables Rehabilitation Hospital, Miami",
+   "html": "",
+   "handbookHtml": "",
+   "attachments": [],
+   "source": "handbook"
+  },
+  {
+   "id": "sa",
+   "title": "St. Anthony's Rehabilitation Hospital",
+   "short": "St. Anthony's",
+   "codes": [
+    "SA"
+   ],
+   "handbookMatch": "anthony",
+   "category": "Inpatient Rehab",
+   "pgy": "PGY-3, PGY-4",
+   "type": "Core",
+   "location": "St. Anthony's Rehabilitation Hospital, Lauderdale Lakes, FL",
+   "html": "",
+   "handbookHtml": "",
+   "attachments": [],
+   "source": "handbook"
+  },
+  {
+   "id": "wpb",
+   "title": "West Palm Beach VA",
+   "short": "West Palm Beach VA",
+   "codes": [
+    "WPB"
+   ],
+   "handbookMatch": "west palm beach va",
+   "category": "Consult Service",
+   "pgy": "PGY-4",
+   "type": "Core",
+   "location": "West Palm Beach VA Medical Center, West Palm Beach, FL",
+   "html": "",
+   "handbookHtml": "",
+   "attachments": [],
+   "source": "handbook"
+  },
+  {
+   "id": "iss",
+   "title": "ISS / Integrative Spine & Sports (Outpatient)",
+   "short": "ISS Outpatient",
+   "codes": [
+    "ISS"
+   ],
+   "handbookMatch": "general outpatient|integrative spine & sports (iss)",
+   "category": "Outpatient",
+   "pgy": "PGY-3, PGY-4",
+   "type": "Core",
+   "location": "Integrative Spine & Sports, South Florida",
+   "html": "",
+   "handbookHtml": "",
+   "attachments": [],
+   "source": "handbook"
+  },
+  {
+   "id": "emg",
+   "title": "Electrodiagnostics (EDX) - EMG Rotation",
+   "short": "EMG / EDX",
+   "codes": [
+    "EMG",
+    "EDX"
+   ],
+   "handbookMatch": "electrodiagnos",
+   "category": "EMG/EDX",
+   "pgy": "PGY-3",
+   "type": "Core",
+   "location": "ISS + South FL Spine + West Palm Beach VA",
+   "html": "",
+   "handbookHtml": "",
+   "attachments": [],
+   "source": "handbook"
+  },
+  {
+   "id": "neuro",
+   "title": "Neurorehab / Design Neuroscience Center",
+   "short": "Neurorehab (Design)",
+   "codes": [
+    "NEURO",
+    "NEUROREHAB"
+   ],
+   "handbookMatch": "neurorehab",
+   "category": "Neurorehab",
+   "pgy": "PGY-2",
+   "type": "Core",
+   "location": "Design Neuroscience Center, South Florida",
+   "html": "",
+   "handbookHtml": "",
+   "attachments": [],
+   "source": "handbook"
+  },
+  {
+   "id": "ped1",
+   "title": "Pediatric PM&R/ PED I",
+   "short": "Peds I (Nationwide)",
+   "codes": [
+    "PED 1",
+    "PED I"
+   ],
+   "handbookMatch": "pediatrics 1",
+   "category": "Inpatient Rehab",
+   "pgy": "PGY-3, PGY-4",
+   "type": "Core",
+   "location": "Nationwide Children's Hospital (and local sites)",
+   "html": "",
+   "handbookHtml": "",
+   "attachments": [],
+   "source": "handbook"
+  },
+  {
+   "id": "ped2",
+   "title": "PED II / Prosthetics & Orthotics",
+   "short": "Peds II / P&O",
+   "codes": [
+    "P&O / PED 2",
+    "P&O/PED 2",
+    "PED 2",
+    "P&O"
+   ],
+   "handbookMatch": "pediatrics ii",
+   "category": "Outpatient",
+   "pgy": "PGY-3, PGY-4",
+   "type": "Core",
+   "location": "Design Neuroscience Center + KRMC + Hanger Clinic, South Florida",
+   "html": "",
+   "handbookHtml": "",
+   "attachments": [],
+   "source": "handbook"
+  },
+  {
+   "id": "mouhanna",
+   "title": "Interventional Pain — Dr. Joseph Mouhanna",
+   "short": "Interventional Pain (Mouhanna)",
+   "codes": [
+    "MOUHANNA"
+   ],
+   "handbookMatch": "interventional pain (south miami)|mouhanna",
+   "category": "Outpatient",
+   "pgy": "PGY-3, PGY-4",
+   "type": "Core",
+   "location": "South Miami",
+   "html": "",
+   "handbookHtml": "",
+   "attachments": [],
+   "source": "handbook"
+  },
+  {
+   "id": "hatgis",
+   "title": "Interventional Pain — Dr. Jesse Hatgis",
+   "short": "Interventional Pain (Hatgis)",
+   "codes": [
+    "HATGIS"
+   ],
+   "handbookMatch": "hatgis",
+   "category": "Outpatient",
+   "pgy": "PGY-3, PGY-4",
+   "type": "Core",
+   "location": "Interventional Spine Specialists of Florida (ISSF) — Tamarac & Plantation, FL",
+   "html": "",
+   "handbookHtml": "",
+   "attachments": [],
+   "source": "handbook"
+  },
+  {
+   "id": "elective",
+   "title": "Electives",
+   "short": "Elective",
+   "codes": [
+    "ELECTIVE"
+   ],
+   "handbookMatch": "electives|rheumatology|broward|wound care|hospice|orthopedic|davis",
+   "category": "Elective",
+   "pgy": "PGY-3, PGY-4",
+   "type": "Elective",
+   "location": "Various (Rheumatology, Wound Care, Hospice, Pain, Ortho, etc.)",
+   "html": "",
+   "handbookHtml": "",
+   "attachments": [],
+   "source": "handbook"
+  }
+ ],
+ "policies": [
+  {
+   "id": "departure",
+   "title": "Coverage & Departure Protocol",
+   "handbookMatch": "departure",
+   "html": "",
+   "source": "handbook",
+   "attachments": []
+  },
+  {
+   "id": "attendance",
+   "title": "Didactics Attendance Policy",
+   "handbookMatch": "didactic",
+   "html": "",
+   "source": "handbook",
+   "attachments": []
+  },
+  {
+   "id": "pto",
+   "title": "PTO Policy",
+   "handbookMatch": "pto",
+   "html": "",
+   "source": "handbook",
+   "attachments": []
+  },
+  {
+   "id": "fmla",
+   "title": "FMLA & Leave Policies",
+   "handbookMatch": "fmla|family and medical",
+   "html": "",
+   "source": "handbook",
+   "attachments": []
+  },
+  {
+   "id": "grievance",
+   "title": "Grievances & Due Process",
+   "handbookMatch": "grievance",
+   "html": "",
+   "source": "handbook",
+   "attachments": []
+  }
+ ],
+ "guides": [],
+ "residents": [],
+ "didactics": [],
+ "contacts": [],
+ "links": [],
+ "announcements": [],
+ "subpages": [],
+ "public": true
+}
