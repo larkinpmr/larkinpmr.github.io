@@ -68,17 +68,30 @@ function installAutoRefresh() {
 }
 
 function autoRefresh() {
-  const cache = CacheService.getScriptCache();
-  writeCache_(cache, 'core_', JSON.stringify(build_()), 900);
-  const hbAge = Date.now() - Number(cache.get('hb_at') || 0);
-  const sig = handbookSig_();   // cheap: lists the Handbooks docs and their "last edited" times, without exporting them
-  if ((sig && sig !== cache.get('hb_sig')) || hbAge > 25 * 60 * 1000 || !cache.get('hb_n')) {
-    writeCache_(cache, 'hb_', JSON.stringify(buildHandbook_()), 3600);
-    cache.put('hb_at', String(Date.now()), 3600);
-    if (sig) cache.put('hb_sig', sig, 21600);
-  }
-  try { cache.put('hub_ics', buildCalendar_(), 900); } catch (err) { /* served uncached */ }
-  try { syncHowToTab_(); } catch (err) { /* the tab is only instructions */ }
+  // Only one refresh at a time: when Google is slow, a new run simply skips instead of piling on.
+  // (Its own lock, so sign-ins, which use the script lock, are never held up by a refresh.)
+  const lock = LockService.getDocumentLock();
+  if (lock && !lock.tryLock(0)) return;
+  const props = PropertiesService.getScriptProperties();
+  try {
+    const cache = CacheService.getScriptCache();
+    writeCache_(cache, 'core_', JSON.stringify(build_()), 900);
+    const hbAge = Date.now() - Number(cache.get('hb_at') || 0);
+    const sig = handbookSig_();   // cheap: lists the Handbooks docs and their "last edited" times, without exporting them
+    if ((sig && sig !== cache.get('hb_sig')) || hbAge > 25 * 60 * 1000 || !cache.get('hb_n')) {
+      writeCache_(cache, 'hb_', JSON.stringify(buildHandbook_()), 3600);
+      cache.put('hb_at', String(Date.now()), 3600);
+      if (sig) cache.put('hb_sig', sig, 21600);
+    }
+    try { cache.put('hub_ics', buildCalendar_(), 900); } catch (err) { /* served uncached */ }
+    try { syncHowToTab_(); } catch (err) { /* the tab is only instructions */ }
+    props.setProperty('refresh_ok', String(Date.now()));
+  } catch (err) {
+    // Google's temporary hiccups ("server error, try again", slow storage) are normal now and then: note it and
+    // let the next run (5 minutes later) try again, instead of a failure email each time. The Monday health
+    // check warns if no refresh has worked for several hours.
+    props.setProperty('refresh_err', Utilities.formatDate(new Date(), TZ, 'EEE MMM d, h:mm a') + ' · ' + String(err && err.message || err).slice(0, 300));
+  } finally { if (lock) try { lock.releaseLock(); } catch (e) { } }
 }
 
 /** Run from the editor to preview the calendar feed in the log. */
@@ -1652,8 +1665,9 @@ const HOWTO_LINES = [
   [''],
   ['HOME PAGE EXTRAS'],
   ['PTO → nothing extra to do: the hub reads the chief Google Calendar and shows every event with "PTO" and a resident\'s name in the title (e.g. "PTO – Chris Keener") on Resident Schedule ▸ Time off. Only the name, the dates and whether it is CME or PTO are shown (CME when the title says CME or conference), never the reason or notes. PM&R Hub ▸ More ▸ Show the PTO the hub found lists what it found. Optional Settings rows: "PTO calendar" (a Calendar ID: then every event on that calendar counts as PTO, and the title only needs the resident\'s name) and "PTO keyword" (if you title events differently, e.g. Vacation). Nicknames written in quotes in Contacts or Approved Emails (Bhargavi "Vee" Madhu) are recognized; add others in a Settings row "Nicknames" (Vee = Bhargavi Madhu; Rudy = Rodolfo Rivera). Small spelling slips are matched too.'],
-  ['Birthdays → add a "Birthday" column to the Approved Emails tab (any format, e.g. 3/15 or March 15; the year is never shown). On the day, Home says "Happy birthday" to everyone.'],
-  ['Countdowns → Settings row "Countdowns": one per line or separated by ;, written Label = date (for example: In-training exam = 2/27/2027; Graduation = 6/30/2027). Home shows "41 days to In-training exam" until the date passes. The one whose name has SAE or in-training also appears in the weekly email.'],
+  ['Birthdays → add a "Birthday" column to the Approved Emails tab (any format, e.g. 3/15 or March 15; the year is never shown). On the day, Home says "Happy birthday" to everyone, with a little confetti the first time each device opens the hub that day.'],
+  ['Countdowns → Settings row "Countdowns": one per line or separated by ;, written Label = date (for example: In-training exam = 2/27/2027; Graduation = 6/30/2027). Home shows "41 days to In-training exam" until the date passes. The one whose name has SAE or in-training also appears in the weekly email. At 100, 50, 10 and 1 days left (and on the day) the countdown glows with a star and a little confetti. Keep the word Graduation in the graduation countdown\'s name: on that day the whole site header goes neon.'],
+  ['Live lecture button → on a lecture day the "Join Zoom" button glows and says Live from 10 minutes before the start until the end. It uses the time in the Didactic Schedule\'s Time column, else the Settings row "Didactics start time" (blank = 2:00 PM), and assumes 3 hours unless the Time says an end (e.g. 2-5 PM).'],
   ['Rotation feedback → Settings row "Rotation feedback form": the link to a Google Form. In the last week of a rotation and the week after, that resident\'s Home shows "How was SA? 2-minute feedback". Optional: put {rotation} and {name} in the link (a prefilled-form link) and they are filled in.'],
   [''],
   ['WHO CAN USE THE HUB (email sign-in)'],
@@ -1698,6 +1712,7 @@ const HOWTO_LINES = [
   ['No invitation drafts → PM&R Hub ▸ Draft lecture invitations now: the box says why (Invitation drafts set to off, no Confirmed column, or no unconfirmed guest lectures in the next 6 weeks).'],
   ['Weekly email missing or sent to the wrong people → PM&R Hub ▸ Draft this week\'s email now: the box names any class label it could not find and lists the labels that exist.'],
   ['The site takes long to open on a new device → PM&R Hub ▸ Set up / repair automatic tasks (it restarts the 5-minute data refresh).'],
+  ['Email from Google "Summary of failures for Google Apps Script" → usually Google having a slow spell ("server error, please wait and try again", "exceeded maximum execution time"); nothing to do, the site keeps showing the last good data. The data refresh now skips a run while the previous one is still going and handles these hiccups quietly, so these emails should be rare. The Monday check warns if the refresh has not worked for 3+ hours. If the emails show the same error every 5 minutes for a day, run PM&R Hub ▸ Check that everything is working.'],
   ['After pasting new code into Code.gs → Deploy ▸ Manage deployments: for BOTH deployments click the pencil, choose New version, and Deploy. Then reload this sheet so the PM&R Hub menu updates.'],
   [''],
   ['OWNERSHIP'],
@@ -2219,6 +2234,13 @@ function healthCheck_() {
   const missing = Object.keys(need).filter(k => have.indexOf(k) < 0);
   if (missing.length) bad('Automatic tasks not running: ' + missing.map(k => need[k]).join(', ') + '. Fix: PM&R Hub ▸ Set up / repair automatic tasks.');
   else ok('All automatic tasks are running.');
+  // background refresh actually working?
+  { const pr = PropertiesService.getScriptProperties(), last = Number(pr.getProperty('refresh_ok') || 0), err = pr.getProperty('refresh_err') || '';
+    const hrs = last ? (Date.now() - last) / 3600000 : null;
+    if (have.indexOf('autoRefresh') < 0) { /* already reported above */ }
+    else if (hrs === null) ok('Data refresh: no completed run recorded yet (it records from the next run on).');
+    else if (hrs > 3) bad('The data refresh has not worked for ' + Math.round(hrs) + ' hours (last problem: ' + (err || 'unknown') + '). The website still shows the last good data. If this is not a Google outage, try PM&R Hub ▸ Set up / repair automatic tasks, then PM&R Hub ▸ Check that everything is working.');
+    else ok('Data refresh is working (last run ' + (hrs < 1 ? Math.max(1, Math.round(hrs * 60)) + ' min' : Math.round(hrs) + ' h') + ' ago)' + (err ? '. Last temporary Google hiccup: ' + err.split(' · ')[0] + '.' : '.')); }
   // services
   if (typeof People === 'undefined') bad('People API service is off, so the weekly email cannot read the class contact labels. Fix: Extensions ▸ Apps Script ▸ + next to Services ▸ People API ▸ Add.');
   if (typeof Gmail === 'undefined') bad('Gmail API service is off, so emails use the backup signature. Fix: Extensions ▸ Apps Script ▸ + next to Services ▸ Gmail API ▸ Add.');

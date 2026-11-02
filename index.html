@@ -267,6 +267,49 @@ header.top::after { content: ""; position: absolute; left: 0; right: 0; bottom: 
 /* Chrome: a glint slides across the metal now and then (about every 9 s) */
 .wm-chrome .t { background-image: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .95) 50%, transparent 60%), var(--wm-chrome); background-size: 300% 100%, 100% 100%; background-repeat: no-repeat; background-position: 150% 0, 0 0; animation: wmglintloop 9s ease-in-out 3s infinite; }
 @keyframes wmglintloop { 0% { background-position: 150% 0, 0 0; } 14%, 100% { background-position: -50% 0, 0 0; } }
+/* ---- little celebrations and touches (see "little celebrations" in the script) ---- */
+.confetti { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 300; }
+/* countdown milestones: the chip lights up, the number flashes three times after the opening */
+.cdown.cd-mile { border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); background: color-mix(in srgb, var(--accent-soft) 70%, var(--surface)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent), 0 0 14px color-mix(in srgb, var(--accent) 30%, transparent); }
+.cdown.cd-mile b { animation: cdmile .55s ease-in-out calc(var(--boot-end, 1500ms) + 100ms) 6 alternate; }
+@keyframes cdmile { from { text-shadow: none; filter: none; } to { text-shadow: 0 0 6px var(--accent), 0 0 16px var(--accent); filter: brightness(1.25); } }
+.cdown.cd-mile::before { content: "★"; color: var(--accent); font-size: .85em; margin-right: 1px; }
+/* graduation day: the header goes full neon */
+:root.grad-day header.top, :root.neon-party header.top { box-shadow: 0 6px 28px -6px color-mix(in srgb, var(--accent) 55%, transparent); }
+:root.grad-day header.top::after, :root.neon-party header.top::after { height: 4px; bottom: -4px; background: var(--stripe); box-shadow: 0 0 10px var(--accent), 0 0 22px var(--accent); animation: wmneon 3s ease-in-out infinite alternate; }
+/* rotation switch day: "This month" flips like a departure board */
+.mycard .switched .newrot { display: inline-block; margin-left: 6px; padding: 0 7px; border-radius: 999px; background: var(--accent); color: var(--on-accent); font: 700 9.5px/1.6 var(--body); letter-spacing: .06em; text-transform: uppercase; vertical-align: 1px; }
+.flap { display: inline-grid; perspective: 420px; }
+.flap > span { grid-area: 1 / 1; display: inline-flex; gap: 8px; align-items: center; backface-visibility: hidden; transform-origin: 50% 50%; }
+.flap-old { animation: flapout .32s cubic-bezier(.5, 0, .9, .5) var(--fd, 1500ms) both; color: var(--muted); }
+.flap-new { animation: flapin .5s cubic-bezier(.2, .9, .3, 1.25) calc(var(--fd, 1500ms) + .32s) both; }
+@keyframes flapout { from { transform: rotateX(0); opacity: 1; } to { transform: rotateX(90deg); opacity: 0; } }
+@keyframes flapin { from { transform: rotateX(-90deg); opacity: 0; } to { transform: rotateX(0); opacity: 1; } }
+/* live lecture: the Join button breathes and says Live */
+.join .lv:empty { display: none; }
+.join .lv { order: 3; margin-left: 2px; padding: 0 6px; border-radius: 999px; background: rgba(255, 255, 255, .22); font-size: 10.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.join.live { position: relative; animation: joinlive 2.2s ease-in-out infinite alternate; }
+.join.live::before { content: ""; order: -1; width: 7px; height: 7px; border-radius: 50%; background: #FF3B5C; box-shadow: 0 0 0 0 rgba(255, 59, 92, .7); animation: livedot 1.6s ease-out infinite; }
+@keyframes joinlive { from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent); } to { box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent), 0 0 18px color-mix(in srgb, var(--accent) 55%, transparent); } }
+@keyframes livedot { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 92, .7); } 100% { box-shadow: 0 0 0 7px rgba(255, 59, 92, 0); } }
+/* gliding tab highlight */
+nav.tabs.glide, .bottomnav.glide { position: relative; }
+nav.tabs.glide a, .bottomnav.glide a { position: relative; z-index: 1; }
+.tab-ind { position: absolute; left: 0; top: 0; z-index: 0; border-radius: 999px; background: var(--accent-soft); pointer-events: none; opacity: 0; transition: transform .38s cubic-bezier(.3, .8, .25, 1), width .38s cubic-bezier(.3, .8, .25, 1), opacity .2s; }
+.tab-ind.no-anim { transition: none; }
+nav.tabs.glide a[aria-current="page"] { background: transparent; }
+.bottomnav.glide a[aria-current="page"] svg { background: transparent !important; }
+:root[data-holiday]:not([data-holiday=""]) .bottomnav .tab-ind { background: color-mix(in srgb, var(--hol-tint, var(--accent)) 22%, transparent); }
+/* schedule: neon line sweeps down this month's column the first time it opens */
+.sched-wrap { position: relative; }
+.now-sweep { position: absolute; pointer-events: none; z-index: 3; border-radius: 4px; background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 14%, transparent), color-mix(in srgb, var(--accent) 6%, transparent));
+  box-shadow: inset 2px 0 0 color-mix(in srgb, var(--accent) 60%, transparent), inset -2px 0 0 color-mix(in srgb, var(--accent) 60%, transparent);
+  animation: nsfill 1s cubic-bezier(.45, 0, .3, 1) both, nsfade .8s ease 1.3s forwards; }
+.ns-line { position: absolute; left: -3px; right: -3px; height: 3px; top: 0; border-radius: 3px; background: var(--accent); box-shadow: 0 0 8px var(--accent), 0 0 18px var(--accent); animation: nsline 1s cubic-bezier(.45, 0, .3, 1) both, nsfade .3s ease 1s forwards; }
+@keyframes nsfill { from { clip-path: inset(0 -6px 100% -6px); } to { clip-path: inset(0 -6px 0 -6px); } }
+@keyframes nsline { from { top: 0; } to { top: calc(100% - 3px); } }
+@keyframes nsfade { to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .tab-ind { transition: none; } .cdown.cd-mile b, .join.live, .join.live::before, :root.grad-day header.top::after { animation: none; } }
 /* Idle "alive" effects for the other styles: same slow 8 s fade up/down as the neon */
 .wm-sticker .t { animation: wmlift 8s cubic-bezier(.45, 0, .55, 1) infinite alternate; }
 @keyframes wmlift { from { transform: rotate(-4deg); text-shadow: .05em .05em 0 var(--wm-shadow), .1em .1em 0 var(--wm-cyanbg); }
@@ -1553,11 +1596,12 @@ let wmTimer = null, wmShown = "", wmBooted = false;
 function wmIndex() {
   const pick = +(new URLSearchParams(location.search).get("wm") || 0);
   if (pick >= 1 && pick <= WM_STYLES.length) return pick - 1;
+  if (gradToday()) return 1;   // graduation day: the neon tube logo all day
   return Math.floor(Date.now() / (WM_MINUTES * 60000)) % WM_STYLES.length;
 }
-function showWordmark() {
+function showWordmark(force, playMs) {
   const brand = document.querySelector(".brand"); if (!brand || !S) return;
-  const st = WM_STYLES[wmIndex()], year = esc(S.academicYear || "");
+  const st = WM_STYLES[force != null ? force : wmIndex()], year = esc(S.academicYear || "");
   const key = st.id + "|" + year;
   if (key !== wmShown) {
     wmShown = key;
@@ -1569,7 +1613,7 @@ function showWordmark() {
       brand.querySelector(".wm")?.remove();
       const w = document.createElement("span"); w.className = "wm wm-" + st.id; w.setAttribute("aria-hidden", "true"); w.innerHTML = st.html(year);
       // first time the logo appears after the app opens / reloads: it flickers on like a neon sign, then settles into the slow glow
-      if (!wmBooted) { wmBooted = true; const left = BOOT_END - bootT();
+      if (!wmBooted || playMs) { wmBooted = true; const left = playMs || BOOT_END - bootT();
         if (left > 500 && !calmMotion()) { w.classList.add("wm-boot", "booted"); w.style.setProperty("--boot", left + "ms"); setTimeout(() => w.classList.remove("wm-boot"), left + 50); } }
       brand.appendChild(w); brand.classList.add("has-wm");
     };
@@ -1925,6 +1969,7 @@ function mergeLive(snap, live) {
   if (settings["home subtitle"]) d.heroSub = settings["home subtitle"] === "-" ? "" : settings["home subtitle"];   // a single "-" hides the line
   d.passcode = settings["site passcode"] || "";   // blank = no passcode screen
   d.zoomLink = /^https?:\/\//i.test(settings["virtual lecture link"] || "") ? settings["virtual lecture link"] : "";
+  d.didStart = settings["didactics start time"] || "";
   d.slidesLink = /^https?:\/\//i.test(settings["lecture slides folder"] || "") ? settings["lecture slides folder"] : "";   // Drive folder where residents upload their slides   // the usual Zoom for "Virtual" sessions
   // Home extras: countdowns ("Label = date; Label = date"), rotation feedback form, birthdays (name + month-day only)
   d.countdowns = String(settings["countdowns"] || "").split(/[;\n]+/).map(x => { const m = x.match(/^\s*(.+?)\s*[=:–—]\s*(\S.*?)\s*$/); return m ? { label: m[1], date: parseLooseDate(m[2]) } : null; }).filter(x => x && x.date);
@@ -2206,6 +2251,7 @@ function render(html, tab, keepScroll) {
   document.querySelectorAll("nav.tabs a, .bottomnav a").forEach(a => { if (a.dataset.tab === tab) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
   if (!keepScroll) { window.scrollTo(0, 0); lastY = 0; document.querySelector("header.top")?.classList.remove("hdr-hide"); }
   bindView();
+  funAfterRender(tab);
   const secs = $("#fab-secs"); if (secs) setTimeout(() => { secs.hidden = !document.querySelector("#gtop [data-jump]"); onScroll(); }, 30);
   if (!keepScroll) setTimeout(offerResume, 120); else if (!readable()) document.querySelector(".resume")?.remove();
 }
@@ -2407,10 +2453,32 @@ function meetLink(talks) {
   if (own) return own;
   return talks.some(t => /virtual/i.test(t.location || "")) && S.zoomLink ? S.zoomLink : "";
 }
+/** Live lecture: from 10 minutes before the day's start time until it ends (time from the sheet, else Settings
+ *  "Didactics start time", else 2:00 PM; ends at the sheet's end time, else 3 hours later), the Join button breathes and says Live. */
+function clockMins(s) {
+  const m = String(s || "").match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm|a\.m\.|p\.m\.)?(?:\s*[-–to]+\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm|a\.m\.|p\.m\.)?)?/i);
+  if (!m) return null;
+  const conv = (h, mm, ap, fallbackAp) => { h = +h; const a = (ap || fallbackAp || "").toLowerCase(); if (/p/.test(a) && h < 12) h += 12; if (/a/.test(a) && h === 12) h = 0; if (!a && h >= 1 && h <= 6) h += 12; return h * 60 + (+mm || 0); };
+  const start = conv(m[1], m[2], m[3], m[6]), end = m[4] ? conv(m[4], m[5], m[6], m[3]) : null;
+  return { start, end: end != null && end > start ? end : null };
+}
+function liveWindow(talks) {
+  if (!talks.length || talks[0].date !== todayISO) return null;
+  const own = talks.map(t => clockMins(t.time)).filter(Boolean).sort((a, b) => a.start - b.start)[0];
+  const t = own || clockMins(S.didStart || "2:00 PM") || { start: 840, end: null };
+  const day = parseISO(todayISO).getTime(), st = day + t.start * 60000, en = day + (t.end != null ? t.end : t.start + 180) * 60000;
+  return [st - 10 * 60000, en];
+}
+function liveTick() {
+  const now = Date.now();
+  document.querySelectorAll(".join[data-live]").forEach(a => { const [s, e] = a.dataset.live.split("|").map(Number); const on = now >= s && now < e;
+    a.classList.toggle("live", on); const lv = a.querySelector(".lv"); if (lv) lv.textContent = on ? (now < s + 10 * 60000 ? "Starting" : "Live") : ""; });
+}
+setInterval(liveTick, 30000);
 function joinBtn(talks) {
   const u = meetLink(talks); if (!u) return "";
-  const zoom = /zoom\.us/i.test(u);
-  return `<a class="join" href="${esc(u)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="m15.5 10.5 6-3.5v10l-6-3.5"/></svg>Join ${zoom ? "Zoom" : "meeting"}</a>`;
+  const zoom = /zoom\.us/i.test(u), win = liveWindow(talks);
+  return `<a class="join" href="${esc(u)}" target="_blank" rel="noopener"${win ? ` data-live="${win[0]}|${win[1]}"` : ""}><span class="lv" aria-hidden="true"></span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="m15.5 10.5 6-3.5v10l-6-3.5"/></svg>Join ${zoom ? "Zoom" : "meeting"}</a>`;
 }
 const BOOK = `<svg class="ic" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5C5.5 4.5 8.5 4.5 12 6.5v13c-3.5-2-6.5-2-9-1z"/><path d="M21 5.5c-2.5-1-5.5-1-9 1v13c3.5-2 6.5-2 9-1z"/></svg>`;
 function kindTag(t) {
@@ -2624,9 +2692,16 @@ function meCard() {
   const nd0 = (nextSessions()[0] || [])[0], lec = lec0 && lec0.date === nd0 ? null : lec0;   // already shown (tagged "You") under Next didactics
   const onb = onboardingDue(p);
   const rotLink = (r, raw) => r ? `${chipSpan(r)}<a href="#rot-${r.id}">${esc(r.short)}</a>` : (raw ? esc(raw) : "—");
+  // rotation switch day (the 1st, or the 16th for a mid-month switch): "This month" flips over like a departure board, once per page load
+  const switched = nowSlot > 0 && (today.getDate() === 1 || today.getDate() === HALF_DAY) && slotKey(p, nowSlot) !== slotKey(p, nowSlot - 1);
+  // the flip has a fixed moment (just after the opening); re-renders while it plays pick up where it is, like the countdown reels
+  if (switched && !flapAt && !calmMotion()) flapAt = performance.now() + Math.max(0, BOOT_END - bootT()) + 250;
+  const flap = switched && flapAt && performance.now() < flapAt + 1000;
+  const oldR = switched ? slotRot(p, nowSlot - 1) : null, oldRaw = switched ? slotRaw(p, nowSlot - 1) : "";
+  const nowHtml = flap ? `<span class="flap" style="--fd:${Math.round(flapAt - performance.now())}ms"><span class="flap-old" aria-hidden="true">${oldR ? chipSpan(oldR) + esc(oldR.short) : esc(oldRaw || "—")}</span><span class="flap-new">${rotLink(r0, raw0)}</span></span>` : rotLink(r0, raw0);
   return `<section class="mycard">
     <div class="hi"><b>Hi, ${esc(p.name.split(" ")[0])}</b><span class="n">${esc(p.pgy)}</span><button type="button" id="mechange">Not you?</button>${CFG.liveDataUrl && store.get("hub.cal.me") === "1" ? calButton("mycal", true, "", "Your calendar is added (tap for options)") : ""}</div>
-    <div><span class="k">This month</span><span class="v">${rotLink(r0, raw0)}</span><span class="n">${MONTH_FULL[mi]}${until}</span></div>
+    <div${switched ? ' class="switched"' : ""}><span class="k">This month${switched ? ' <span class="newrot">New today</span>' : ""}</span><span class="v">${nowHtml}</span><span class="n">${MONTH_FULL[mi]}${until}</span></div>
     <div><span class="k">Next</span><span class="v">${j < 24 ? rotLink(nextR, nextRaw) : "End of year"}</span><span class="n">${j < 24 ? "Starts " + (j % 2 ? `${MONTH_FULL[j >> 1]} ${HALF_DAY}` : MONTH_FULL[j >> 1]) : ""}</span></div>
     ${!lec && lec0 ? "" : `<div class="lec"><span class="k">Your next lecture</span>`}${!lec && lec0 ? "" : lec ? `<span class="v"><a href="#didactics">${esc(lec.topic)}</a></span><span class="n">${fmtDate(lec.date)}${lec.location ? " · " + esc(lec.location) : ""}</span>` : `<span class="n">None on the calendar</span>`}${!lec && lec0 ? "" : "</div>"}
     ${onb.map(x => {
@@ -2735,10 +2810,14 @@ function tearCal() {
   const d = today;
   return `<span class="tearcal" role="img" aria-label="${esc(d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }))}"><span class="tc-p now"><span class="tc-m">${MON[d.getMonth()].toUpperCase()}</span><span class="tc-d">${d.getDate()}</span><span class="tc-w">${DOW[d.getDay()].toUpperCase()}</span></span></span>`;
 }
+/** Countdown milestones: at 100, 50, 10 and 1 days left (and on the day) the chip glows and flashes, with a little confetti once a day. */
+const CD_MILES = [100, 50, 10, 1, 0];
+/** Graduation day (a countdown whose label mentions graduation reaches today): the header goes full neon. */
+function gradToday() { return !!(S && (S.countdowns || []).some(c => /graduat/i.test(c.label || "") && c.date === todayISO)); }
 function countdowns(where) {
   const list = (S.countdowns || []).map(c => ({ ...c, days: Math.round((parseISO(c.date) - today) / 86400000) })).filter(c => c.days >= 0).sort((a, b) => a.days - b.days).slice(0, 4);
   if (!list.length) return "";
-  return `<div class="cdowns${where === "top" ? " cd-top" : " cd-body"}">${list.map(c => `<span class="cdown"><b>${c.days === 0 ? "Today" : cdRoll(c.days)}</b>${c.days === 0 ? "" : ` day${c.days === 1 ? "" : "s"} to`} ${esc(c.label)}</span>`).join("")}</div>`;
+  return `<div class="cdowns${where === "top" ? " cd-top" : " cd-body"}">${list.map(c => `<span class="cdown${CD_MILES.includes(c.days) ? " cd-mile" : ""}${c.days === 0 && /graduat/i.test(c.label) ? " cd-grad" : ""}"${CD_MILES.includes(c.days) ? ` title="${c.days === 0 ? "Today's the day" : "Milestone: " + c.days + " day" + (c.days === 1 ? "" : "s") + " to go"}"` : ""}><b>${c.days === 0 ? "Today" : cdRoll(c.days)}</b>${c.days === 0 ? "" : ` day${c.days === 1 ? "" : "s"} to`} ${esc(c.label)}</span>`).join("")}</div>`;
 }
 /** Rotation feedback: in the last week of your rotation and the week after, a short card links to the chiefs' Google Form. */
 function feedbackCard() {
@@ -2765,6 +2844,89 @@ document.addEventListener("click", e => {
 function holBar() { const h = holidayNow(); if (!h) return "";
   const also = new URLSearchParams(location.search).get("holiday") ? [] : HOLIDAYS.filter(x => x !== h && x.when(new Date()));
   const greet = [h.greet, ...also.map(x => x.greet)].join(" & "); return `<div class="holbar hol-${h.id}${greet.length > 20 && window.innerWidth < 480 ? " long" : ""}" role="note"><span class="hb-e" aria-hidden="true">${HOL_EMOJI[h.id] || "🎉"}</span><b>${esc(greet)}</b><span class="hb-d" aria-hidden="true">${HOL_DECO[h.id] || ""}</span></div>`; }
+/* ----------------------------------------------------------- little celebrations and touches
+ * Birthday and milestone confetti (once a day per device), the rotation-switch flip, live Zoom glow,
+ * the gliding tab highlight, the schedule's "now" sweep and the logo easter egg. All skipped for "reduce motion". */
+let flapAt = 0, sweepPlayed = false;
+function onceToday(k) { const key = "hub.fun." + k; if (store.get(key) === todayISO) return false; store.set(key, todayISO); return true; }
+/** Confetti burst from a point (defaults to the top middle of the screen). Colors follow the current theme. */
+function confetti(o = {}) {
+  if (calmMotion()) return;
+  const cv = document.createElement("canvas"); cv.className = "confetti"; cv.setAttribute("aria-hidden", "true");
+  document.documentElement.appendChild(cv);   // outside <body> so the Text size setting can't shift it
+  const dpr = Math.min(2, window.devicePixelRatio || 1), W = innerWidth, H = innerHeight; cv.width = W * dpr; cv.height = H * dpr;
+  const c = cv.getContext("2d"); c.scale(dpr, dpr);
+  const cs = getComputedStyle(document.documentElement);
+  const cols = (o.colors || ["--accent", "--sun", "--wm-pink", "--wm-cyan", "--wm2"].map(v => cs.getPropertyValue(v).trim()).filter(Boolean)).concat(["#FFD166", "#FFFFFF"]);
+  const n = o.n || Math.round(Math.min(170, Math.max(70, W / 6))), ox = o.x != null ? o.x : W / 2, oy = o.y != null ? o.y : H * .22;
+  const P = Array.from({ length: n }, () => { const a = (o.spread || Math.PI * .85) * (Math.random() - .5) - Math.PI / 2, v = 7 + Math.random() * 9;
+    return { x: ox + (Math.random() - .5) * (o.w != null ? o.w : 40), y: oy, vx: Math.cos(a) * v, vy: Math.sin(a) * v, r: Math.random() * 6.3, vr: (Math.random() - .5) * .35, s: 6 + Math.random() * 6, c: cols[Math.random() * cols.length | 0], dot: Math.random() < .28 }; });
+  const t0 = performance.now(), dur = o.ms || 2800;
+  (function frame(t) {
+    const k = (t - t0) / dur; c.clearRect(0, 0, W, H);
+    P.forEach(p => { p.vy += .3; p.vx *= .985; p.vy *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      c.save(); c.globalAlpha = Math.max(0, 1 - Math.max(0, k - .65) / .35); c.translate(p.x, p.y); c.rotate(p.r); c.fillStyle = p.c;
+      if (p.dot) { c.beginPath(); c.arc(0, 0, p.s / 2.6, 0, 6.3); c.fill(); } else c.fillRect(-p.s / 2, -p.s / 4, p.s, Math.max(1.5, p.s / 2 * Math.abs(Math.cos(p.r * 2)))); c.restore(); });
+    if (k < 1) requestAnimationFrame(frame); else cv.remove();
+  })(t0);
+}
+/** Confetti out of an element, after the opening animations finish. */
+function confettiFrom(el, o = {}) {
+  if (!el) return;
+  setTimeout(() => { const r = el.getBoundingClientRect(); if (!r.width) return; confetti({ x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width * .6, ...o }); }, Math.max(150, BOOT_END - bootT() + 100));
+}
+/** Gliding highlight under the current tab (top tabs on computers, the pill in the phone's bottom bar). */
+function tabGlide(instant) {
+  [["nav.tabs", false], [".bottomnav", true]].forEach(([sel, pill]) => {
+    const nav = document.querySelector(sel); if (!nav) return;
+    let ind = nav.querySelector(".tab-ind");
+    if (!ind) { ind = document.createElement("span"); ind.className = "tab-ind"; ind.setAttribute("aria-hidden", "true"); nav.prepend(ind); nav.classList.add("glide"); instant = true; }
+    const a = nav.querySelector('a[aria-current="page"]');
+    if (!a || !a.offsetWidth) { ind.style.opacity = "0"; return; }
+    const w = pill ? 52 : a.offsetWidth, h = pill ? 30 : a.offsetHeight, x = pill ? a.offsetLeft + (a.offsetWidth - 52) / 2 : a.offsetLeft, y = pill ? a.offsetTop + 3 : a.offsetTop;
+    if (instant) ind.classList.add("no-anim");
+    Object.assign(ind.style, { width: w + "px", height: h + "px", transform: `translate(${x}px, ${y}px)`, opacity: "1" });
+    if (instant) { void ind.offsetWidth; ind.classList.remove("no-anim"); }
+  });
+}
+window.addEventListener("resize", () => tabGlide(true));
+if (window.ResizeObserver) { const ro = new ResizeObserver(() => tabGlide(true)); document.querySelectorAll("nav.tabs, .bottomnav").forEach(n => ro.observe(n)); }
+document.fonts?.ready.then(() => tabGlide(true));
+document.querySelector("header.top")?.addEventListener("transitionend", () => tabGlide(true));
+/** Resident Schedule: the first time it opens, a neon line sweeps down this month's column. */
+function scheduleSweep() {
+  const th = document.querySelector("table.sched thead th.now"), wrap = th && th.closest(".sched-wrap"), table = th && th.closest("table");
+  if (!th || calmMotion()) return;
+  const sw = document.createElement("div"); sw.className = "now-sweep"; sw.setAttribute("aria-hidden", "true");
+  Object.assign(sw.style, { left: table.offsetLeft + th.offsetLeft + "px", width: th.offsetWidth + "px", height: table.offsetHeight + "px", top: table.offsetTop + "px" });
+  sw.innerHTML = '<span class="ns-line"></span>';
+  wrap.appendChild(sw); setTimeout(() => sw.remove(), 2200);
+}
+function funAfterRender(tab) {
+  tabGlide(false);
+  liveTick();
+  if (tab === "home") {
+    const bd = document.querySelector(".holbar.bday"); if (bd && onceToday("bday")) confettiFrom(bd);
+    const mile = [...document.querySelectorAll(".cdown.cd-mile")].find(e => e.offsetWidth); if (mile && onceToday("mile")) confettiFrom(mile, { n: gradToday() ? 220 : 110, ms: gradToday() ? 4000 : 2600 });
+  }
+  if (tab === "schedule" && !sweepPlayed && document.querySelector("table.sched")) { sweepPlayed = true; setTimeout(scheduleSweep, Math.max(120, BOOT_END - bootT())); }
+  document.documentElement.classList.toggle("grad-day", gradToday());
+}
+/** Easter egg: tap the logo five times quickly. The logo runs through all seven styles and the hub throws a little party. */
+let eggTaps = [], eggBusy = false;
+document.querySelector(".brand")?.addEventListener("click", () => {
+  const now = Date.now(); eggTaps = eggTaps.filter(t => now - t < 2500); eggTaps.push(now);
+  if (eggTaps.length < 5 || eggBusy || !S) return;
+  eggTaps = []; eggBusy = true;
+  const root = document.documentElement; root.classList.add("neon-party");
+  toast("🎉 You found the secret!"); confetti({ n: 200, ms: 3400 });
+  WM_STYLES.forEach(st => { if (!document.querySelector(`link[data-wm="${st.id}"]`)) { const l = document.createElement("link"); l.rel = "stylesheet"; l.dataset.wm = st.id; l.href = "https://fonts.googleapis.com/css2?" + st.fonts.split("|").map(f => "family=" + f).join("&") + "&display=swap"; document.head.appendChild(l); } });
+  const start = wmIndex(), steps = WM_STYLES.length, each = calmMotion() ? 700 : 1150;
+  for (let k = 1; k <= steps; k++) setTimeout(() => {
+    if (k < steps) showWordmark((start + k) % steps, calmMotion() ? 0 : 1000);
+    else { root.classList.remove("neon-party"); wmShown = ""; showWordmark(null, calmMotion() ? 0 : 1000); eggBusy = false; }
+  }, k * each);
+});
 function viewHome() {
   const onb = onboardingPanel();
   const days = nextSessions();
