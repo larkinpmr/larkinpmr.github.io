@@ -474,6 +474,10 @@ table.sched tr.pgy th { text-align: left; background: var(--raised); font: 600 1
 table.sched .now { background: var(--sun-soft); }
 /* computers: only the cell under the pointer is highlighted (no row/column crosshair) */
 @media (hover: hover) and (pointer: fine) { table.sched tbody td:hover { background-color: color-mix(in srgb, var(--accent-soft) 85%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent); } }
+@media (hover: hover) and (pointer: fine) {
+  table.sched th.name.xh { color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+  table.sched thead th.xh { color: var(--accent); box-shadow: inset 0 -2px 0 var(--accent); }
+}
 /* months already over: codes and PTO dots fade to grey (still clickable; full color on hover) so the eye goes to now and later */
 table.sched td.gone .code, table.sched td.gone .ptodot { filter: grayscale(1); opacity: .45; transition: filter .15s, opacity .15s; }
 table.sched td.gone:hover .code, table.sched td.gone:hover .ptodot, table.sched td.gone .code:focus-visible { filter: none; opacity: 1; }
@@ -2246,6 +2250,14 @@ document.addEventListener("click", e => {
   e.preventDefault(); openContact(a);
 });
 
+/* Computers: pointing at a schedule cell also lights up that resident's name and that month's heading (not the whole row/column) */
+document.addEventListener("mouseover", e => {
+  if (!canHover()) return;
+  document.querySelectorAll("table.sched .xh").forEach(x => x.classList.remove("xh"));
+  const td = e.target.closest("table.sched tbody td"); if (!td) return;
+  const t = td.closest("table.sched"), name = td.parentElement.querySelector("th.name"), head = t.tHead && t.tHead.rows[0] && t.tHead.rows[0].cells[td.cellIndex];
+  if (name) name.classList.add("xh"); if (head) head.classList.add("xh");
+});
 /* Phones: swipe left/right on a main tab (Home, Lectures, Schedule, Guides, Resources) to go to the next/previous tab.
  * Deliberately strict so it doesn't fire by accident: only on those five pages (never inside a guide), a long, fast,
  * clearly sideways swipe, not starting at the screen edge (iPhone's back gesture), on a text box, or on anything
