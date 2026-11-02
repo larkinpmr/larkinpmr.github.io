@@ -472,6 +472,9 @@ table.sched th.name { text-align: left; position: sticky; left: 0; background: v
 table.sched thead th.name { z-index: 2; font: 600 12px/1.2 var(--mono); color: var(--muted); text-transform: uppercase; }
 table.sched tr.pgy th { text-align: left; background: var(--raised); font: 600 12px/1 var(--mono); letter-spacing: .08em; color: var(--muted); padding: 8px 14px; position: sticky; left: 0; }
 table.sched .now { background: var(--sun-soft); }
+/* months already over: codes and PTO dots fade to grey (still clickable; full color on hover) so the eye goes to now and later */
+table.sched td.gone .code, table.sched td.gone .ptodot { filter: grayscale(1); opacity: .45; transition: filter .15s, opacity .15s; }
+table.sched td.gone:hover .code, table.sched td.gone:hover .ptodot, table.sched td.gone .code:focus-visible { filter: none; opacity: 1; }
 table.sched thead th.now { color: var(--sun); background: var(--sun-soft); }
 table.sched tr.hl th.name { color: var(--accent); }
 table.sched tr.dim { opacity: .35; }
@@ -2942,7 +2945,7 @@ function viewSchedule() {
   const who = sState.who.toLowerCase();
   const rows = groups.map(g => `<tr class="pgy"><th colspan="${cols.length + 1}">${esc(g)}</th></tr>` + S.residents.filter(p => p.pgy === g).map(p => {
     const match = who && p.name.toLowerCase().includes(who);
-    return `<tr class="${who ? (match ? "hl" : "dim") : ""}${p.name === ME ? " me" : ""}"><th class="name" scope="row">${whoLink(p)}</th>${cols.map(i => `<td class="${i === curMonth ? "now" : ""}">${p.months2[i] ? `<span class="split" title="${esc(p.months[i])} ${MON[(i + 6) % 12]} 1–${HALF_DAY - 1}, then ${esc(p.months2[i])} from ${MON[(i + 6) % 12]} ${HALF_DAY}"><span class="${i === curMonth && nowHalf ? "past" : ""}">${chipRaw(p.months[i], p.rots[i])}</span><span class="${i === curMonth && !nowHalf ? "later" : ""}">${chipRaw(p.months2[i], p.rots2[i])}</span></span>` : chipRaw(p.months[i], p.rots[i])}${ptoDot(p, i)}</td>`).join("")}</tr>`;
+    return `<tr class="${who ? (match ? "hl" : "dim") : ""}${p.name === ME ? " me" : ""}"><th class="name" scope="row">${whoLink(p)}</th>${cols.map(i => `<td class="${i === curMonth ? "now" : i < curMonth ? "gone" : ""}">${p.months2[i] ? `<span class="split" title="${esc(p.months[i])} ${MON[(i + 6) % 12]} 1–${HALF_DAY - 1}, then ${esc(p.months2[i])} from ${MON[(i + 6) % 12]} ${HALF_DAY}"><span class="${i === curMonth && nowHalf ? "past" : ""}">${chipRaw(p.months[i], p.rots[i])}</span><span class="${i === curMonth && !nowHalf ? "later" : ""}">${chipRaw(p.months2[i], p.rots2[i])}</span></span>` : chipRaw(p.months[i], p.rots[i])}${ptoDot(p, i)}</td>`).join("")}</tr>`;
   }).join("")).join("");
   const used = S.rotations.filter(r => S.residents.some(p => p.rots.includes(r) || p.rots2.includes(r)));
   return head + `<div class="sched-wrap${cols.length > 6 ? " wide" : ""}"><table class="sched"><thead><tr><th class="name">Resident</th>${cols.map(i => `<th class="${i === curMonth ? "now" : ""}">${MONTHS[i]}${i === curMonth ? " · now" : ""}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>
