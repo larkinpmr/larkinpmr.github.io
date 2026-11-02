@@ -111,6 +111,7 @@ snap['guides'] = guides
 for k in ('masterHandbook', 'hbNotice', 'extraSections'): snap.pop(k, None)
 snap['builtFrom'] = 'Handbooks folder' if os.path.isdir(SRC) else 'Master Handbook (split into guides)'
 snap['builtAt'] = datetime.date.today().isoformat()
+import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); from trim_snapshot import trim; snap = trim(snap)   # the saved copy is public: never write private data
 json.dump(snap, open(snap_path, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 print(len(guides), 'guides:', ' | '.join((g['folder'] + ' ▸ ' if g['folder'] else '') + g['name'] for g in guides))
 print('snapshot KB:', os.path.getsize(snap_path) // 1024, '· pictures:', pic_n[0])

@@ -397,6 +397,10 @@ body.gated > :not(.gate) { visibility: hidden; }
 @media (prefers-reduced-motion: reduce) { .gate.waiting .gate-logo { animation: none; } }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .qlinks { margin: 24px 0 0; }
+.loadingbox { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.loadingbox .spin { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .loadingbox .spin { animation: none; } }
 .ql-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 8px; } .ql-head .ql-h { margin: 0; }
 .ql-all { font-size: 14px; font-weight: 600; color: var(--accent); text-decoration: none; } .ql-all:hover { text-decoration: underline; }
 .ql-strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
@@ -1209,6 +1213,8 @@ const store = { get(k) { try { return localStorage.getItem(k); } catch { return 
 let S = null;           // current data
 let CFG = {};
 let source = { mode: "loading", when: "" };
+/** The public saved copy has no private content (schedules, guide text…): until Google answers, pages say so instead of looking empty. */
+const loadingBox = what => `<div class="empty loadingbox"><span class="spin" aria-hidden="true"></span>Loading ${what} from Google Drive…</div>`;
 let lastLive = 0, liveBusy = false, refreshLive = null;   // background refresh (see staleCheck)
 const STALE_MS = 5 * 60000;
 const today = new Date(); today.setHours(0,0,0,0);
@@ -2455,6 +2461,7 @@ function viewDirectory() {
 function directoryList() {
   const q = dirQ.toLowerCase();
   const all = directory().filter(e => !q || (e.name + " " + e.role + " " + e.group + " " + e.contact).toLowerCase().includes(q));
+  if (!all.length && !q) return loadingBox("the directory");
   if (!all.length) return `<div class="empty">No one matches “${esc(dirQ)}”.</div>`;
   const groups = [...new Set(all.map(e => e.group))];
   return `<div class="dir-grid">${groups.map(g => {
@@ -2695,7 +2702,7 @@ function viewHome() {
               <ul class="talks">${talks.map(t => `<li><span class="t">${esc(t.topic)}${kindTag(t)}${meResident() && presentsTalk(t.speaker, meResident().name) ? ' <span class="you">You</span>' : ""}</span>${t.speaker ? `<span class="s">${esc(t.speaker)}</span>` : ""}</li>`).join("")}</ul>
             </div></div>`).join("")}</div>
             <p style="margin:16px 0 0"><a href="#didactics">Full didactic calendar →</a></p>`
-          : `<div class="empty">No upcoming sessions on the calendar.</div>`}
+          : S.didactics.length ? `<div class="empty">No upcoming sessions on the calendar.</div>` : loadingBox("the didactic schedule")}
       </section>
       ${onb}
       <section class="panel wide duo">
@@ -2827,6 +2834,7 @@ function didacticList() {
   if (dState.month !== "all") list = list.filter(t => t.date.startsWith(dState.month));
   else if (dState.scope === "upcoming") list = list.filter(t => t.date >= todayISO);
   if (dState.q) { const q = dState.q.toLowerCase(); list = list.filter(t => (t.topic + " " + t.speaker).toLowerCase().includes(q)); }
+  if (!S.didactics.length) return loadingBox("the didactic schedule");
   if (!list.length) return `<div class="empty">No sessions match. Try another month or clear the filter.</div>`;
   // Upcoming: the next 4 weeks first, the rest of the year one tap away
   let moreBtn = "";
@@ -2904,6 +2912,7 @@ function viewTimeOff() {
   return `<p class="pto-note">From the chief calendar. <span class="ptokey"><i></i>PTO</span> <span class="ptokey cme"><i></i>CME</span> · ask a chief to change anything.</p><div class="ptowrap"><div class="pto-cal">${grid}</div><div class="pto-list">${list}</div></div>`;
 }
 function viewSchedule() {
+  if (!S.residents.length) return `<div class="view-head"><div><div class="eyebrow">Resident Schedule · ${esc(S.academicYear)}</div><h1>Block schedule</h1></div></div>${loadingBox("the schedule")}`;
   const pgys = [...new Set(S.residents.map(p => p.pgy))];
   const head = `
   <div class="view-head"><div><div class="eyebrow">Resident Schedule · ${esc(S.academicYear)}</div><h1>Block schedule</h1>
@@ -3004,6 +3013,7 @@ function readyBanner(wide) {
 }
 let gTab = "guide";
 function guideBody(it) {
+  if (!it.html && !it.handbookHtml) return loadingBox("this page");
   if (S.masterHandbook && it.handbookHtml) return `<div class="prose">${it.handbookHtml}</div>`;
   if (!it.handbookHtml || it.handbookHtml === it.html) return `<div class="prose">${it.html}</div>`;
   const tab = gTab === "handbook" ? "handbook" : "guide";
