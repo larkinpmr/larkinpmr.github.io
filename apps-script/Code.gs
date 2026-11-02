@@ -1956,8 +1956,12 @@ function weeklyRecipients_(settings) {
   else if (labels.length) {
     const groups = []; let tok;
     do { const r = People.ContactGroups.list({ pageSize: 1000, pageToken: tok }); (r.contactGroups || []).forEach(g => groups.push(g)); tok = r.nextPageToken; } while (tok);
+    const gname = x => String(x.formattedName || x.name || '').replace(/\s+/g, ' ').trim();
     labels.forEach(label => {
-      const g = groups.find(x => String(x.formattedName || x.name || '').trim().toLowerCase() === label.toLowerCase());
+      // exact name first; otherwise a label with the same year and the word "class" ("Class of 2028", "2028 class list")
+      const yr = (label.match(/20\d\d/) || [])[0];
+      const g = groups.find(x => gname(x).toLowerCase() === label.toLowerCase())
+        || (yr && /class/i.test(label) ? groups.find(x => gname(x).indexOf(yr) >= 0 && /class/i.test(gname(x))) : null);
       if (!g) { missing.push(label); return; }
       const members = (People.ContactGroups.get(g.resourceName, { maxMembers: 1000 }).memberResourceNames) || [];
       for (let i = 0; i < members.length; i += 200) {
@@ -1965,6 +1969,10 @@ function weeklyRecipients_(settings) {
         res.forEach(x => { const p = x.person || {}; const em = (p.emailAddresses || []).find(e => e.metadata && e.metadata.primary) || (p.emailAddresses || [])[0]; if (em) add(((p.names || [])[0] || {}).displayName, em.value); });
       }
     });
+  }
+  if (missing.length && typeof People !== 'undefined') {
+    try { const all = (People.ContactGroups.list({ pageSize: 1000 }).contactGroups || []).filter(g => g.groupType === 'USER_CONTACT_GROUP').map(g => '"' + String(g.formattedName || g.name).trim() + '"');
+      note = 'Labels in the chief Google Contacts: ' + (all.join(', ') || 'none') + '. Rename a label to match, or put the exact names in Settings "Weekly email to".'; } catch (err) { /* names only */ }
   }
   wanted.filter(w => /@/.test(w)).forEach(w => add('', w));   // plain addresses after the class lists
   // nothing from the class lists: the residents on the Approved Emails tab
