@@ -1086,7 +1086,7 @@ function applicantPage_(fresh) {
  * Lecture reminder test email · Lecture reminder days ("7" or "7, 1") · Didactics start time (blank = 2:00 PM) ·
  * Guest lecture length (hours) (blank = 2) · Virtual lecture link · Lecture reminder signature.
  * "Lecture reminder…" rows are kept off the public website. */
-const PRIVATE_TABS = ['Lecturers', 'Lecture Reminders', 'Lecture Locations', 'Invitations', 'Approved Emails', 'Sign-ins', 'Applicant Page'];
+const PRIVATE_TABS = ['Lecturers', 'Lecture Reminders', 'Lecture Locations', 'Invitations', 'Approved Emails', 'Sign-ins', 'Applicant Page', 'Weekly Email'];
 const LOCATION_HEAD = ['Location (as written in the Didactic Schedule)', 'What the email says', 'Address (optional: becomes a directions link)'];
 const LECTURER_HEAD = ['Name (as written in the Didactic Schedule)', 'Email', 'Also written as (separate with ;)', 'Send reminders (yes/no)', 'Notes'];
 const REMINDER_HEAD = ['Sent', 'Lecture date', 'Topic', 'Speaker', 'Email', 'Days before', 'Status'];
@@ -1271,7 +1271,7 @@ function reminderEmail_(t, l, settings) {
     rows.map(r => r[0] + ': ' + r[1]).join('\n') +
     (flexible ? '\n\n' + flexNote : '') +
     '\n\nAdd it to your calendar:\nGoogle Calendar: ' + google + '\nOutlook: ' + outlook + '\nApple Calendar or other apps: open the attached .ics file.' +
-    '\n\nIf anything has changed, or you would like to share slides or materials ahead of time, just reply to this email.\n\nThank you,\n' + sign;
+    '\n\nIf anything has changed, or you would like to share slides or materials ahead of time, just reply to this email.\n\n' + closing_(settings, 'Thank you', false).plain;
   const html = '<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#1f2937">' +
     '<p>Dear ' + esc(greet) + ',</p><p>Thank you again for teaching our PM&amp;R residents. This is a friendly reminder about your upcoming ' + (virtual ? 'virtual' : 'in-person') + ' lecture:</p>' +
     '<table style="border-collapse:collapse;margin:8px 0 14px">' + rows.map(r => '<tr><td style="padding:3px 16px 3px 0;color:#6b7280">' + r[0] + '</td><td style="padding:3px 0;font-weight:bold">' +
@@ -1280,7 +1280,7 @@ function reminderEmail_(t, l, settings) {
     '<p style="margin:0 0 6px">Add it to your calendar:</p><div>' + btn(google, 'Google Calendar') + btn(outlook, 'Outlook') + '</div>' +
     '<p style="margin:0 0 14px;color:#6b7280;font-size:13px">Apple Calendar or another app: open the attached .ics file.' + (link ? ' The join link is saved in the event.' : '') + '</p>' +
     '<p>If anything has changed, or you would like to share slides or materials ahead of time, just reply to this email.</p>' +
-    '<p>Thank you,<br>' + signHtml_(sign) + '</p></div>';
+    closing_(settings, 'Thank you', false).html + '</div>';
   const moved = t.moved ? 'Please note: the date of this lecture has changed since our last email. The details above are current.' : '';
   return { subject: (t.moved ? 'Updated date: ' : '') + subject, plain: moved ? plain.replace('\n\n', '\n\n' + moved + '\n\n') : plain,
     html: moved ? html.replace('</p><p>Thank you again', '</p><p style="padding:10px 14px;border-left:4px solid #B45309;background:#FFFBEB"><b>' + esc(moved) + '</b></p><p>Thank you again') : html, attachments: [attachment] };
@@ -1519,10 +1519,11 @@ function invitationEmail_(x, settings, talks) {
   const p4 = 'If none of these work, we are happy to find another date that fits your schedule. Please reply to let us know if you are interested and which date works best.';
   const subject = 'Invitation to lecture for the Larkin PM&R residents';
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
-  const plain = 'Dear ' + greet + ',\n\n' + p1 + '\n\n' + p2 + (p3 ? '\n\n' + p3 + '\n' + dates.map(d => '• ' + d).join('\n') : '') + '\n\n' + p4 + '\n\nThank you for considering it,\n' + sign;
+  const end = closing_(settings, 'Thank you for considering it', true);
+  const plain = 'Dear ' + greet + ',\n\n' + p1 + '\n\n' + p2 + (p3 ? '\n\n' + p3 + '\n' + dates.map(d => '• ' + d).join('\n') : '') + '\n\n' + p4 + '\n\n' + end.plain;
   const html = '<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#1f2937"><p>Dear ' + esc(greet) + ',</p><p>' + esc(p1) + '</p><p>' + esc(p2) + '</p>' +
     (p3 ? '<p style="margin-bottom:4px">' + esc(p3) + '</p><ul style="margin-top:0">' + dates.map(d => '<li>' + esc(d) + '</li>').join('') + '</ul>' : '') +
-    '<p>' + esc(p4) + '</p><p>Thank you for considering it,<br>' + signHtml_(sign) + '</p></div>';
+    '<p>' + esc(p4) + '</p>' + end.html + '</div>';
   return { subject: subject, plain: plain, html: html };
 }
 
@@ -1585,8 +1586,9 @@ function dateInvitationEmail_(x, settings) {
   const p3 = 'If that day does not work, could you let us know another date in ' + month + ' that would? We are happy to work around your schedule.';
   const subject = 'Lecture request: ' + x.topic + ' (' + Utilities.formatDate(new Date(x.date + 'T12:00:00Z'), 'UTC', 'MMM d') + ')';
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
-  const plain = 'Dear ' + greet + ',\n\n' + p1 + '\n\n' + p2 + '\n\n' + p3 + '\n\nThank you,\n' + sign;
-  const html = '<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#1f2937"><p>Dear ' + esc(greet) + ',</p><p>' + esc(p1) + '</p><p>' + esc(p2) + '</p><p>' + esc(p3) + '</p><p>Thank you,<br>' + signHtml_(sign) + '</p></div>';
+  const end = closing_(settings, 'Thank you', true);
+  const plain = 'Dear ' + greet + ',\n\n' + p1 + '\n\n' + p2 + '\n\n' + p3 + '\n\n' + end.plain;
+  const html = '<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#1f2937"><p>Dear ' + esc(greet) + ',</p><p>' + esc(p1) + '</p><p>' + esc(p2) + '</p><p>' + esc(p3) + '</p>' + end.html + '</div>';
   return { subject: subject, plain: plain, html: html };
 }
 
@@ -1611,6 +1613,18 @@ function signature_(settings) {
   } catch (err) { /* fall back to the plain signature */ }
   email = email || Session.getEffectiveUser().getEmail();
   return ['Physical Medicine & Rehabilitation Chief Residents' + (year ? ' ' + year : ''), 'Larkin Community Hospital South Miami', 'Email: ' + email].concat(chiefs).join('\n');
+}
+
+/** How an email ends. Drafts: "Thank you," + a highlighted [Your name] for the chief who sends it, then the chief Gmail's
+ * own default signature. Emails the script sends itself (reminders): "Thank you," + that signature. Without the Gmail
+ * API service (or with a "Lecture reminder signature" Settings row) the Contacts-tab signature is used, as before. */
+function closing_(settings, thanks, draft) {
+  const gsig = String(settings['Lecture reminder signature'] || '').trim() ? '' : gmailSignature_();
+  if (!gsig) { const sign = signature_(settings); return { plain: thanks + ',\n' + sign, html: '<p>' + thanks + ',<br>' + signHtml_(sign) + '</p>' }; }
+  const plainSig = gsig.replace(/<br\s*\/?>|<\/(div|p)>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/\n{3,}/g, '\n\n').trim();
+  return draft
+    ? { plain: thanks + ',\n[Your name]\n\n--\n' + plainSig, html: '<p>' + thanks + ',<br><span style="background:#FFF59D">[Your name]</span></p><div>--</div>' + gsig }
+    : { plain: thanks + ',\n\n--\n' + plainSig, html: '<p>' + thanks + ',</p><div>--</div>' + gsig };
 }
 
 function signHtml_(sign) {
@@ -1651,9 +1665,16 @@ const HOWTO_LINES = [
   ['Confirmed column in the Didactic Schedule → yes or confirmed = the guest gets a reminder 7 days before. Blank = the guest gets an invitation draft. Anything else (rescheduled, declined…) = nothing.'],
   ['Every Monday → invitation drafts are created in Gmail ▸ Drafts for guest lectures in the next 6 weeks with a blank Confirmed cell, and the chief Gmail gets a note. Open each draft, adjust it, and press Send. When the guest agrees, type yes under Confirmed.'],
   ['Invitations tab → to invite someone by hand, add a row and type yes under "Create draft?". Leave the dates blank to suggest open Mondays.'],
+  ['Invitation drafts end with "Thank you," and a highlighted [Your name] for whoever sends it, then the chief Gmail\'s own default signature (needs the Gmail API service; see the weekly email). Reminders use that signature too.'],
   ['Settings "Lecture reminders" → test (everything goes to the "Lecture reminder test email"), on (to the lecturers) or off. Optional: Invitation lead (weeks), Lecture reminder days, Invitation drafts (off = no Monday drafts; nothing is ever sent without a chief).'],
   ['The chief Gmail is emailed about guests with no email on file (Mondays), emails that failed, reminded lectures that disappear or are canceled, and guest lectures still blank a week out. Every email sent is logged on the Lecture Reminders tab.'],
   ['Lecture Locations tab → what in-person locations are called in emails (for example ISS → full name) and an optional address that becomes a directions link.'],
+  [''],
+  ['WEEKLY SUNDAY EMAIL (a draft, never sent automatically)'],
+  ['Every Sunday around 7 AM a draft of the weekly email to all residents appears in Gmail ▸ Drafts, and the chief Gmail gets a note. Open it, check it, and press Send. It lists the week\'s Monday (and Thursday) didactics with the Zoom link or the location, this week\'s updates, the SAE countdown, birthdays, a good-luck line when rotations switch, and the helpful links.'],
+  ['Weekly Email tab → greeting, standing messages (every week), updates (type = update: used in the next draft only, unless you give a Show until date) and the helpful links (type = link; {year} becomes the academic year) with the PTO steps. Run draftWeeklyEmail to make (or remake) this week\'s draft any time.'],
+  ['The signature is the chief Gmail\'s own default signature (Gmail ▸ Settings ▸ Signature), so a new year\'s signature carries over by itself. Every email also has a big "Open the PM&R Hub" button (Settings "Hub link" changes the address).'],
+  ['Who gets it → the Google Contacts labels "2027 Class", "2028 Class", "2029 Class" (they move up automatically with the Academic Year). Settings "Weekly email to" replaces them, "Weekly email also to" adds people (e.g. the program director), "Weekly email" = off pauses it, "Zoom passcode" adds the passcode under the Zoom link.'],
   [''],
   ['APPLICANT PAGE (larkinpmr.github.io/apply)'],
   ['A public page for interview season. It shows only the Applicant Page tab: no resident names, schedules or contacts. One row per item; Section says what it is: Headline, Subtitle, Stat (number + label), Highlight (title + text), Rotation (name, one-line blurb, Where, PGY, Group), Week (day + text), Interview (time + what), Graduate (class year + where they went), Contact email.'],
@@ -1826,4 +1847,253 @@ function authRequest_(p) {
     return { ok: true, token: token, name: who.name, email: email };
   }
   return { ok: false, error: 'request' };
+}
+
+/* ------------------------------------------------------------------ weekly Sunday email (draft)
+ * Every Sunday at 7 AM a draft of the weekly email to all residents is made in the chief Gmail's Drafts
+ * (nothing is sent). It is written from the Didactic Schedule (the week's Monday and Thursday sessions, the Zoom
+ * link or the location), the private "Weekly Email" tab (greeting, standing messages, this week's updates and the
+ * helpful links), the SAE countdown, birthdays and rotation switches. Addressed to the Google Contacts labels
+ * "<year> Class" for the three classes of the academic year (needs the People API service, see installWeeklyEmail).
+ *   installWeeklyEmail   run once: creates the tab and the Sunday 7 AM schedule
+ *   draftWeeklyEmail     makes the draft right now (for the coming week; on a Monday, for this week)
+ * Settings: "Weekly email" (off to pause) · "Weekly email to" (contact labels or addresses; blank = the three class
+ * labels) · "Weekly email also to" (extra labels/addresses, e.g. the program director) · "Zoom passcode" (optional). */
+const WEEKLY_HEAD = ['Type (greeting / standing / update / link / pto step)', 'Text (**bold** and *italic* work)', 'Link (for link rows)', 'Note (shown after the link)', 'Show until (optional date, for updates)', 'Status (filled in by the script)'];
+
+function installWeeklyEmail() {
+  weeklyTab_();
+  ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === 'draftWeeklyEmail').forEach(t => ScriptApp.deleteTrigger(t));
+  ScriptApp.newTrigger('draftWeeklyEmail').timeBased().onWeekDay(ScriptApp.WeekDay.SUNDAY).atHour(7).inTimezone(TZ).create();
+  const need = [typeof People === 'undefined' ? 'People API (to read the "' + classLabels_(panelSettings_()).join('", "') + '" contact labels)' : '',
+    typeof Gmail === 'undefined' ? 'Gmail API (to add the chief Gmail\'s own signature)' : ''].filter(Boolean);
+  Logger.log('The "Weekly Email" tab is ready and a draft will be made every Sunday around 7 AM (Gmail ▸ Drafts; nothing is sent).\n' +
+    (need.length ? 'One more step: in this editor, click + next to "Services" (left side) and add ' + need.join(' and ') + ' (one at a time: pick it, click Add). Then run installWeeklyEmail again.'
+      : 'Class lists and the Gmail signature are both connected.') +
+    '\nRun draftWeeklyEmail to see this week\'s draft now.');
+}
+
+function weeklyTab_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  if (ss.getSheetByName('Weekly Email')) return ss.getSheetByName('Weekly Email');
+  const sh = panelSheet_('Weekly Email', WEEKLY_HEAD);
+  const did = 'https://docs.google.com/spreadsheets/d/' + (idFromLink_(panelSettings_()['Didactic Schedule Sheet']) || FALLBACK['Didactic Schedule Sheet']) + '/edit?usp=sharing';
+  const res = 'https://docs.google.com/spreadsheets/d/' + (idFromLink_(panelSettings_()['Resident Schedule Sheet']) || FALLBACK['Resident Schedule Sheet']) + '/edit?usp=sharing';
+  const rows = [
+    ['greeting', 'Hey team,', '', '', '', ''],
+    ['standing', 'Please keep updating **case logs** and **work hours**, thanks!', '', '', '', ''],
+    ['update', '', '', '', '', 'Type this week\'s updates in rows like this one (type = update). Each is used in the next Sunday draft only, unless you give a Show until date.'],
+    ['link', '{year} DIDACTIC SCHEDULE', did, 'Requires login to Larkin PM&R Google Account (To View)', '', ''],
+    ['link', '{year} RESIDENT ROTATION SCHEDULE', res, 'Requires login to Larkin PM&R Google Account (To View)', '', ''],
+    ['link', 'ACGME MINIMUM REQUIREMENTS FOR PROCEDURES', 'https://www.acgme.org/Portals/0/PFAssets/ProgramResources/340_PMR_MinimumProceduresAnnouncement.pdf?ver=2015-11-06-120651-327', '(OFFICIAL ACGME WEBSITE) - Review this to see the ACGME procedure requirements for graduation.', '', ''],
+    ['link', '{year} RESIDENT CONTACT LIST', 'https://docs.google.com/spreadsheets/d/1O5VH2Tgy4Hf4XvexGBBnk-POWULqI1N-iiRaEh3E-xU/edit?usp=sharing', 'PLEASE KEEP UPDATED for the most current best contact information.', '', 'Still last year\'s list: paste the new contact list link here when it exists.'],
+    ['link', 'PREVIOUS DIDACTICS PRESENTATIONS', 'https://drive.google.com/drive/u/1/folders/1zL-izG0ZJGuEFv6uFm2TCC_dCZQm4oRy', '', '', ''],
+    ['link', 'UPDATED PTO FORM', 'https://drive.google.com/file/d/1t6zMBjgmF0tYBxYztc9r9ht5dqvRmYwC/view?usp=sharing', 'this is the most current PTO form to be used!', '', ''],
+    ['pto step', '**PTO Protocol:** *(Reminder: Suleidy must receive the full signed form 30 days in advance to your requested PTO dates)*', '', '', '', ''],
+    ['pto step', '1. Discuss PTO dates with your coresident to make sure there are no conflicts', '', '', '', ''],
+    ['pto step', '2. **Coresident\'s** Signature *(coresident that will be or is on the rotation with you)*', '', '', '', ''],
+    ['pto step', '3. **Attending\'s** Signature', '', '', '', ''],
+    ['pto step', '4. **Chief\'s** Signature (**DO NOT cc Suleidy**)', '', '', '', ''],
+    ['pto step', '5. **Dr. Diaz\'s** Signature: send to ISS residents (*via larkinpmr@gmail.com*, **DO NOT cc Suleidy**) (*make the residents there aware; it is still your responsibility that it is completed*)', '', '', '', ''],
+    ['pto step', '6. ISS residents/Dr. Diaz will scan and **send to chief email with Suleidy cc-ed** (*or if ISS residents send it back to you, then it is your job to send it to chief email with Suleidy cc-ed*)', '', '', '', ''],
+    ['pto step', '***BOTTOM LINE: If Dr. Diaz\'s signature is NOT on the form, DO NOT cc Suleidy on the email yet***', '', '', '', ''],
+    ['pto step', 'Send your PTO forms in PDF format.', '', '', '', ''],
+    ['pto step', 'You need to remind your coresident/attendings of upcoming PTO!!!! No surprises!!!!', '', '', '', ''],
+    ['link', 'Resident Forum', 'https://docs.google.com/forms/d/1mgI0tDlqPdYzdq25zvP903DIfGDzi4yCtvV2R6sGNyc/edit?ts=68910345', 'Send in any concerns or issues so they can be addressed.', '', '']
+  ];
+  sh.getRange(2, 1, rows.length, WEEKLY_HEAD.length).setValues(rows);
+  sh.setColumnWidth(1, 150); sh.setColumnWidth(2, 520); sh.setColumnWidth(3, 260); sh.setColumnWidth(4, 320); sh.setColumnWidth(5, 150); sh.setColumnWidth(6, 300);
+  sh.getRange(2, 1, rows.length, WEEKLY_HEAD.length).setWrap(true).setVerticalAlignment('top');
+  return sh;
+}
+
+/** The chief Gmail's default signature (HTML), as set in Gmail ▸ Settings ▸ Signature. Needs the Gmail API service; '' if unavailable. */
+function gmailSignature_() {
+  try {
+    if (typeof Gmail === 'undefined') return '';
+    const list = Gmail.Users.Settings.SendAs.list('me').sendAs || [];
+    const me = Session.getEffectiveUser().getEmail().toLowerCase();
+    const s = list.find(x => x.isDefault) || list.find(x => String(x.sendAsEmail).toLowerCase() === me) || list[0];
+    return s && s.signature ? String(s.signature) : '';
+  } catch (err) { return ''; }
+}
+
+/** The three "<year> Class" contact labels for the academic year (2026-2027 → 2027, 2028, 2029 Class). */
+function classLabels_(settings) {
+  const m = String(settings['Academic Year'] || '').match(/(20\d\d)\D+(20\d\d)/);
+  const end = m ? Number(m[2]) : (new Date().getMonth() >= 6 ? new Date().getFullYear() + 1 : new Date().getFullYear());
+  return [end, end + 1, end + 2].map(y => y + ' Class');
+}
+
+/** Contact labels and plain addresses → "Name <email>" list. Returns { to: [...], missing: [labels not found], note }. */
+function weeklyRecipients_(settings) {
+  const list = s => String(s || '').split(/\s*[,;\n]\s*/).map(x => x.trim()).filter(Boolean);
+  const wanted = (list(settings['Weekly email to']).length ? list(settings['Weekly email to']) : classLabels_(settings)).concat(list(settings['Weekly email also to']));
+  const out = [], seen = {}, missing = [];
+  const add = (name, email) => { email = String(email || '').trim(); const k = email.toLowerCase(); if (!/@/.test(email) || seen[k]) return; seen[k] = true; out.push(name ? '"' + String(name).replace(/"/g, '') + '" <' + email + '>' : email); };
+  const labels = wanted.filter(w => !/@/.test(w));
+  let note = '';
+  if (labels.length && typeof People === 'undefined') { note = 'The People API service is not on yet, so the class lists could not be read (see installWeeklyEmail).'; missing.push.apply(missing, labels); }
+  else if (labels.length) {
+    const groups = []; let tok;
+    do { const r = People.ContactGroups.list({ pageSize: 1000, pageToken: tok }); (r.contactGroups || []).forEach(g => groups.push(g)); tok = r.nextPageToken; } while (tok);
+    labels.forEach(label => {
+      const g = groups.find(x => String(x.formattedName || x.name || '').trim().toLowerCase() === label.toLowerCase());
+      if (!g) { missing.push(label); return; }
+      const members = (People.ContactGroups.get(g.resourceName, { maxMembers: 1000 }).memberResourceNames) || [];
+      for (let i = 0; i < members.length; i += 200) {
+        const res = People.People.getBatchGet({ resourceNames: members.slice(i, i + 200), personFields: 'names,emailAddresses' }).responses || [];
+        res.forEach(x => { const p = x.person || {}; const em = (p.emailAddresses || []).find(e => e.metadata && e.metadata.primary) || (p.emailAddresses || [])[0]; if (em) add(((p.names || [])[0] || {}).displayName, em.value); });
+      }
+    });
+  }
+  wanted.filter(w => /@/.test(w)).forEach(w => add('', w));   // plain addresses after the class lists
+  // nothing from the class lists: the residents on the Approved Emails tab
+  if (missing.length && missing.length === labels.length) {
+    const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Approved Emails');
+    if (sh) values_(sh).slice(1).forEach(r => {
+      if (!/resident|fellow/i.test(String(r[2] || '')) || /^(no|n|off|false|0|inactive|removed)$/i.test(String(r[3] || '').trim())) return;
+      add(String(r[1] || '').trim(), String(r[0] || '').split(/\s*[,;]\s*/)[0]);
+    });
+  }
+  return { to: out, missing: missing, note: note };
+}
+
+/** "**bold**", "*italic*" and bare links → HTML (text is escaped first). */
+function weeklyInline_(s) {
+  const esc = x => String(x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return esc(s).replace(/\*\*\*(.+?)\*\*\*/g, '<b><i>$1</i></b>').replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/(^|[^*])\*(?!\s)(.+?)\*(?!\*)/g, '$1<i>$2</i>')
+    .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1">$1</a>');
+}
+const weeklyPlain_ = s => String(s).replace(/\*\*\*(.+?)\*\*\*/g, '$1').replace(/\*\*(.+?)\*\*/g, '$1').replace(/(^|[^*])\*(?!\s)(.+?)\*(?!\*)/g, '$1$2');
+
+/** Monday (yyyy-MM-dd) of the week the email is about: on Monday this week, otherwise the coming Monday. */
+function weeklyMonday_() {
+  const now = new Date(), dow = Number(Utilities.formatDate(now, TZ, 'u'));   // 1 = Monday … 7 = Sunday
+  return Utilities.formatDate(new Date(now.getTime() + ((8 - dow) % 7) * 86400000), TZ, 'yyyy-MM-dd');
+}
+const addDays_ = (iso, n) => Utilities.formatDate(new Date(new Date(iso + 'T12:00:00Z').getTime() + n * 86400000), 'UTC', 'yyyy-MM-dd');
+const mmdd_ = iso => iso.slice(5, 7) + '/' + iso.slice(8, 10);
+const weekday_ = iso => Utilities.formatDate(new Date(iso + 'T12:00:00Z'), 'UTC', 'EEEE');
+
+function draftWeeklyEmail() {
+  const settings = panelSettings_();
+  if (/^(off|no|false|0)$/i.test(String(settings['Weekly email'] || '').trim())) { Logger.log('Nothing drafted: Settings "Weekly email" is off.'); return; }
+  const mon = weeklyMonday_(), sun = addDays_(mon, 6);
+  const sh = weeklyTab_(), rows = values_(sh);
+  const tag = 'In the ' + mmdd_(mon) + ' draft';
+  const kind = r => String(r[0] || '').trim().toLowerCase();
+  const until = r => isoDate_(r[4]);
+  const greeting = (rows.find(r => kind(r) === 'greeting') || [, 'Hey team,'])[1] || 'Hey team,';
+  const standing = rows.filter(r => kind(r) === 'standing' && String(r[1]).trim()).map(r => String(r[1]).trim());
+  const updRows = [];
+  rows.forEach((r, i) => { if (i && kind(r) === 'update' && String(r[1]).trim()) {
+    const st = String(r[5] || '').trim(), u = until(r);
+    if (u ? u >= mon : (!/^In the \d\d\/\d\d draft/.test(st) || st === tag)) updRows.push({ i: i, text: String(r[1]).trim(), keep: !!u });
+  } });
+  const year = String(settings['Academic Year'] || '').replace(/\s*[–—]\s*/, '-').replace(/\s*-\s*/, '-').trim();
+  const links = rows.filter((r, i) => i && /^(link|pto step)$/.test(kind(r)) && String(r[1]).trim());
+
+  // the week's sessions
+  const talks = readTalks_(settings).filter(t => t.date >= mon && t.date <= sun);
+  const off = t => /no didactics|no lectures?\b|cancel+ed|no class|holiday break/i.test(t.topic);   // "Holiday Party" is an event, not a day off
+  const days = [...new Set(talks.map(t => t.date))].sort().map(d => ({ date: d, talks: talks.filter(t => t.date === d) }));
+  const live = days.filter(d => d.talks.some(t => !off(t)));
+  const pass = String(settings['Zoom passcode'] || settings['Virtual lecture passcode'] || '').trim();
+  const H = [], P = [];   // html and plain-text bodies
+  const p = (html, plain) => { H.push(html); P.push(plain == null ? html.replace(/<[^>]+>/g, '') : plain); };
+  const red = s => '<b style="color:#C00000">' + weeklyInline_(s) + '</b>';
+  p('<p>' + weeklyInline_(greeting) + '</p>', weeklyPlain_(greeting));
+  standing.forEach(s => p('<p>' + weeklyInline_(s) + '</p>', weeklyPlain_(s)));
+  // a prominent link to the hub: this week's schedule, rotation guides, contacts (and a nudge to sign in / add it to the home screen)
+  const hub = String(settings['Hub link'] || 'https://larkinpmr.github.io').trim().replace(/\/+$/, '');
+  p('<table role="presentation" cellpadding="0" cellspacing="0" style="margin:6px 0 14px"><tr><td style="background:#C2185B;border-radius:8px;padding:11px 20px">' +
+    '<a href="' + hub + '" style="color:#ffffff;font-weight:bold;font-size:16px;text-decoration:none">📲 Open the PM&amp;R Hub →</a></td>' +
+    '<td style="padding-left:14px;font-size:14px;color:#444">Your rotation, this week\'s didactics, rotation guides and contacts in one place.<br>' +
+    'Sign in once with your email, then add it to your home screen.</td></tr></table>',
+    'PM&R HUB: ' + hub + '\nYour rotation, this week\'s didactics, rotation guides and contacts in one place. Sign in once with your email, then add it to your home screen.');
+  p('<p><b>******DIDACTICS UPDATE******</b></p>', '******DIDACTICS UPDATE******');
+  const notes = [];
+  if (!live.length) {
+    const why = talks.filter(off).map(t => t.topic.replace(/no didactics|no lectures?\b|cancel+ed/gi, ' ').replace(/\(\s*\)/g, ' ').replace(/\s+/g, ' ').replace(/^[\s\-–—:/(]+|[\s\-–—:/)]+$/g, '').trim()).filter(Boolean)[0];
+    p('<p>There will be <b>no didactics this week</b>' + (why ? ' (' + weeklyInline_(why) + ')' : '') + '.</p>', 'There will be no didactics this week' + (why ? ' (' + why + ')' : '') + '.');
+  }
+  live.forEach(d => {
+    const ts = d.talks.filter(t => !off(t)), t0 = ts[0];
+    const virtual = /virtual|zoom/i.test(t0.location || '');
+    const time = clock_(lectureTimes_(t0, settings).start);
+    const where = virtual ? null : lectureLocation_(t0.location);
+    const head = weekday_(d.date) + ' (' + mmdd_(d.date) + ') will be held ' + (virtual ? 'virtually' : 'in person' + (where && where.name ? ' at ' + where.name : '')) + ' at ' + time + '.';
+    p('<p>Didactics this <b><u>' + weeklyInline_(head) + '</u></b></p>', 'Didactics this ' + head);
+    if (where && where.address) p('<p>📍 <a href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(where.address) + '">' + weeklyInline_(where.address) + '</a></p>', 'Address: ' + where.address);
+    p('<ul>' + ts.map(t => '<li>' + weeklyInline_(t.topic) + (t.speaker ? ' – ' + red(t.speaker) : '') + '</li>').join('') + '</ul>', ts.map(t => '  - ' + t.topic + (t.speaker ? ' – ' + t.speaker : '')).join('\n'));
+    if (virtual) {
+      const link = meetLink_(ts, settings) || String(settings['Virtual lecture link'] || '').trim();
+      const id = (link.match(/\/j\/(\d{9,11})/) || [])[1];
+      if (link) p('<p>Join Zoom Meeting<br><a href="' + link + '">' + weeklyInline_(link) + '</a>' + (id ? '<br><br>Meeting ID: ' + id.replace(/^(\d{3})(\d{4})(\d+)$/, '$1 $2 $3') : '') + (pass ? '<br>Passcode: ' + weeklyInline_(pass) : '') + '</p>',
+        'Join Zoom Meeting\n' + link + (id ? '\n\nMeeting ID: ' + id.replace(/^(\d{3})(\d{4})(\d+)$/, '$1 $2 $3') : '') + (pass ? '\nPasscode: ' + pass : ''));
+      else notes.push(weekday_(d.date) + ' is virtual but there is no Zoom link (Settings "Virtual lecture link").');
+    }
+  });
+
+  p('<p style="font-size:14px">Full didactic calendar (with the Zoom link and an "Add to my calendar" button): <a href="' + hub + '/#didactics">' + hub.replace(/^https?:\/\//, '') + '/#didactics</a></p>',
+    'Full didactic calendar: ' + hub + '/#didactics');
+  // this week: updates, rotation switch, SAE countdown, birthdays
+  const extra = [];
+  updRows.forEach(u => extra.push(u.text));
+  try {
+    const res = parseResidents_(readSheet_(idFromLink_(settings['Resident Schedule Sheet']) || FALLBACK['Resident Schedule Sheet'], settings['Resident Schedule tab']));
+    const codeOn = (p, iso) => { const m = Number(iso.slice(5, 7)), d = Number(iso.slice(8, 10)), i = (m + 5) % 12; return normCode_(d >= 16 && p.months2[i] ? p.months2[i] : p.months[i]); };
+    let switching = false;
+    for (let k = 0; k < 7 && !switching; k++) { const day = addDays_(mon, k), prev = addDays_(day, -1); if (day.slice(5) === '07-01') continue; switching = res.some(p => codeOn(p, day) && codeOn(p, prev) && codeOn(p, day) !== codeOn(p, prev)); }
+    if (switching) extra.push(String(settings['Weekly email rotation message'] || 'Good luck to everyone starting a new rotation this week!'));
+  } catch (err) { /* no rotation line */ }
+  String(settings['Countdowns'] || '').split(/[;\n]+/).forEach(x => {
+    const m = x.match(/^\s*(.+?)\s*[=:–—]\s*(\S.*?)\s*$/); if (!m || !/\bsae\b|in-?\s?training|self[-\s]?assess/i.test(m[1])) return;
+    const iso = isoDate_(m[2]) || futureDate_(m[2]); if (!iso) return;
+    const n = Math.round((new Date(iso + 'T12:00:00Z') - new Date(mon + 'T12:00:00Z')) / 86400000);
+    if (n >= 0) extra.push('**' + n + ' day' + (n === 1 ? '' : 's') + '** until the ' + m[1] + ' (' + Utilities.formatDate(new Date(iso + 'T12:00:00Z'), 'UTC', 'EEEE, MMMM d') + ').');
+  });
+  try { birthdays_().forEach(b => { for (let k = 0; k < 7; k++) { const day = addDays_(mon, k); if (day.slice(5) === b.md) extra.push('Happy birthday to **' + b.name + '** (' + weekday_(day) + ')! 🎉'); } }); } catch (err) { /* no birthdays */ }
+  p('<p><b>******WEEKLY UPDATES******</b></p>', '\n******WEEKLY UPDATES******');
+  if (updRows.length === 0) p('<p style="background:#FFF59D;padding:4px 6px">[Add this week\'s updates here, or delete this line.]</p>', '[Add this week\'s updates here, or delete this line.]');
+  if (extra.length) p('<ul>' + extra.map(s => '<li>' + weeklyInline_(s) + '</li>').join('') + '</ul>', extra.map(s => '  - ' + weeklyPlain_(s)).join('\n'));
+
+  // helpful links (with the PTO protocol under the PTO form) and the signature
+  p('<p>______________________________________</p><p><b><u style="background:#FFFF00">REMINDER HELPFUL LINKS (SEE BELOW)</u>:</b></p>', '______________________________________\nREMINDER HELPFUL LINKS (SEE BELOW):');
+  let n = 0, steps = [];
+  const flush = () => { if (steps.length) { p('<ul>' + steps.map(s => '<li>' + weeklyInline_(s) + '</li>').join('') + '</ul>', steps.map(s => '   - ' + weeklyPlain_(s)).join('\n')); steps = []; } };
+  links.forEach(r => {
+    if (kind(r) === 'pto step') { steps.push(String(r[1]).trim()); return; }
+    flush();
+    const label = String(r[1]).trim().replace(/\{year\}/gi, year), url = String(r[2] || '').trim(), note = String(r[3] || '').trim();
+    n++;
+    p('<div>' + n + ') ' + (url ? '<a href="' + url + '">' + weeklyInline_(label) + '</a>' : weeklyInline_(label)) + (note ? ' - ' + weeklyInline_(note) : '') + '</div>',
+      n + ') ' + weeklyPlain_(label) + (url ? ' <' + url + '>' : '') + (note ? ' - ' + weeklyPlain_(note) : ''));
+  });
+  flush();
+  const gsig = String(settings['Lecture reminder signature'] || '').trim() ? '' : gmailSignature_();
+  if (gsig) p('<br><div>--</div>' + gsig, '--\n' + gsig.replace(/<br\s*\/?>|<\/(div|p)>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/\n{3,}/g, '\n\n').trim());
+  else {
+    const sig = signature_(settings);
+    p('<br><div>--</div><div>' + sig.split('\n').map(weeklyInline_).join('<br>').replace(/(<br>)(?=[^<]*\|\|)/, '<br><br>') + '</div>', '--\n' + sig);
+    notes.push('The signature came from the Contacts tab: turn on the Gmail API service (see installWeeklyEmail) to use the chief Gmail\'s own signature.');
+  }
+
+  // subject, like the chiefs write it
+  const dates = live.map(d => mmdd_(d.date));
+  const allVirtual = live.length && live.every(d => /virtual|zoom/i.test(d.talks[0].location || ''));
+  const oneWhere = live.length === 1 && !allVirtual ? String(live[0].talks[0].location || '').trim() : '';   // as written in the sheet ("ISS")
+  const subject = !live.length ? 'No Didactics ' + mmdd_(mon) : (allVirtual ? 'Virtual Didactics ' : oneWhere && oneWhere.length <= 25 ? 'Didactics at ' + oneWhere + ' ' : 'Didactics ') + dates.join(' & ');
+
+  const rcpt = weeklyRecipients_(settings);
+  if (!rcpt.to.length) notes.push('No recipients found: add them in the draft.');
+  // re-running replaces this week's earlier draft instead of piling up copies
+  GmailApp.getDrafts().forEach(d => { try { if (d.getMessage().getSubject() === subject) d.deleteDraft(); } catch (err) { /* skip */ } });
+  GmailApp.createDraft(rcpt.to.join(', '), subject, P.join('\n\n'), { htmlBody: '<div style="font-family:Arial,sans-serif;font-size:15px;color:#212121">' + H.join('') + '</div>', name: 'Larkin PMR Chief' });
+  updRows.forEach(u => { if (!u.keep) sh.getRange(u.i + 1, 6).setValue(tag); });
+  if (rcpt.missing.length) notes.push('Contact label(s) not found: ' + rcpt.missing.join(', ') + (rcpt.note ? ' — ' + rcpt.note : '') + (rcpt.missing.length === classLabels_(settings).length ? ' The residents on the Approved Emails tab were used instead.' : ''));
+  const summary = 'Weekly email draft "' + subject + '" is in Gmail ▸ Drafts for ' + rcpt.to.length + ' recipient(s). Review it and press Send.' + (notes.length ? '\n\nCheck:\n- ' + notes.join('\n- ') : '');
+  Logger.log(summary);
+  try { MailApp.sendEmail({ to: chiefEmail_(), subject: 'Hub: weekly email draft ready (' + subject + ')', name: 'PM&R Hub', body: summary + '\n\nUpdates for next week go on the Control Panel\'s "Weekly Email" tab.' }); } catch (err) { /* the draft is there either way */ }
 }
