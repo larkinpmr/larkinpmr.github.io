@@ -472,6 +472,8 @@ table.sched th.name { text-align: left; position: sticky; left: 0; background: v
 table.sched thead th.name { z-index: 2; font: 600 12px/1.2 var(--mono); color: var(--muted); text-transform: uppercase; }
 table.sched tr.pgy th { text-align: left; background: var(--raised); font: 600 12px/1 var(--mono); letter-spacing: .08em; color: var(--muted); padding: 8px 14px; position: sticky; left: 0; }
 table.sched .now { background: var(--sun-soft); }
+/* computers: only the cell under the pointer is highlighted (no row/column crosshair) */
+@media (hover: hover) and (pointer: fine) { table.sched tbody td:hover { background-color: color-mix(in srgb, var(--accent-soft) 85%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent); } }
 /* months already over: codes and PTO dots fade to grey (still clickable; full color on hover) so the eye goes to now and later */
 table.sched td.gone .code, table.sched td.gone .ptodot { filter: grayscale(1); opacity: .45; transition: filter .15s, opacity .15s; }
 table.sched td.gone:hover .code, table.sched td.gone:hover .ptodot, table.sched td.gone .code:focus-visible { filter: none; opacity: 1; }
