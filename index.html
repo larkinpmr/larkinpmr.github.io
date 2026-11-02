@@ -293,7 +293,7 @@ header.top::after { content: ""; position: absolute; left: 0; right: 0; bottom: 
 @keyframes joinlive { from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent); } to { box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent), 0 0 18px color-mix(in srgb, var(--accent) 55%, transparent); } }
 @keyframes livedot { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 92, .7); } 100% { box-shadow: 0 0 0 7px rgba(255, 59, 92, 0); } }
 /* gliding tab highlight */
-nav.tabs.glide, .bottomnav.glide { position: relative; }
+nav.tabs.glide { position: relative; }   /* the bottom bar is already position: fixed, which positions the pill; never override it */
 nav.tabs.glide a, .bottomnav.glide a { position: relative; z-index: 1; }
 .tab-ind { position: absolute; left: 0; top: 0; z-index: 0; border-radius: 999px; background: var(--accent-soft); pointer-events: none; opacity: 0; transition: transform .38s cubic-bezier(.3, .8, .25, 1), width .38s cubic-bezier(.3, .8, .25, 1), opacity .2s; }
 .tab-ind.no-anim { transition: none; }
