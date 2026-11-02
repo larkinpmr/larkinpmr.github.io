@@ -1532,7 +1532,7 @@ function invitationEmail_(x, settings, talks) {
  * Settings: "Invitation lead (weeks)" (blank = 6) · "Automatic invitations" (off to stop). */
 function draftUpcomingInvitations(talks) {
   const settings = panelSettings_();
-  if (/^(off|no|false|0)$/i.test(String(settings['Automatic invitations'] || '').trim())) return;
+  if (/^(off|no|false|0)$/i.test(String(settings['Automatic invitations'] || '').trim())) { Logger.log('Nothing drafted: Settings "Automatic invitations" is set to "' + settings['Automatic invitations'] + '". Clear it (or set it to on) and run this again.'); return; }
   talks = Array.isArray(talks) ? talks : readTalks_(settings);
   if (!talks.some(t => t.confKnown)) { Logger.log('Add a "Confirmed" column to the Didactic Schedule first, so the script can tell confirmed guests from planned ones.'); return; }
   const weeks = Number(settings['Invitation lead (weeks)']) || 6;
