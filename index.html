@@ -109,9 +109,18 @@
 .prefs h3 { font: 600 11px/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
 .prefs .seg { display: flex; }
 .prefs .seg button { flex: 1; }
-.swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+.swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+@media (max-width: 420px) { .swatch { width: 31px; height: 31px; } }
 .swatch { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--line); cursor: pointer; }
 .swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--ink); }
+.swatch-custom { display: grid; place-items: center; color: #fff; filter: drop-shadow(0 0 0 transparent); }
+.swatch-custom svg { filter: drop-shadow(0 0 2px rgba(0, 0, 0, .55)); }
+.custom-box { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r); background: var(--raised); }
+.custom-box label { display: grid; justify-items: center; gap: 3px; font-size: .78rem; font-weight: 600; color: var(--muted); cursor: pointer; }
+.custom-box input[type=color] { width: 40px; height: 34px; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: none; cursor: pointer; }
+.custom-box input[type=color]::-webkit-color-swatch-wrapper { padding: 3px; } .custom-box input[type=color]::-webkit-color-swatch { border: none; border-radius: 5px; }
+.custom-box input[type=color]::-moz-color-swatch { border: none; border-radius: 5px; }
+.custom-box .btn { margin-left: auto; }
 .install { display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
 .install .btn { justify-self: start; }
 .prefs .edit { border-top: 1px solid var(--line); padding-top: 14px; font-size: 14px; color: var(--muted); }
@@ -1208,7 +1217,14 @@ table.sched td { position: relative; }
         <button type="button" class="swatch" data-ac="ocean" title="Biscayne Bay" aria-label="Biscayne Bay" style="background:linear-gradient(135deg,#5A45DA,#2F7BFF,#35E0BC)"></button>
         <button type="button" class="swatch" data-ac="teal" title="Art Deco" aria-label="Art Deco" style="background:linear-gradient(135deg,#F49A80,#72D6C1,#AE97EE)"></button>
         <button type="button" class="swatch" data-ac="forest" title="Everglades" aria-label="Everglades" style="background:linear-gradient(135deg,#087647,#8CCB3A,#E9BB1F)"></button>
-        <button type="button" class="swatch" data-ac="plum" title="Black &amp; Gold" aria-label="Black &amp; Gold" style="background:linear-gradient(135deg,#16130E,#8A6100 45%,#E6C15A)"></button></div></div>
+        <button type="button" class="swatch" data-ac="plum" title="Black &amp; Gold" aria-label="Black &amp; Gold" style="background:linear-gradient(135deg,#16130E,#8A6100 45%,#E6C15A)"></button>
+        <button type="button" class="swatch swatch-custom" data-ac="custom" title="Make your own" aria-label="Make your own color scheme" style="background:linear-gradient(135deg,#C41F6E,#8A3BC4,#12B5BF)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        <div class="custom-box" id="custom-box" hidden>
+          <label><input type="color" data-cc="0" value="#c41f6e"><span>Main</span></label>
+          <label><input type="color" data-cc="1" value="#8a3bc4"><span>Second</span></label>
+          <label><input type="color" data-cc="2" value="#12b5bf"><span>Third</span></label>
+          <button type="button" class="btn small ghost" id="cc-reset">Reset</button>
+        </div></div>
       <div id="install-box"><h3>Use it like an app</h3><div id="install-body" class="install"></div></div>
       <div><h3>New here?</h3><div class="prefs-row"><button type="button" class="btn small ghost" id="tour-btn">Take a tour</button><button type="button" class="btn small ghost" id="home-btn">Home screen setup</button></div></div>
       <div id="signout-box" hidden><h3>Signed in</h3><div class="install"><span id="signout-who"></span><button type="button" class="btn small ghost" id="signout-btn">Sign out of this device</button></div></div>
@@ -1271,6 +1287,23 @@ function loadFont(id) {
   if (!FONT_CSS[id] || document.getElementById("font-" + id)) return;
   const l = document.createElement("link"); l.id = "font-" + id; l.rel = "stylesheet"; l.href = "https://fonts.googleapis.com/css2?" + FONT_CSS[id] + "&display=swap"; document.head.appendChild(l);
 }
+/* ---- "Make your own" color scheme (gear menu): three picked colors -> a full light and dark theme.
+ * Backgrounds, cards, lines and text are tinted from color 1; the colors are nudged darker/lighter only as much
+ * as needed so text stays readable whatever is picked. Saved per device (hub.cc). */
+const CUSTOM_DEFAULT = ["#C41F6E", "#8A3BC4", "#12B5BF"];
+function customColors() { const v = (store.get("hub.cc") || "").split(",").filter(c => /^#[0-9a-f]{6}$/i.test(c)); return v.length === 3 ? v : CUSTOM_DEFAULT.slice(); }
+const hexRgb = h => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+const rgbHex = c => "#" + c.map(x => Math.round(Math.max(0, Math.min(255, x))).toString(16).padStart(2, "0")).join("").toUpperCase();
+const mixHex = (a, b, t) => { const x = hexRgb(a), y = hexRgb(b); return rgbHex(x.map((v, i) => v + (y[i] - v) * t)); };   // t = share of b
+const lum = h => { const c = hexRgb(h).map(v => { v /= 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+const contrast = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+function hexHsl(h) { const [r, g, b] = hexRgb(h).map(v => v / 255), mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+  if (!d) return [0, 0, l]; const s = d / (1 - Math.abs(2 * l - 1)); let hh = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; return [hh * 60, s, l]; }
+function hslHex(h, s, l) { const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2;
+  const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x]; return rgbHex([r, g, b].map(v => (v + m) * 255)); }
+/* darken (toward "#000000") or lighten a color only until it reaches the contrast ratio, keeping its hue and saturation */
+function ccReadable(c, bg, ratio, toward) { const [h, s, l0] = hexHsl(c); let l = l0, out = c, dn = toward === "#000000";
+  while (contrast(out, bg) < ratio && (dn ? l > 0 : l < 1)) { l = dn ? Math.max(0, l - .02) : Math.min(1, l + .02); out = hslHex((h + 360) % 360, s, l); } return out; }
 function applyPrefs() {
   const root = document.documentElement;
   if (PREF.th === "auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme", PREF.th);
@@ -1282,7 +1315,10 @@ function applyPrefs() {
   document.querySelectorAll("[data-fs]").forEach(b => b.setAttribute("aria-pressed", b.dataset.fs === PREF.fs));
   document.querySelectorAll("[data-th]").forEach(b => b.setAttribute("aria-pressed", b.dataset.th === PREF.th));
   document.querySelectorAll("[data-ac]").forEach(b => b.setAttribute("aria-pressed", b.dataset.ac === PREF.ac));
-  themeFavicon();
+  const cbox = document.getElementById("custom-box");
+  if (cbox) { cbox.hidden = PREF.ac !== "custom"; const cc = customColors(); cbox.querySelectorAll("input[type=color]").forEach((inp, i) => { inp.value = cc[i].toLowerCase(); });
+    const sw = document.querySelector('.swatch[data-ac="custom"]'); if (sw) sw.style.background = `linear-gradient(135deg, ${cc.join(", ")})`; }
+  queueMicrotask(() => { applyHoliday(); themeFavicon(); });
 }
 /** Browser tab icon follows the chosen theme (same colors as the slim-header logo); Miami Vice uses the original file.
  *  The installed app's home-screen icon is fixed at install time and stays the original. */
@@ -1305,7 +1341,12 @@ prefsBox.addEventListener("click", e => {
   if (b.dataset.th) { PREF.th = b.dataset.th; store.set("hub.th", PREF.th); }
   if (b.dataset.ac) { PREF.ac = b.dataset.ac; store.set("hub.ac", PREF.ac); }
   if (b.dataset.ff) { PREF.ff = b.dataset.ff; store.set("hub.ff", PREF.ff); }
+  if (b.id === "cc-reset") { store.set("hub.cc", CUSTOM_DEFAULT.join(",")); }
   applyPrefs(); qShort();
+});
+prefsBox.addEventListener("input", e => {
+  const inp = e.target.closest("input[data-cc]"); if (!inp) return;
+  const cc = customColors(); cc[+inp.dataset.cc] = inp.value.toUpperCase(); store.set("hub.cc", cc.join(",")); applyPrefs();
 });
 applyPrefs();
 $("#tour-btn").onclick = e => { e.stopPropagation(); startTour(); };
@@ -1436,7 +1477,7 @@ const HOLIDAYS = [
     dark: ["#0B1A12", "#12251A", "#1A3123", "#EEF6EF", "#A7BFAE", "#24402E", "#F87171", "#3B1616", "#2A0606", "#4ADE80", "#123322", ["#F87171", "#FACC15", "#4ADE80"]] },
 ];
 const HOL_VARS = ["--bg", "--surface", "--raised", "--ink", "--muted", "--line", "--accent", "--accent-soft", "--on-accent", "--sun", "--sun-soft"];
-const HOL_ALL = HOL_VARS.concat(["--hol-trim", "--hol-tint", "--hol-bar", "--stripe", "--hero-grad", "--wm-pink", "--wm-cyan", "--wm-cyanbg", "--wm-shadow", "--wm-body", "--wm-soft", "--wm-neon", "--wm-neon-glow",
+const HOL_ALL = HOL_VARS.concat(["--wm2", "--t3", "--lg-bg1", "--lg-bg2", "--lg-sun1", "--lg-sun2", "--lg-g1", "--lg-g2", "--lg-wave", "--lg-ray", "--hol-trim", "--hol-tint", "--hol-bar", "--stripe", "--hero-grad", "--wm-pink", "--wm-cyan", "--wm-cyanbg", "--wm-shadow", "--wm-body", "--wm-soft", "--wm-neon", "--wm-neon-glow",
   "--wm-cyan-glow", "--wm-pink-glow", "--wm-tube", "--wm-tube-glow", "--wm-tube2", "--wm-tube2-glow", "--wm-sunset", "--wm-chrome", "--wm-chrome2", "--wm-chrome2-glow", "color-scheme"]);
 function holidayNow() {
   if (S && /^(off|no|false|0)$/i.test(String(S.holidayThemes || "").trim())) return null;
@@ -1445,10 +1486,24 @@ function holidayNow() {
   const d = new Date();
   return HOLIDAYS.filter(h => h.when(d)).sort((a, b) => (b.pri || 0) - (a.pri || 0))[0] || null;
 }
+function customPalette(dark) {
+  const [c1, c2, c3] = customColors(), K = "#000000", W = "#FFFFFF";
+  if (!dark) {
+    const bg = mixHex(W, c1, .035), surface = W, ink = ccReadable(mixHex(c1, K, .82), surface, 12, K);
+    const acc = ccReadable(c1, surface, 4.6, K), sun = ccReadable(c2, surface, 4.6, K);
+    return [bg, surface, mixHex(W, c1, .08), ink, ccReadable(mixHex(c1, "#6B6B6B", .7), surface, 5, K), mixHex(W, c1, .13), acc, mixHex(W, acc, .13), W, sun, mixHex(W, sun, .14),
+      [c1, c2, c3].map(c => ccReadable(c, surface, 3, K))];
+  }
+  const bg = mixHex(K, c1, .07), surface = mixHex(K, c1, .11), ink = mixHex(W, c1, .07);
+  const acc = ccReadable(c1, surface, 5, W), sun = ccReadable(c2, surface, 5, W);
+  return [bg, surface, mixHex(K, c1, .16), ink, ccReadable(mixHex(W, c1, .3), surface, 6, W), mixHex(K, c1, .24), acc, mixHex(surface, acc, .22), mixHex(K, acc, .15), sun, mixHex(surface, sun, .2),
+    [c1, c2, c3].map(c => ccReadable(c, bg, 4, W))];
+}
 function applyHoliday() {
   const root = document.documentElement, h = holidayNow();
   const dark = root.dataset.theme === "dark" || (root.dataset.theme !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
-  const pal = h && (dark ? h.dark : h.light);
+  const custom = !h && PREF.ac === "custom";
+  const pal = h ? (dark ? h.dark : h.light) : custom ? customPalette(dark) : null;
   root.dataset.holiday = h ? h.id : "";
   if (!pal) { HOL_ALL.forEach(v => root.style.removeProperty(v)); return; }
   const set = (k, v) => root.style.setProperty(k, v);
@@ -1465,6 +1520,13 @@ function applyHoliday() {
   set("--wm-chrome", `linear-gradient(180deg, ${dark ? "#FFFFFF" : ink} 0%, ${g[0]} 45%, ${dark ? bg : ink} 50%, ${g[1]} 58%, ${g[g.length - 1]} 100%)`);
   set("--wm-chrome2", acc); set("--wm-chrome2-glow", dark ? `0 0 6px ${acc}, 0 0 14px ${acc}` : "none");
   set("color-scheme", dark ? "dark" : "light");
+  if (custom) {   // own scheme: also the logo's second color, third color and the slim-header logo; no holiday trim
+    set("--wm2", sun); set("--t3", g[2]);
+    set("--lg-bg1", mixHex("#000000", g[0], .35)); set("--lg-bg2", mixHex("#000000", g[0], .1)); set("--lg-sun1", mixHex("#FFFFFF", g[2], .45)); set("--lg-sun2", g[2]);
+    set("--lg-g1", g[0]); set("--lg-g2", g[1]); set("--lg-wave", g[1]); set("--lg-ray", mixHex("#FFFFFF", g[2], .5));
+    ["--hol-trim", "--hol-tint", "--hol-bar"].forEach(v => root.style.removeProperty(v)); return;
+  }
+  ["--wm2", "--t3", "--lg-bg1", "--lg-bg2", "--lg-sun1", "--lg-sun2", "--lg-g1", "--lg-g2", "--lg-wave", "--lg-ray"].forEach(v => root.style.removeProperty(v));
   const stops = []; g.forEach((c, i) => stops.push(`${c} ${i * 26}px ${i * 26 + 20}px`, `${dark ? "#000" : ink} ${i * 26 + 20}px ${i * 26 + 26}px`));
   set("--hol-trim", `repeating-linear-gradient(90deg, ${stops.join(", ")})`);
   set("--hol-tint", g[0]);
