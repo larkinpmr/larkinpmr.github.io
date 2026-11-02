@@ -64,7 +64,7 @@ function installAutoRefresh() {
   ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === 'autoRefresh').forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('autoRefresh').timeBased().everyMinutes(5).create();
   autoRefresh();
-  Logger.log('Auto-refresh is on: data is rebuilt every 5 minutes.');
+  say_('Auto-refresh is on: data is rebuilt every 5 minutes.');
 }
 
 function autoRefresh() {
@@ -84,24 +84,24 @@ function autoRefresh() {
 /** Run from the editor to preview the calendar feed in the log. */
 function testCalendar() {
   const ics = buildCalendar_();
-  Logger.log(ics.split('BEGIN:VEVENT').length - 1 + ' calendar events');
-  Logger.log(ics.slice(0, 1500));
+  say_(ics.split('BEGIN:VEVENT').length - 1 + ' calendar events');
+  say_(ics.slice(0, 1500));
 }
 
 /** Run this once from the editor (▶ Run) to grant access and check that every source is readable. */
 function testHub() {
   const out = build_();
   const t0 = Date.now(); const hb = buildHandbook_();
-  Logger.log('Errors: ' + JSON.stringify(out.errors.concat(hb.errors)));
-  Logger.log('Schedules/contacts download size: ' + Math.round(JSON.stringify(out).length / 1024) + ' KB');
-  Logger.log('Handbook download size: ' + Math.round(JSON.stringify(hb).length / 1024) + ' KB (built in ' + ((Date.now() - t0) / 1000).toFixed(1) + ' s)');
-  Logger.log('Didactic rows: ' + (out.didactics || []).length + ' · Resident rows: ' + (out.residents || []).length);
-  Logger.log('Control panel tabs: ' + Object.keys(out.panel).join(', '));
+  say_('Errors: ' + JSON.stringify(out.errors.concat(hb.errors)));
+  say_('Schedules/contacts download size: ' + Math.round(JSON.stringify(out).length / 1024) + ' KB');
+  say_('Handbook download size: ' + Math.round(JSON.stringify(hb).length / 1024) + ' KB (built in ' + ((Date.now() - t0) / 1000).toFixed(1) + ' s)');
+  say_('Didactic rows: ' + (out.didactics || []).length + ' · Resident rows: ' + (out.residents || []).length);
+  say_('Control panel tabs: ' + Object.keys(out.panel).join(', '));
   const talks = parseDidactics_(out.didactics || []);
   const today = Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd');
   const next = talks.filter(t => t.date >= today).slice(0, 8);
-  Logger.log('Sessions the website reads: ' + talks.length + ' (' + talks.filter(t => t.date >= today).length + ' upcoming). Next ones:');
-  next.forEach(t => Logger.log(t.date + (t.time ? ' ' + t.time : '') + ' · ' + t.topic + (t.speaker ? ' — ' + t.speaker : '') + (t.location ? ' @ ' + t.location : '')));
+  say_('Sessions the website reads: ' + talks.length + ' (' + talks.filter(t => t.date >= today).length + ' upcoming). Next ones:');
+  next.forEach(t => say_(t.date + (t.time ? ' ' + t.time : '') + ' · ' + t.topic + (t.speaker ? ' — ' + t.speaker : '') + (t.location ? ' @ ' + t.location : '')));
 }
 
 function build_() {
@@ -111,7 +111,7 @@ function build_() {
     if (panel) panel.getSheets().forEach(sh => {
       if (PRIVATE_TABS.indexOf(sh.getName()) >= 0) return;
       let v = values_(sh);
-      if (sh.getName() === 'Settings') v = v.filter(r => !/^(lecture reminder|site passcode)/i.test(String(r[0] || '').trim()) || (/^site passcode/i.test(String(r[0] || '').trim()) && !signInOn_()));   // private rows; the passcode only while email sign-in is off
+      if (sh.getName() === 'Settings') v = v.filter(r => !/^(lecture reminder|site passcode|weekly email|zoom passcode|invitation)/i.test(String(r[0] || '').trim()) || (/^site passcode/i.test(String(r[0] || '').trim()) && !signInOn_()));   // private rows (reminder, invitation and weekly-email addresses, Zoom passcode); the passcode only while email sign-in is off
       out.panel[sh.getName()] = v;
     });
   } catch (err) { out.errors.push('Control Panel: ' + err.message); }
@@ -183,9 +183,9 @@ function testPTO() {
   const out = build_(), settings = {};
   (out.panel['Settings'] || []).forEach(r => { if (r[0]) settings[String(r[0]).trim()] = String(r[1] || '').trim(); });
   const r = ptoEvents_(settings, out.residents);
-  Logger.log('Calendar: ' + r.calendar + ' · ' + r.list.length + ' PTO entries on the hub (' + parseResidents_(out.residents || []).length + ' residents to match against)');
-  r.list.forEach(p => Logger.log('  ' + p.name + ': ' + p.start + (p.end !== p.start ? ' to ' + p.end : '')));
-  Logger.log(r.skipped.length ? 'No resident name matched (add a "Nicknames" row in Settings, or fix the event title):\n  ' + r.skipped.join('\n  ') : 'Every PTO event matched a resident.');
+  say_('Calendar: ' + r.calendar + ' · ' + r.list.length + ' PTO entries on the hub (' + parseResidents_(out.residents || []).length + ' residents to match against)');
+  r.list.forEach(p => say_('  ' + p.name + ': ' + p.start + (p.end !== p.start ? ' to ' + p.end : '')));
+  say_(r.skipped.length ? 'No resident name matched (add a "Nicknames" row in Settings, or fix the event title):\n  ' + r.skipped.join('\n  ') : 'Every PTO event matched a resident.');
 }
 
 /** Birthdays for the Home banner: the optional "Birthday" column of the private Approved Emails tab.
@@ -327,13 +327,13 @@ function refreshHandbookNow() {
   writeCache_(CacheService.getScriptCache(), 'hb_', payload, 3600);
   CacheService.getScriptCache().put('hb_at', String(Date.now()), 3600);
   const html = hb.handbookHtml || (hb.guides || []).map(g => g.html).join('');
-  Logger.log('Errors: ' + JSON.stringify(hb.errors));
-  if (hb.guides) Logger.log('Handbooks folder: ' + hb.guides.length + ' docs · ' + hb.guides.map(g => (g.folder ? g.folder + ' ▸ ' : '') + g.name).join(' | '));
-  Logger.log('Pictures in the Handbook export: ' + (html.match(/<img/g) || []).length +
+  say_('Errors: ' + JSON.stringify(hb.errors));
+  if (hb.guides) say_('Handbooks folder: ' + hb.guides.length + ' docs · ' + hb.guides.map(g => (g.folder ? g.folder + ' ▸ ' : '') + g.name).join(' | '));
+  say_('Pictures in the Handbook export: ' + (html.match(/<img/g) || []).length +
     ' · saved to "Hub pictures" now: ' + PIC_STATS.saved + ' · already saved: ' + PIC_STATS.reused +
     ' · kept inline: ' + (html.match(/<img src="data:/g) || []).length);
-  if (PIC_STATS.failed.length) Logger.log('Picture problem: ' + PIC_STATS.failed[0]);
-  Logger.log('Handbook download size: ' + Math.round(payload.length / 1024) + ' KB. "Program Handbook" notes left: ' + (html.match(/see the <a/g) || []).length);
+  if (PIC_STATS.failed.length) say_('Picture problem: ' + PIC_STATS.failed[0]);
+  say_('Handbook download size: ' + Math.round(payload.length / 1024) + ' KB. "Program Handbook" notes left: ' + (html.match(/see the <a/g) || []).length);
 }
 
 /* ------------------------------------------------------------------ Handbooks folder
@@ -501,8 +501,8 @@ function setupHandbooksFolder() {
   let r = rows.findIndex(x => String(x[0]).trim().toLowerCase() === 'handbooks folder');
   if (r < 0) { st.appendRow(['Handbooks Folder', root.getUrl()]); } else st.getRange(r + 1, 2).setValue(root.getUrl());
   CacheService.getScriptCache().remove('hb_n');
-  Logger.log(log.join('\n'));
-  Logger.log('Handbooks folder: ' + root.getUrl() + '\nThe Control Panel Settings tab now points the site at this folder. Next: run refreshHandbookNow.');
+  say_(log.join('\n'));
+  say_('Handbooks folder: ' + root.getUrl() + '\nThe Control Panel Settings tab now points the site at this folder. Next: run refreshHandbookNow.');
 }
 
 function readSheet_(sheetId, tabName) {
@@ -911,8 +911,8 @@ function buildMyCalendar_(who) {
 function testMyCalendar() {
   const name = 'Courtney Baxter';
   const ics = buildMyCalendar_(name);
-  Logger.log((ics.split('BEGIN:VEVENT').length - 1) + ' events for ' + name);
-  Logger.log(ics.split('\r\n').filter(l => /^(SUMMARY|DTSTART)/.test(l)).slice(0, 40).join('\n'));
+  say_((ics.split('BEGIN:VEVENT').length - 1) + ' events for ' + name);
+  say_(ics.split('\r\n').filter(l => /^(SUMMARY|DTSTART)/.test(l)).slice(0, 40).join('\n'));
 }
 
 /* ------------------------------------------------------------------ link checker
@@ -1001,7 +1001,7 @@ function checkHandbookLinks() {
   if (list.length) sh.getRange(2, 1, list.length, 6).setBackgrounds(list.map(l => Array(6).fill(colors[l.status])));
   sh.autoResizeColumns(1, 4);
   const count = s => list.filter(l => l.status === s).length;
-  Logger.log(list.length + ' links checked: ' + count('OK') + ' OK · ' + count('Broken') + ' broken · ' + count('Private') + ' private · ' + count('Check') + ' to check by hand. See the "Link Check" tab.');
+  say_(list.length + ' links checked: ' + count('OK') + ' OK · ' + count('Broken') + ' broken · ' + count('Private') + ' private · ' + count('Check') + ' to check by hand. See the "Link Check" tab.');
 }
 
 /* ------------------------------------------------------------------ applicant page (larkinpmr.github.io/apply)
@@ -1051,12 +1051,12 @@ const APPLY_DRAFT = [
 
 function installApplicantPage() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  if (ss.getSheetByName('Applicant Page')) { Logger.log('The "Applicant Page" tab already exists: edit it there.'); return; }
+  if (ss.getSheetByName('Applicant Page')) { say_('The "Applicant Page" tab already exists: edit it there.'); return; }
   const sh = panelSheet_('Applicant Page', APPLY_HEAD);
   sh.getRange(2, 1, APPLY_DRAFT.length, APPLY_HEAD.length).setValues(APPLY_DRAFT);
   [130, 330, 520, 230, 120, 150].forEach((w, i) => sh.setColumnWidth(i + 1, w));
   sh.getRange(2, 1, APPLY_DRAFT.length, APPLY_HEAD.length).setWrap(true).setVerticalAlignment('top');
-  Logger.log('Created the "Applicant Page" tab with a starter draft. Check every row (the stats, highlights and blurbs are a draft), ' +
+  say_('Created the "Applicant Page" tab with a starter draft. Check every row (the stats, highlights and blurbs are a draft), ' +
     'fill in Interview and Graduate rows, then set "Show page" to on. Preview any time at larkinpmr.github.io/apply/?preview');
 }
 
@@ -1100,8 +1100,8 @@ function installLectureReminders() {
   ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === 'sendLectureReminders').forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('sendLectureReminders').timeBased().atHour(8).everyDays(1).inTimezone(TZ).create();
   const st = panelSettings_(), mode = reminderMode_(st);
-  Logger.log('The daily 8 AM check is on. Mode: ' + mode.toUpperCase() + (mode === 'test' ? ' — every reminder goes to ' + testAddress_(st) + ', not to lecturers.' : mode === 'on' ? ' — reminders go to the lecturers.' : ' — nothing is sent.') +
-    '\nNext: add guest lecturers to the "Lecturers" tab, run previewLectureReminders, then sendTestReminder.\nWhen the test emails look right, set Settings "Lecture reminders" to on.');
+  say_('The daily 8 AM check is on. Mode: ' + mode.toUpperCase() + (mode === 'test' ? ' — every reminder goes to ' + testAddress_(st) + ', not to lecturers.' : mode === 'on' ? ' — reminders go to the lecturers.' : ' — nothing is sent.') +
+    '\nNext: add guest lecturers to the "Lecturers" tab, then PM&R Hub ▸ More ▸ Preview lecture reminder emails and Send two test reminders.\nWhen the test emails look right, set Settings "Lecture reminders" to on.');
 }
 
 /** "Lecture Locations" tab: turns sheet shorthand like "ISS" into something a guest understands. */
@@ -1358,7 +1358,7 @@ function checkLecturerEmails(talks) {
   const settings = panelSettings_();
   talks = Array.isArray(talks) ? talks : readTalks_(settings);
   const missing = missingLecturerEmails_(settings, talks, 21);
-  if (!Array.isArray(arguments[0])) Logger.log(missing.length ? 'Guest lectures with no email:\n' + missing.join('\n') : 'Every guest lecture in the next 3 weeks has an email on file.');
+  if (!Array.isArray(arguments[0])) say_(missing.length ? 'Guest lectures with no email:\n' + missing.join('\n') : 'Every guest lecture in the next 3 weeks has an email on file.');
   if (!missing.length) return;
   MailApp.sendEmail({ to: chiefEmail_(), subject: 'Hub: ' + missing.length + ' upcoming guest lecture(s) with no email on file', name: 'PM&R Hub',
     body: 'These guest lectures in the next 3 weeks will not get a reminder, because the speaker is not on the Control Panel\'s "Lecturers" tab (or the name is spelled differently there):\n\n' +
@@ -1396,7 +1396,7 @@ function previewLectureReminders() {
   if (missing.length) lines.push('', 'Guest speakers with no email on the Lecturers tab (no reminder will go out):');
   missing.forEach(x => lines.push('  ' + x));
   if (!ScriptApp.getProjectTriggers().some(t => t.getHandlerFunction() === 'sendLectureReminders')) lines.push('', 'NOTE: the daily check is not on yet. Run installLectureReminders.');
-  Logger.log(lines.join('\n'));
+  say_(lines.join('\n'));
 }
 
 /** Sends sample reminders (one virtual, one in person) to the test address so you can see exactly what lecturers get. */
@@ -1408,7 +1408,7 @@ function sendTestReminder() {
     const m = reminderEmail_({ date: soon, time: '2:00 PM', rowTime: '2:00 PM', location: x.location, topic: x.topic, speaker: 'Dr. Example' }, { name: 'Dr. Example Lecturer' }, settings);
     MailApp.sendEmail({ to: to, subject: '[TEST] ' + m.subject, body: m.plain, htmlBody: m.html, attachments: m.attachments, name: 'Larkin PM&R Chief Residents' });
   });
-  Logger.log('Two sample reminders (virtual and in person) sent to ' + to + '. Check that inbox.');
+  say_('Two sample reminders (virtual and in person) sent to ' + to + '. Check that inbox.');
 }
 
 /* ------------------------------------------------------------------ lecture invitation drafts
@@ -1425,7 +1425,7 @@ function installInvitations() {
   [180, 230, 220, 300, 200, 130, 260, 360].forEach((w, i) => sh.setColumnWidth(i + 1, w));
   ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === 'onInvitationsEdit').forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('onInvitationsEdit').forSpreadsheet(SpreadsheetApp.getActiveSpreadsheet()).onEdit().create();
-  Logger.log('The "Invitations" tab is ready. Fill in a row and type yes under "Create draft?": the invitation appears in the chief Gmail\'s Drafts folder within a few seconds.');
+  say_('The "Invitations" tab is ready. Fill in a row and type yes under "Create draft?": the invitation appears in the chief Gmail\'s Drafts folder within a few seconds.');
 }
 
 /** Installable edit trigger: a "yes" typed on the Invitations tab creates that row's draft right away. */
@@ -1435,7 +1435,7 @@ function onInvitationsEdit(e) {
 
 function createInvitationDrafts() {
   const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Invitations');
-  if (!sh) { Logger.log('No "Invitations" tab yet. Run installInvitations first.'); return; }
+  if (!sh) { say_('No "Invitations" tab yet. Run installInvitations first.'); return; }
   const settings = panelSettings_();
   const rows = values_(sh);
   let talks = null, made = 0;
@@ -1451,7 +1451,7 @@ function createInvitationDrafts() {
       cell.setValue('Draft created ' + Utilities.formatDate(new Date(), TZ, 'MMM d, yyyy') + ' (Gmail ▸ Drafts)'); made++;
     } catch (err) { cell.setValue('Problem: ' + err.message); }
   });
-  Logger.log(made ? made + ' invitation draft(s) created in the chief Gmail Drafts folder.' : 'No new rows marked "yes".');
+  say_(made ? made + ' invitation draft(s) created in the chief Gmail Drafts folder.' : 'No new rows marked "yes".');
 }
 
 /** Upcoming Monday didactics, 2–10 weeks out, with no guest speaker yet. */
@@ -1535,9 +1535,9 @@ function invitationEmail_(x, settings, talks) {
 function draftUpcomingInvitations(talks) {
   const settings = panelSettings_();
   const drafts = settings['Invitation drafts'] !== undefined && String(settings['Invitation drafts']).trim() !== '' ? ['Invitation drafts', settings['Invitation drafts']] : ['Automatic invitations', settings['Automatic invitations']];
-  if (/^(off|no|false|0)$/i.test(String(drafts[1] || '').trim())) { Logger.log('Nothing drafted: Settings "' + drafts[0] + '" is set to "' + drafts[1] + '". Clear it (or set it to on) and run this again.'); return; }
+  if (/^(off|no|false|0)$/i.test(String(drafts[1] || '').trim())) { say_('Nothing drafted: Settings "' + drafts[0] + '" is set to "' + drafts[1] + '". Clear it (or set it to on) and run this again.'); return; }
   talks = Array.isArray(talks) ? talks : readTalks_(settings);
-  if (!talks.some(t => t.confKnown)) { Logger.log('Add a "Confirmed" column to the Didactic Schedule first, so the script can tell confirmed guests from planned ones.'); return; }
+  if (!talks.some(t => t.confKnown)) { say_('Add a "Confirmed" column to the Didactic Schedule first, so the script can tell confirmed guests from planned ones.'); return; }
   const weeks = Number(settings['Invitation lead (weeks)']) || 6;
   const sh = panelSheet_('Invitations', INVITE_HEAD);
   if (sh.getLastColumn() < INVITE_HEAD.length) sh.getRange(1, 1, 1, INVITE_HEAD.length).setValues([INVITE_HEAD]).setFontWeight('bold');
@@ -1567,7 +1567,7 @@ function draftUpcomingInvitations(talks) {
       sh.appendRow([lec ? lec.name : guest, email, t.topic, (d.getUTCMonth() + 1) + '/' + d.getUTCDate() + '/' + d.getUTCFullYear(), virtual ? 'virtual' : 'in person', 'auto', status, note]);
     });
   });
-  Logger.log(made.length ? made.length + ' invitation draft(s) created:\n' + made.join('\n') : 'No new unconfirmed guest lectures in the next ' + weeks + ' weeks.');
+  say_(made.length ? made.length + ' invitation draft(s) created:\n' + made.join('\n') : 'No new unconfirmed guest lectures in the next ' + weeks + ' weeks.');
   if (made.length) MailApp.sendEmail({ to: chiefEmail_(), subject: 'Hub: ' + made.length + ' lecture invitation draft(s) ready to send', name: 'PM&R Hub',
     body: 'These guest lectures in the next ' + weeks + ' weeks are not marked Confirmed yet, so an invitation is waiting in Gmail ▸ Drafts for each one:\n\n' + made.join('\n') +
       '\n\nOpen each draft, adjust it if you like, and press Send. When a lecturer confirms, type yes under "Confirmed" in the Didactic Schedule (and add them to the Lecturers tab if they are not there yet).' });
@@ -1639,17 +1639,19 @@ const HOWTO_WARNING = '⚠  DO NOT TYPE IN OR EDIT THIS TAB.  It is rewritten au
 const HOWTO_LINES = [
   ['HOW TO KEEP THE HUB UP TO DATE'],
   ['You never edit the website. Edit the Google files below and the site follows within about 5 minutes (refresh the page). The full Chief Handoff Guide has more detail.'],
+  ['PM&R Hub menu (top of this sheet, next to Help) → everything you need to run: Draft this week\'s email now · Draft lecture invitations now · Refresh the Handbook · Check that everything is working · Set up / repair automatic tasks · Start a new academic year · Open the yearly checklist (and a More submenu). Each shows its result in a box. You only open Extensions ▸ Apps Script to paste new code.'],
+  ['Every Monday the hub checks itself and emails the chief Gmail only if something needs fixing (a stopped automatic task, a missing contact label, a broken schedule link, last year\'s Academic Year…). No email = all good.'],
   [''],
   ['WHAT TO EDIT'],
   ['Didactic schedule → the Didactic Schedule sheet. Each session needs a Date (or sits under a dated row) and a Lecture Topic; add Time, Location and Speaker. Write "Virtual" in Location for Zoom sessions. Put "Journal Club" in the topic for Journal Club. For a week off, write "No Didactics" (or "Holiday Break") in the topic, e.g. "Labor Day (No Didactics)": the weekly email then says there are no didactics that week. Calendar subscribers follow the sheet automatically.'],
   ['Resident schedule → the Resident Schedule sheet, using the codes in the Rotations tab (SCW, WGRH, EMG…). To split a month in half, give that month two columns (merge the month header or leave the new header blank): the first column is the 1st–15th, the second starts on the 16th.'],
-  ['Rotation guides & policies → the Handbooks folder in Drive: one Google Doc per page. The doc name is the page title, the folder is its group, and the Policies folder appears under Resources. To add a rotation, copy a doc in the right folder and rename it; add a Rotations-tab row with exactly the same name to give it a schedule code. The site picks up doc edits within about 5 minutes (refresh the page); run refreshHandbookNow to make it immediate. Each guide\'s "First day" card (address and phone numbers) and its "Jump to" menu are built from the doc itself: put the address and main phone near the top, and write section titles as short bold lines (e.g. "Responsibilities:") so they appear in the menu. Every guide and policy page shows "Last updated" with the date and time its doc was last edited (pages edited in the past week also get a "Recently updated" tag), so there is no need to type an update date into the docs.'],
+  ['Rotation guides & policies → the Handbooks folder in Drive: one Google Doc per page. The doc name is the page title, the folder is its group, and the Policies folder appears under Resources. To add a rotation, copy a doc in the right folder and rename it; add a Rotations-tab row with exactly the same name to give it a schedule code. The site picks up doc edits within about 5 minutes (refresh the page); PM&R Hub ▸ Refresh the Handbook on the site now makes it immediate. Each guide\'s "First day" card (address and phone numbers) and its "Jump to" menu are built from the doc itself: put the address and main phone near the top, and write section titles as short bold lines (e.g. "Responsibilities:") so they appear in the menu. Every guide and policy page shows "Last updated" with the date and time its doc was last edited (pages edited in the past week also get a "Recently updated" tag), so there is no need to type an update date into the docs.'],
   ['Contacts, announcements, quick links → the tabs in this Control Panel. Contacts rows whose role contains "Chief" show on Home as the chiefs (and are the backup email signature if the Gmail API service is off).'],
   ['Quick Links tab → Label, URL, Note. Home shows 8 of them as small buttons plus "All links"; the rest are on Resources ▸ Links. Optional columns: Home (type yes on the ones Home should show; otherwise the first 8 rows) and Group (a heading for the Links page, e.g. Schedules, Forms; otherwise links are grouped by kind).'],
-  ['Settings tab → Academic Year, Home headline and subtitle, Email sign-in (on/off), Virtual lecture link (the usual Zoom link), Zoom passcode (shown under the Zoom link in the weekly email), Lecture slides folder (link to the shared Drive folder where residents upload slides: adds an "Upload slides" button on Didactics; residents need edit access to that folder), Holiday themes (off to turn off), Hub link (the site address used in emails), plus the lecture reminder, invitation and weekly email rows described below.'],
+  ['Settings tab → Academic Year, Home headline and subtitle, Email sign-in (on/off), Virtual lecture link (the usual Zoom link), Zoom passcode (shown under the Zoom link in the weekly email), Lecture slides folder (link to the shared Drive folder where residents upload slides: adds an "Upload slides" button on Didactics; residents need edit access to that folder), Holiday themes (off to turn off), Hub link (the site address used in emails), plus the lecture reminder, invitation and weekly email rows described below. Rows holding addresses or passcodes (lecture reminder…, invitation…, weekly email…, Zoom passcode) are never sent to the website.'],
   [''],
   ['HOME PAGE EXTRAS'],
-  ['PTO → nothing extra to do: the hub reads the chief Google Calendar and shows every event with "PTO" and a resident\'s name in the title (e.g. "PTO – Chris Keener") on Resident Schedule ▸ Time off. Only the name, the dates and whether it is CME or PTO are shown (CME when the title says CME or conference), never the reason or notes. Run testPTO to see what it found. Optional Settings rows: "PTO calendar" (a Calendar ID: then every event on that calendar counts as PTO, and the title only needs the resident\'s name) and "PTO keyword" (if you title events differently, e.g. Vacation). Nicknames written in quotes in Contacts or Approved Emails (Bhargavi "Vee" Madhu) are recognized; add others in a Settings row "Nicknames" (Vee = Bhargavi Madhu; Rudy = Rodolfo Rivera). Small spelling slips are matched too.'],
+  ['PTO → nothing extra to do: the hub reads the chief Google Calendar and shows every event with "PTO" and a resident\'s name in the title (e.g. "PTO – Chris Keener") on Resident Schedule ▸ Time off. Only the name, the dates and whether it is CME or PTO are shown (CME when the title says CME or conference), never the reason or notes. PM&R Hub ▸ More ▸ Show the PTO the hub found lists what it found. Optional Settings rows: "PTO calendar" (a Calendar ID: then every event on that calendar counts as PTO, and the title only needs the resident\'s name) and "PTO keyword" (if you title events differently, e.g. Vacation). Nicknames written in quotes in Contacts or Approved Emails (Bhargavi "Vee" Madhu) are recognized; add others in a Settings row "Nicknames" (Vee = Bhargavi Madhu; Rudy = Rodolfo Rivera). Small spelling slips are matched too.'],
   ['Birthdays → add a "Birthday" column to the Approved Emails tab (any format, e.g. 3/15 or March 15; the year is never shown). On the day, Home says "Happy birthday" to everyone.'],
   ['Countdowns → Settings row "Countdowns": one per line or separated by ;, written Label = date (for example: In-training exam = 2/27/2027; Graduation = 6/30/2027). Home shows "41 days to In-training exam" until the date passes. The one whose name has SAE or in-training also appears in the weekly email.'],
   ['Rotation feedback → Settings row "Rotation feedback form": the link to a Google Form. In the last week of a rotation and the week after, that resident\'s Home shows "How was SA? 2-minute feedback". Optional: put {rotation} and {name} in the link (a prefilled-form link) and they are filled in.'],
@@ -1664,7 +1666,7 @@ const HOWTO_LINES = [
   ['GUEST LECTURERS (automatic emails from the chief Gmail)'],
   ['Lecturers tab → one row per guest: name as written in the Didactic Schedule, email (several are fine, separated by commas), other spellings, and yes. This tab is never shown on the website.'],
   ['Confirmed column in the Didactic Schedule → yes or confirmed = the guest gets a reminder 7 days before. Blank = the guest gets an invitation draft. Anything else (rescheduled, declined…) = nothing.'],
-  ['Every Monday → invitation drafts are created in Gmail ▸ Drafts for guest lectures in the next 6 weeks with a blank Confirmed cell, and the chief Gmail gets a note. Open each draft, adjust it, and press Send. When the guest agrees, type yes under Confirmed. Missed a Monday? Run draftUpcomingInvitations: it never makes the same draft twice. (installLectureReminders turns on the daily 8 AM check that does this; installInvitations creates the Invitations tab.)'],
+  ['Every Monday → invitation drafts are created in Gmail ▸ Drafts for guest lectures in the next 6 weeks with a blank Confirmed cell, and the chief Gmail gets a note. Open each draft, adjust it, and press Send. When the guest agrees, type yes under Confirmed. Missed a Monday? PM&R Hub ▸ Draft lecture invitations now: it never makes the same draft twice.'],
   ['Invitations tab → to invite someone by hand, add a row and type yes under "Create draft?". Leave the dates blank to suggest open Mondays.'],
   ['Invitation drafts end with "Thank you," and a highlighted [Your name] for whoever sends it, then the chief Gmail\'s own default signature (needs the Gmail API service; see the weekly email). Reminders use that signature too.'],
   ['Settings "Lecture reminders" → test (everything goes to the "Lecture reminder test email"), on (to the lecturers) or off. Optional: Invitation lead (weeks), Lecture reminder days, Invitation drafts (off = no Monday drafts; nothing is ever sent without a chief).'],
@@ -1673,33 +1675,30 @@ const HOWTO_LINES = [
   [''],
   ['WEEKLY SUNDAY EMAIL (a draft, never sent automatically)'],
   ['Every Sunday around 7 AM a draft of the weekly email to all residents appears in Gmail ▸ Drafts, and the chief Gmail gets a note. Open it, check it, and press Send. It lists the week\'s Monday (and Thursday) didactics with the Zoom link or the location, this week\'s updates, the SAE countdown, birthdays, a good-luck line when rotations switch, and the helpful links.'],
-  ['Weekly Email tab → greeting, standing messages (every week), updates (type = update: used in the next draft only, unless you give a Show until date) and the helpful links (type = link; {year} becomes the academic year) with the PTO steps. Run draftWeeklyEmail to make (or remake) this week\'s draft any time.'],
+  ['Weekly Email tab → greeting, standing messages (every week), updates (type = update: used in the next draft only, unless you give a Show until date) and the helpful links (type = link; {year} becomes the academic year) with the PTO steps. PM&R Hub ▸ Draft this week\'s email now makes (or remakes) this week\'s draft any time.'],
   ['The signature is the chief Gmail\'s own default signature (Gmail ▸ Settings ▸ Signature), so a new year\'s signature carries over by itself. Every email ends with a small "PM&R Hub" button above the signature (Settings "Hub link" changes the address). The greeting rotates each week through the greeting rows.'],
   ['Who gets it → the chief Google Contacts labels for the three classes, e.g. "2027 Class", "2028 Class", "2029 Class" (any label with the year and the word "class" works, and they move up automatically with the Academic Year). Settings "Weekly email to" replaces them, "Weekly email also to" adds people, "Weekly email CC" copies people (e.g. the program director and coordinator; "Weekly email BCC" for blind copies), "Weekly email" = off pauses it, "Zoom passcode" adds the passcode under the Zoom link.'],
   [''],
-  ['One-time setup → in Apps Script click + next to Services and add People API (reads the class labels), then Gmail API (reads the chief signature); then run installWeeklyEmail (creates the Weekly Email tab and the Sunday schedule) and draftWeeklyEmail to see this week\'s draft. Remaking a week\'s draft replaces the earlier one.'],
+  ['One-time setup → in Apps Script click + next to Services and add People API (reads the class labels), then Gmail API (reads the chief signature); then PM&R Hub ▸ Set up / repair automatic tasks (creates the Weekly Email tab and the Sunday schedule) and PM&R Hub ▸ Draft this week\'s email now. Remaking a week\'s draft replaces the earlier one.'],
   [''],
   ['APPLICANT PAGE (larkinpmr.github.io/apply)'],
   ['A public page for interview season. It shows only the Applicant Page tab: no resident names, schedules or contacts. One row per item; Section says what it is: Headline, Subtitle, Stat (number + label), Highlight (title + text), Rotation (name, one-line blurb, Where, PGY, Group), Week (day + text), Interview (time + what), Graduate (class year + where they went), Contact email.'],
   ['"Show page" row → on = applicants can see it; off = it says "coming soon". Add ?preview to the address to check your edits first (larkinpmr.github.io/apply/?preview). Edits appear within about 5 minutes.'],
   [''],
   ['NEW ACADEMIC YEAR (each July)'],
-  ['1. Make the new Didactic and Resident Schedule sheets (File ▸ Make a copy of last year\'s), paste their links into Settings, and update Academic Year (the website and the email signature show the new year).'],
-  ['2. Update the Approved Emails tab: add the new class, set graduates to no. (Changing the Academic Year already makes every device verify once more. If email sign-in is off, change the Site passcode instead.)'],
-  ['3. Update Contacts with the new chiefs (name and cell), and update the chief Gmail\'s signature (Gmail ▸ Settings ▸ Signature): the weekly email, invitations and reminders all use it.'],
-  ['4. Check the Rotations tab codes match the new Resident Schedule.'],
-  ['5. Update the Lecturers tab (add new guests, remove old ones) and keep the Confirmed column in the new Didactic Schedule.'],
-  ['6. Have residents review their Handbooks docs; run checkHandbookLinks.'],
-  ['7. In the chief Google Contacts, make the incoming class\'s label (e.g. "2030 Class") and add them; the weekly email picks it up when the Academic Year changes. On the Weekly Email tab, paste the new resident contact list link.'],
+  ['1. PM&R Hub ▸ Start a new academic year: it copies this year\'s two schedule sheets (or uses new ones you link), points Settings at them, sets the Academic Year (every device verifies its email once more) and turns off sign-in for the graduating residents.'],
+  ['2. PM&R Hub ▸ Open the yearly checklist: the Yearly Checklist tab lists the remaining human steps with tick boxes (fill in the schedules, add the new residents to Approved Emails, new chiefs in Contacts and the Gmail signature, the new class\'s contact label, the contact list link on the Weekly Email tab, Lecturers, Handbook review, handing over the chief Gmail). It resets each year.'],
+  ['3. Finish with PM&R Hub ▸ Check that everything is working.'],
   [''],
-  ['IF SOMETHING LOOKS WRONG (Extensions ▸ Apps Script, pick the function, press Run, read the log)'],
-  ['Site footer says "Saved copy" → run testHub; the "Errors" line names the source that failed (usually a link in Settings or a file\'s sharing).'],
-  ['A Handbook change is not on the site after 10 minutes → run refreshHandbookNow, then reload the site.'],
-  ['Check the lecture emails without sending anything → run previewLectureReminders. Run sendTestReminder for two sample reminders at the test address.'],
-  ['No invitation drafts → run draftUpcomingInvitations and read the log: it says why (Invitation drafts set to off, no Confirmed column, or no unconfirmed guest lectures in the next 6 weeks).'],
-  ['Weekly email missing or sent to the wrong people → run draftWeeklyEmail and read the log: it names any class label it could not find and lists the labels that exist.'],
-  ['The site takes long to open on a new device → click the clock icon (Triggers) on the left; autoRefresh should be there. If not, run installAutoRefresh once.'],
-  ['After pasting new code into Code.gs → Deploy ▸ Manage deployments: for BOTH deployments click the pencil, choose New version, and Deploy.'],
+  ['IF SOMETHING LOOKS WRONG'],
+  ['First: PM&R Hub ▸ Check that everything is working. It lists what is wrong and how to fix it. Anything automatic that stopped: PM&R Hub ▸ Set up / repair automatic tasks (safe to run any time).'],
+  ['Site footer says "Saved copy" → PM&R Hub ▸ More ▸ Show what the site reads; the "Errors" line names the source that failed (usually a link in Settings or a file\'s sharing).'],
+  ['A Handbook change is not on the site after 10 minutes → PM&R Hub ▸ Refresh the Handbook on the site now, then reload the site.'],
+  ['Check the lecture emails without sending anything → PM&R Hub ▸ More ▸ Preview lecture reminder emails (and Send two test reminders).'],
+  ['No invitation drafts → PM&R Hub ▸ Draft lecture invitations now: the box says why (Invitation drafts set to off, no Confirmed column, or no unconfirmed guest lectures in the next 6 weeks).'],
+  ['Weekly email missing or sent to the wrong people → PM&R Hub ▸ Draft this week\'s email now: the box names any class label it could not find and lists the labels that exist.'],
+  ['The site takes long to open on a new device → PM&R Hub ▸ Set up / repair automatic tasks (it restarts the 5-minute data refresh).'],
+  ['After pasting new code into Code.gs → Deploy ▸ Manage deployments: for BOTH deployments click the pencil, choose New version, and Deploy. Then reload this sheet so the PM&R Hub menu updates.'],
   [''],
   ['OWNERSHIP'],
   ['This sheet, its Apps Script, the Handbooks folder and the GitHub account that hosts the site all belong to the shared chief Gmail. Hand over that login (and update its recovery phone and email) each year and nothing breaks.'],
@@ -1721,7 +1720,7 @@ function writeHowToTab() {
   // A typing attempt shows Google's "this range is protected" warning; the script can still rewrite it.
   sh.protect().setDescription('Written automatically by the hub script. Do not edit.').setWarningOnly(true);
   PropertiesService.getScriptProperties().setProperty('howto_hash', howToHash_());
-  Logger.log('The "How to update" tab is up to date (' + HOWTO_LINES.length + ' lines).');
+  say_('The "How to update" tab is up to date (' + HOWTO_LINES.length + ' lines).');
 }
 
 function howToHash_() {
@@ -1750,7 +1749,7 @@ const SIGNIN_HEAD = ['Signed in', 'Email', 'Name', 'Device', 'Academic year', 'L
 function installSignIn() {
   const a = panelSheet_('Approved Emails', APPROVED_HEAD); [340, 200, 200, 120, 300].forEach((w, i) => a.setColumnWidth(i + 1, w));
   const b = panelSheet_('Sign-ins', SIGNIN_HEAD); [150, 240, 180, 160, 120, 150, 260, 120].forEach((w, i) => b.setColumnWidth(i + 1, w));
-  Logger.log('Approved Emails and Sign-ins tabs are ready. Fill in Approved Emails, then set Settings "Email sign-in" to on.');
+  say_('Approved Emails and Sign-ins tabs are ready. Fill in Approved Emails, then set Settings "Email sign-in" to on.');
 }
 
 function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
@@ -1874,10 +1873,10 @@ function installWeeklyEmail() {
   ScriptApp.newTrigger('draftWeeklyEmail').timeBased().onWeekDay(ScriptApp.WeekDay.SUNDAY).atHour(7).inTimezone(TZ).create();
   const need = [typeof People === 'undefined' ? 'People API (to read the "' + classLabels_(panelSettings_()).join('", "') + '" contact labels)' : '',
     typeof Gmail === 'undefined' ? 'Gmail API (to add the chief Gmail\'s own signature)' : ''].filter(Boolean);
-  Logger.log('The "Weekly Email" tab is ready and a draft will be made every Sunday around 7 AM (Gmail ▸ Drafts; nothing is sent).\n' +
+  say_('The "Weekly Email" tab is ready and a draft will be made every Sunday around 7 AM (Gmail ▸ Drafts; nothing is sent).\n' +
     (need.length ? 'One more step: in this editor, click + next to "Services" (left side) and add ' + need.join(' and ') + ' (one at a time: pick it, click Add). Then run installWeeklyEmail again.'
       : 'Class lists and the Gmail signature are both connected.') +
-    '\nRun draftWeeklyEmail to see this week\'s draft now.');
+    '\nTo see this week\'s draft now: PM&R Hub ▸ Draft this week\'s email now.');
 }
 
 function weeklyTab_() {
@@ -2012,7 +2011,7 @@ const weekday_ = iso => Utilities.formatDate(new Date(iso + 'T12:00:00Z'), 'UTC'
 
 function draftWeeklyEmail() {
   const settings = panelSettings_();
-  if (/^(off|no|false|0)$/i.test(String(settings['Weekly email'] || '').trim())) { Logger.log('Nothing drafted: Settings "Weekly email" is off.'); return; }
+  if (/^(off|no|false|0)$/i.test(String(settings['Weekly email'] || '').trim())) { say_('Nothing drafted: Settings "Weekly email" is off.'); return; }
   const mon = weeklyMonday_(), sun = addDays_(mon, 6);
   const sh = weeklyTab_(), rows = values_(sh);
   const tag = 'In the ' + mmdd_(mon) + ' draft';
@@ -2131,6 +2130,217 @@ function draftWeeklyEmail() {
   updRows.forEach(u => { if (!u.keep) sh.getRange(u.i + 1, 6).setValue(tag); });
   if (rcpt.missing.length) notes.push('Contact label(s) not found: ' + rcpt.missing.join(', ') + (rcpt.note ? ' — ' + rcpt.note : '') + (rcpt.missing.length === classLabels_(settings).length ? ' The residents on the Approved Emails tab were used instead.' : ''));
   const summary = 'Weekly email draft "' + subject + '" is in Gmail ▸ Drafts for ' + rcpt.to.length + ' recipient(s). Review it and press Send.' + (notes.length ? '\n\nCheck:\n- ' + notes.join('\n- ') : '');
-  Logger.log(summary);
+  say_(summary);
   try { MailApp.sendEmail({ to: chiefEmail_(), subject: 'Hub: weekly email draft ready (' + subject + ')', name: 'PM&R Hub', body: summary + '\n\nUpdates for next week go on the Control Panel\'s "Weekly Email" tab.' }); } catch (err) { /* the draft is there either way */ }
+}
+
+
+/* ------------------------------------------------------------------ PM&R Hub menu, health check, new year
+ * A "PM&R Hub" menu in the Control Panel so chiefs never need the Apps Script editor (except to paste new code):
+ * every item shows its result in a box. A weekly health check emails the chiefs only when something needs fixing.
+ * "Start a new academic year" does the July switch in one go; the Yearly Checklist tab lists the few human steps. */
+let SAY_ = null;   // collects log lines while a menu item runs, so the result can be shown in a box
+function say_(m) { Logger.log(m); if (SAY_) SAY_.push(String(m)); }
+
+function onOpen() {
+  const ui = SpreadsheetApp.getUi();
+  ui.createMenu('PM&R Hub')
+    .addItem('Draft this week\'s email now', 'menuWeeklyEmail')
+    .addItem('Draft lecture invitations now', 'menuInvitations')
+    .addItem('Refresh the Handbook on the site now', 'menuRefreshHandbook')
+    .addSeparator()
+    .addItem('Check that everything is working', 'menuHealthCheck')
+    .addItem('Set up / repair automatic tasks', 'menuSetup')
+    .addSeparator()
+    .addItem('Start a new academic year…', 'newAcademicYear')
+    .addItem('Open the yearly checklist', 'menuChecklist')
+    .addSeparator()
+    .addSubMenu(ui.createMenu('More')
+      .addItem('Preview lecture reminder emails', 'menuPreviewReminders')
+      .addItem('Send two test reminders to the test address', 'menuTestReminder')
+      .addItem('Check every link in the Handbook', 'menuCheckLinks')
+      .addItem('Show what the site reads (testHub)', 'menuTestHub')
+      .addItem('Show the PTO the hub found', 'menuTestPTO')
+      .addItem('Rewrite the "How to update" tab', 'writeHowToTab'))
+    .addToUi();
+}
+
+/** Runs a function and shows everything it reported in a box (errors included, in plain words). */
+function menuRun_(title, fn) {
+  SAY_ = [];
+  let ok = true;
+  try { fn(); } catch (err) { ok = false; SAY_.push('Something went wrong: ' + (err && err.message ? err.message : err)); }
+  const lines = SAY_.length ? SAY_ : ['Done.']; SAY_ = null;
+  const ui = SpreadsheetApp.getUi();
+  const html = HtmlService.createHtmlOutput('<div style="font:14px/1.5 Arial,sans-serif;color:#1f2937;white-space:pre-wrap">' +
+    lines.join('\n').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/(✓[^\n]*)/g, '<span style="color:#15803d">$1</span>').replace(/(⚠[^\n]*)/g, '<b style="color:#b45309">$1</b>') + '</div>').setWidth(620).setHeight(Math.min(560, 120 + lines.join('\n').length / 2.2));
+  ui.showModalDialog(html, (ok ? '' : '⚠ ') + title);
+}
+function menuWeeklyEmail() { menuRun_('Weekly email', () => draftWeeklyEmail()); }
+function menuInvitations() { menuRun_('Lecture invitations', () => draftUpcomingInvitations()); }
+function menuRefreshHandbook() { menuRun_('Handbook', () => { refreshHandbookNow(); say_('The site shows the new Handbook within a minute (refresh the page).'); }); }
+function menuPreviewReminders() { menuRun_('Lecture reminders (preview, nothing sent)', () => previewLectureReminders()); }
+function menuTestReminder() { menuRun_('Test reminders', () => sendTestReminder()); }
+function menuCheckLinks() { menuRun_('Handbook links', () => checkHandbookLinks()); }
+function menuTestHub() { menuRun_('What the site reads', () => testHub()); }
+function menuTestPTO() { menuRun_('PTO found', () => testPTO()); }
+function menuChecklist() { const sh = checklistTab_(); SpreadsheetApp.getActiveSpreadsheet().setActiveSheet(sh); }
+function menuHealthCheck() { menuRun_('Hub health check', () => { const r = healthCheck_(); r.lines.forEach(l => say_(l)); }); }
+function menuSetup() { menuRun_('Automatic tasks', () => setupEverything()); }
+
+/** One click: every automatic task the hub uses (safe to run again; it never duplicates anything). */
+function setupEverything() {
+  installAutoRefresh(); installLectureReminders(); installInvitations(); installWeeklyEmail();
+  ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === 'weeklyHealthCheck').forEach(t => ScriptApp.deleteTrigger(t));
+  ScriptApp.newTrigger('weeklyHealthCheck').timeBased().onWeekDay(ScriptApp.WeekDay.MONDAY).atHour(9).inTimezone(TZ).create();
+  checklistTab_(); writeHowToTab();
+  say_('');
+  say_('✓ All automatic tasks are set up: data refresh every 5 minutes, lecture reminders and Monday invitation drafts (8 AM), Sunday weekly email draft (7 AM), Monday health check (9 AM).');
+  const r = healthCheck_();
+  say_(r.problems ? '\nStill to fix:' : '');
+  r.lines.filter(l => /^⚠/.test(l)).forEach(l => say_(l));
+}
+
+/** Weekly (Monday 9 AM): emails the chiefs only when something needs fixing. */
+function weeklyHealthCheck() {
+  const r = healthCheck_();
+  if (!r.problems) return;
+  MailApp.sendEmail({ to: chiefEmail_(), name: 'PM&R Hub', subject: 'Hub: ' + r.problems + ' thing' + (r.problems === 1 ? '' : 's') + ' to fix',
+    body: 'The weekly hub check found something that needs attention:\n\n' + r.lines.filter(l => /^⚠/.test(l)).join('\n\n') +
+      '\n\nIn the Hub Control Panel, use PM&R Hub ▸ Check that everything is working to see the full list, and PM&R Hub ▸ Set up / repair automatic tasks for anything automatic.' });
+}
+
+function healthCheck_() {
+  const lines = [], ok = m => lines.push('✓ ' + m), bad = m => lines.push('⚠ ' + m);
+  const settings = panelSettings_();
+  // automatic tasks
+  const have = ScriptApp.getProjectTriggers().map(t => t.getHandlerFunction());
+  const need = { autoRefresh: 'data refresh every 5 minutes', sendLectureReminders: 'daily lecture reminders and Monday invitation drafts', draftWeeklyEmail: 'Sunday weekly email draft', onInvitationsEdit: 'Invitations tab "Create draft?"', weeklyHealthCheck: 'this weekly check' };
+  const missing = Object.keys(need).filter(k => have.indexOf(k) < 0);
+  if (missing.length) bad('Automatic tasks not running: ' + missing.map(k => need[k]).join(', ') + '. Fix: PM&R Hub ▸ Set up / repair automatic tasks.');
+  else ok('All automatic tasks are running.');
+  // services
+  if (typeof People === 'undefined') bad('People API service is off, so the weekly email cannot read the class contact labels. Fix: Extensions ▸ Apps Script ▸ + next to Services ▸ People API ▸ Add.');
+  if (typeof Gmail === 'undefined') bad('Gmail API service is off, so emails use the backup signature. Fix: Extensions ▸ Apps Script ▸ + next to Services ▸ Gmail API ▸ Add.');
+  if (typeof People !== 'undefined' && typeof Gmail !== 'undefined') ok('People API and Gmail API services are on.');
+  // academic year
+  const m = String(settings['Academic Year'] || '').match(/(20\d\d)\D+(20\d\d)/);
+  const now = new Date(), ayEnd = now.getMonth() >= 6 ? now.getFullYear() + 1 : now.getFullYear();
+  if (!m) bad('Settings "Academic Year" is empty or not like 2026-2027.');
+  else if (Number(m[2]) < ayEnd) bad('Academic Year still says ' + m[0] + ' but it is now ' + (ayEnd - 1) + '-' + ayEnd + '. Fix: PM&R Hub ▸ Start a new academic year.');
+  else ok('Academic Year: ' + m[0] + '.');
+  // schedules
+  let talks = [];
+  try { talks = readTalks_(settings); const today = Utilities.formatDate(now, TZ, 'yyyy-MM-dd'), soon = Utilities.formatDate(new Date(now.getTime() + 56 * 86400000), TZ, 'yyyy-MM-dd');
+    const up = talks.filter(t => t.date >= today && t.date <= soon).length;
+    if (!talks.length) bad('The Didactic Schedule sheet has no sessions the hub can read (check the link in Settings and that it has Date and Topic columns).');
+    else if (!up) bad('No didactics on the schedule in the next 8 weeks. Is the Didactic Schedule sheet in Settings this year\'s?');
+    else ok('Didactic Schedule: ' + up + ' session(s) in the next 8 weeks.');
+  } catch (err) { bad('Cannot open the Didactic Schedule sheet (' + err.message + '). Check the link in Settings and that the chief account can open it.'); }
+  try { const res = parseResidents_(readSheet_(idFromLink_(settings['Resident Schedule Sheet']) || FALLBACK['Resident Schedule Sheet'], settings['Resident Schedule tab']));
+    if (!res.length) bad('The Resident Schedule sheet has no residents the hub can read.'); else ok('Resident Schedule: ' + res.length + ' residents.');
+  } catch (err) { bad('Cannot open the Resident Schedule sheet (' + err.message + ').'); }
+  // Handbook
+  try { if (handbookSig_()) ok('Handbooks folder is readable.'); else bad('The Handbooks folder could not be read (check Settings and sharing).'); } catch (err) { bad('The Handbooks folder could not be read (' + err.message + ').'); }
+  // weekly email recipients and signature
+  try { const rc = weeklyRecipients_(settings);
+    if (rc.missing.length) bad('Weekly email: contact label(s) not found: ' + rc.missing.join(', ') + '. ' + (rc.note || '') + ' Fix: make or rename the label in Google Contacts (chief account).');
+    else ok('Weekly email goes to ' + rc.to.length + ' people.');
+  } catch (err) { bad('Weekly email recipients could not be read (' + err.message + ').'); }
+  if (typeof Gmail !== 'undefined') { if (gmailSignature_()) ok('Chief Gmail signature found.'); else bad('The chief Gmail has no signature. Fix: Gmail ▸ Settings ▸ See all settings ▸ Signature.'); }
+  if (!/^https?:\/\//i.test(String(settings['Virtual lecture link'] || ''))) bad('Settings "Virtual lecture link" (the usual Zoom link) is empty.');
+  // sign-in list
+  const ap = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Approved Emails');
+  if (ap) { const n = values_(ap).slice(1).filter(r => /resident|fellow/i.test(String(r[2] || '')) && !/^(no|n|off|false|0|inactive|removed)$/i.test(String(r[3] || '').trim())).length;
+    if (!n) bad('No active residents on the Approved Emails tab: nobody can sign in.'); else ok('Approved Emails: ' + n + ' active residents.'); }
+  const problems = lines.filter(l => /^⚠/.test(l)).length;
+  lines.unshift(problems ? problems + ' thing' + (problems === 1 ? '' : 's') + ' to fix:\n' : 'Everything looks good.\n');
+  return { lines: lines, problems: problems };
+}
+
+/* ---------- yearly checklist tab (the few steps a person has to do) */
+const CHECKLIST_HEAD = ['Each July (tick as you go; it resets when you start a new academic year)', 'Done', 'Where / how'];
+const CHECKLIST_ROWS = [
+  ['1. Start the new year: PM&R Hub ▸ Start a new academic year', 'Copies (or links) the two schedule sheets, updates Settings and the Academic Year, and turns off sign-in for graduates.'],
+  ['2. Fill in the new Didactic Schedule (dates, topics, speakers; keep the Confirmed column)', 'The sheet linked in Settings'],
+  ['3. Fill in the new Resident Schedule', 'The sheet linked in Settings; codes from the Rotations tab'],
+  ['4. Add the incoming residents to Approved Emails (email, name, Resident, yes, birthday)', 'Approved Emails tab'],
+  ['5. Update Contacts with the new chiefs (name and cell) and program leadership', 'Contacts tab'],
+  ['6. Update the chief Gmail signature with the new chiefs', 'Gmail ▸ Settings ▸ See all settings ▸ Signature'],
+  ['7. Make the incoming class\'s contact label (e.g. 2030 Class) and add them', 'contacts.google.com (chief account) ▸ Create label'],
+  ['8. Paste the new resident contact list link', 'Weekly Email tab ▸ the "RESIDENT CONTACT LIST" row'],
+  ['9. Update the Lecturers tab (new guests in, old ones out)', 'Lecturers tab'],
+  ['10. Residents review their Handbooks docs; then PM&R Hub ▸ More ▸ Check every link in the Handbook', 'Handbooks folder in Drive'],
+  ['11. Hand over the chief Gmail login and update its recovery phone and email', 'myaccount.google.com ▸ Security'],
+  ['12. PM&R Hub ▸ Check that everything is working', 'Fix anything it lists, then you are done']
+];
+function checklistTab_(reset) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName('Yearly Checklist');
+  if (!sh) {
+    sh = panelSheet_('Yearly Checklist', CHECKLIST_HEAD);
+    sh.getRange(2, 1, CHECKLIST_ROWS.length, 3).setValues(CHECKLIST_ROWS.map(r => [r[0], false, r[1]]));
+    sh.getRange(2, 2, CHECKLIST_ROWS.length, 1).insertCheckboxes();
+    sh.setColumnWidth(1, 560); sh.setColumnWidth(2, 60); sh.setColumnWidth(3, 460);
+    sh.getRange(2, 1, CHECKLIST_ROWS.length, 3).setWrap(true).setVerticalAlignment('middle');
+  } else if (reset) sh.getRange(2, 2, Math.max(1, sh.getLastRow() - 1), 1).setValue(false);
+  return sh;
+}
+
+/* ---------- start a new academic year */
+function setSetting_(key, value) {
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Settings');
+  const rows = values_(sh), i = rows.findIndex(r => String(r[0] || '').trim().toLowerCase() === key.toLowerCase());
+  if (i >= 0) sh.getRange(i + 1, 2).setValue(value); else sh.appendRow([key, value]);
+  CacheService.getScriptCache().removeAll(['acad_year', 'signin_on']);
+}
+
+function newAcademicYear() {
+  const ui = SpreadsheetApp.getUi(), settings = panelSettings_();
+  const cur = String(settings['Academic Year'] || '').match(/(20\d\d)\D+(20\d\d)/);
+  const next = cur ? cur[2] + '-' + (Number(cur[2]) + 1) : '';
+  const a = ui.prompt('Start a new academic year (1 of 3)', 'New academic year (current: ' + (cur ? cur[0] : 'not set') + ')' + (next ? '\nLeave blank for ' + next + '.' : ''), ui.ButtonSet.OK_CANCEL);
+  if (a.getSelectedButton() !== ui.Button.OK) return;
+  const year = (a.getResponseText().trim() || next).replace(/\s*[–—-]\s*/, '-');
+  if (!/^20\d\d-20\d\d$/.test(year)) { ui.alert('Please type the year like ' + (next || '2027-2028') + '.'); return; }
+  const linkQ = (n, what) => ui.prompt('Start a new academic year (' + n + ' of 3)', 'Link to the NEW ' + what + ' (if you already made it).\nLeave blank and the hub makes a copy of this year\'s for you to fill in.', ui.ButtonSet.OK_CANCEL);
+  const d = linkQ(2, 'Didactic Schedule sheet'); if (d.getSelectedButton() !== ui.Button.OK) return;
+  const r = linkQ(3, 'Resident Schedule sheet'); if (r.getSelectedButton() !== ui.Button.OK) return;
+  // who graduates: the highest PGY on this year's Resident Schedule
+  let grads = [];
+  try { const res = parseResidents_(readSheet_(idFromLink_(settings['Resident Schedule Sheet']) || FALLBACK['Resident Schedule Sheet'], settings['Resident Schedule tab']));
+    const top = res.map(x => Number(String(x.pgy).replace(/\D/g, '')) || 0).reduce((a, b) => Math.max(a, b), 0);
+    grads = res.filter(x => (Number(String(x.pgy).replace(/\D/g, '')) || 0) === top && top).map(x => x.name); } catch (err) { /* none */ }
+  const sure = ui.alert('Start ' + year + '?',
+    'This will:\n• ' + (d.getResponseText().trim() ? 'use the Didactic Schedule you linked' : 'make a copy of this year\'s Didactic Schedule named for ' + year) +
+    '\n• ' + (r.getResponseText().trim() ? 'use the Resident Schedule you linked' : 'make a copy of this year\'s Resident Schedule named for ' + year) +
+    '\n• point the website and emails at those sheets and set the Academic Year to ' + year + ' (every device verifies its email once more)' +
+    '\n• turn off sign-in for the graduating residents' + (grads.length ? ': ' + grads.join(', ') : ' (none found)') +
+    '\n• reset the Yearly Checklist\n\nRun it when the new year should go live on the site (usually July 1). Continue?', ui.ButtonSet.YES_NO);
+  if (sure !== ui.Button.YES) return;
+  menuRun_('New academic year ' + year, () => {
+    const oldYear = cur ? cur[0] : '';
+    const sheetFor = (resp, key) => {
+      const given = idFromLink_(resp.getResponseText());
+      if (given) { say_('✓ ' + key + ': using the sheet you linked.'); return 'https://docs.google.com/spreadsheets/d/' + given + '/edit'; }
+      const src = DriveApp.getFileById(idFromLink_(settings[key]) || FALLBACK[key]);
+      const name = oldYear && src.getName().indexOf(oldYear) >= 0 ? src.getName().replace(oldYear, year) : src.getName() + ' ' + year;
+      const parents = src.getParents(), copy = parents.hasNext() ? src.makeCopy(name, parents.next()) : src.makeCopy(name);
+      say_('✓ ' + key + ': made "' + name + '" (a copy of this year\'s; update its dates and names). ' + copy.getUrl());
+      return copy.getUrl();
+    };
+    const didUrl = sheetFor(d, 'Didactic Schedule Sheet'), resUrl = sheetFor(r, 'Resident Schedule Sheet');
+    setSetting_('Didactic Schedule Sheet', didUrl); setSetting_('Resident Schedule Sheet', resUrl); setSetting_('Academic Year', year);
+    say_('✓ Settings updated: Academic Year ' + year + ' and both schedule links.');
+    const ap = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Approved Emails');
+    let off = 0;
+    if (ap && grads.length) { const keys = grads.map(normName_); values_(ap).forEach((row, i) => {
+      if (!i || !/resident/i.test(String(row[2] || ''))) return;
+      const nm = normName_(row[1]); if (keys.some(k => k && (k === nm || (k.split(' ').pop() === nm.split(' ').pop() && k.split(' ')[0] === nm.split(' ')[0])))) { ap.getRange(i + 1, 4).setValue('no'); off++; } }); }
+    say_('✓ Sign-in turned off for ' + off + ' graduating resident(s) on Approved Emails' + (off < grads.length ? ' (check the tab for anyone missed: ' + grads.join(', ') + ')' : '') + '.');
+    checklistTab_(true);
+    say_('✓ Yearly Checklist reset.');
+    say_('\nNext: open PM&R Hub ▸ Open the yearly checklist for the remaining steps (new residents, chiefs, Gmail signature, class contact label…).');
+    try { autoRefresh(); } catch (err) { /* the site catches up within 5 minutes */ }
+  });
 }

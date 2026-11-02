@@ -13,6 +13,8 @@ The hub website (**https://larkinpmr.github.io**) is built from Google Drive. No
 - **GitHub account:** `larkinpmr`, signed in with the chief Gmail. It hosts the website. You only need it for design changes.
 - Update the chief Gmail's **recovery phone and email** to the new chief's. If 2-step verification is on, move it to the new chief's phone. Losing this account means losing control of the hub.
 
+**The saved copy is public, so it holds nothing private.** The website file that lets the site open instantly (`data/snapshot.json`) contains only the rotation names, the note templates and the "read this first" note. Schedules, guide text, policies and contacts load from Google after sign-in and are kept on each signed-in device. Settings rows with addresses or passcodes (lecture reminder…, invitation…, weekly email…, Zoom passcode) are never sent to the website.
+
 # What controls what
 
 | Google file (in the chief Drive) | What it controls on the site | Who edits it |
@@ -145,13 +147,21 @@ A lean public page for interview season: header, quick stats, "Why Larkin PM&R" 
 
 # Start of each academic year (July)
 
-1. **Accounts:** give the new chiefs the chief Gmail and update its recovery phone/email and 2-step verification.
-2. **New schedule sheets:** if you start new Didactic or Resident Schedule sheets, paste their links into Control Panel ▸ **Settings**. Keep the same layout: month columns for residents; Date / Time / Location / Topic / Speaker columns for didactics.
-3. **Settings tab:** update "Academic year".
-4. **Rotations tab:** check the schedule codes (for example WPB, SA, ISS) match the codes used in the new Resident Schedule. Any code the site doesn't recognize shows as plain text.
-5. **Contacts and Quick Links:** update names, phones and links.
-6. **Handbooks:** have residents review their rotation docs.
-7. Run **checkHandbookLinks** (below) and fix anything red.
+Everything runs from the **PM&R Hub** menu at the top of the Control Panel sheet:
+
+1. **PM&R Hub ▸ Start a new academic year.** It asks for the new year (e.g. 2027-2028) and, optionally, links to new schedule sheets you already made. Otherwise it copies this year's Didactic and Resident Schedule sheets for you, points Settings at the new sheets, sets the Academic Year (every device verifies its email once more), and turns off sign-in for the graduating residents (the highest PGY on the old Resident Schedule). Run it when the new year should go live, usually July 1.
+2. **PM&R Hub ▸ Open the yearly checklist.** The **Yearly Checklist** tab lists the remaining human steps with tick boxes, and resets each year:
+   - fill in the new schedules
+   - new residents on Approved Emails
+   - new chiefs in Contacts and in the chief Gmail signature
+   - the incoming class's contact label (e.g. "2030 Class")
+   - the new contact list link on the Weekly Email tab
+   - Lecturers
+   - Handbook review and the link check
+   - handing over the chief Gmail (recovery phone and email, 2-step verification)
+3. **PM&R Hub ▸ Check that everything is working**, and fix anything it lists.
+
+Also check the **Rotations** tab codes match the codes used in the new Resident Schedule (any code the site doesn't recognize shows as plain text).
 
 # Quarterly Handbook review
 
@@ -160,32 +170,42 @@ A lean public page for interview season: header, quick stats, "Why Larkin PM&R" 
 3. In Apps Script, run **checkHandbookLinks**. Fix broken links in the Handbook. For "Private" links, open the Drive file and set sharing to "Anyone with the link".
 4. Run **refreshHandbookNow** so the site picks up the changes right away.
 
-# The Apps Script buttons
+# The PM&R Hub menu
 
-Open the **Hub Control Panel** sheet ▸ **Extensions ▸ Apps Script**. Choose a function in the menu next to "Debug" and click **Run**. The log at the bottom shows the result.
+Open the **Hub Control Panel** sheet: the **PM&R Hub** menu sits next to Help. Every item shows its result in a box. You only open **Extensions ▸ Apps Script** to paste new code.
 
-| Function | When to run it |
+| Menu item | What it does |
 |---|---|
-| **refreshHandbookNow** | After editing a Handbooks doc, if you want the site updated immediately (otherwise the site notices the edit and updates within about 5 minutes). The log lists every doc it found |
-| **checkHandbookLinks** | Each quarter: tests every link in every Handbooks doc and writes a **Link Check** tab in the Control Panel, problems first |
-| **setupHandbooksFolder** | Already done (October 2026): it split the old single Handbook into the Handbooks folder. Don't run it again unless you rebuild from scratch |
-| **writeHowToTab** | Rewrites the Control Panel's "How to update" tab now. It also updates by itself within about 5 minutes whenever new code with changed instructions is pasted in. Don't type in that tab: it gets overwritten |
-| **testHub** | If the site says "Saved copy" or something looks missing: lists errors and sizes |
-| **testCalendar** / **testMyCalendar** | To preview the didactics calendar or one resident's personal calendar |
-| **installLectureReminders** / **previewLectureReminders** / **sendTestReminder** / **checkLecturerEmails** | Guest lecturer reminder emails (see above) |
-| **installInvitations** / **createInvitationDrafts** / **draftUpcomingInvitations** | Lecture invitation drafts (see above) |
-| **testPTO** | Lists the PTO the hub found on the chief calendar and any events it skipped (no resident name in the title). Run it once first to allow Calendar access |
-| **installApplicantPage** | Once: creates the Applicant Page tab with a starter draft (see above) |
-| **installAutoRefresh** | Only if the automatic 5-minute refresh ever stops (check the clock icon, "Triggers", on the left) |
+| **Draft this week's email now** | Makes (or remakes) this week's weekly email draft in Gmail ▸ Drafts |
+| **Draft lecture invitations now** | Invitation drafts for unconfirmed guest lectures in the next 6 weeks (never duplicates) |
+| **Refresh the Handbook on the site now** | After editing a Handbooks doc, if you don't want to wait the ~5 minutes |
+| **Check that everything is working** | Lists what's fine (✓) and what needs fixing (⚠), with how to fix it |
+| **Set up / repair automatic tasks** | Turns on (or restarts) every automatic task: 5-minute data refresh, daily lecture reminders and Monday invitation drafts, Sunday weekly email, Monday health check. Safe to run any time |
+| **Start a new academic year…** | The July switch (see above) |
+| **Open the yearly checklist** | The Yearly Checklist tab |
+| **More ▸** | Preview lecture reminder emails · Send two test reminders · Check every link in the Handbook · Show what the site reads · Show the PTO the hub found · Rewrite the "How to update" tab |
 
-**If you ever paste new code into Code.gs or Admin.html:** click **Deploy ▸ Manage deployments**. For **each** of the two deployments, click the pencil, set Version to **New version**, and click **Deploy**. Without this, the site keeps running the old code. The links stay the same.
+**Monday health check:** every Monday at 9 AM the hub checks itself and emails the chief Gmail **only if something needs fixing**, for example:
+- a stopped automatic task
+- a Services switch turned off
+- last year's Academic Year
+- a schedule sheet it can't open, or no lectures in the next 8 weeks
+- a missing class contact label
+- no Gmail signature
+
+No email means all is well.
+
+The same functions can still be run from the Apps Script editor (refreshHandbookNow, testHub, draftWeeklyEmail, draftUpcomingInvitations, checkHandbookLinks, testPTO, installAutoRefresh…), but the menu covers them all.
+
+**If you ever paste new code into Code.gs or Admin.html:** click **Deploy ▸ Manage deployments**. For **each** of the two deployments, click the pencil, set Version to **New version**, and click **Deploy**. Without this, the site keeps running the old code. The links stay the same. Then reload the Control Panel sheet so the **PM&R Hub** menu shows the latest items.
 
 # When something looks wrong
 
 | What you see | What to do |
 |---|---|
-| Site footer says **"Saved copy"** | Google could not be reached. Run **testHub** and read the "Errors" line. Most often a file link in Settings is wrong, or the file is not in the chief Drive. |
-| A Handbook change isn't on the site after 10 minutes | Run **refreshHandbookNow**, then reload the site (⌘+Shift+R or Ctrl+Shift+R). |
+| Anything odd, or an email from the hub saying something needs fixing | **PM&R Hub ▸ Check that everything is working**; for anything automatic, **PM&R Hub ▸ Set up / repair automatic tasks** |
+| Site footer says **"Saved copy"** | Google could not be reached. Use **PM&R Hub ▸ More ▸ Show what the site reads** and read the "Errors" line. Most often a file link in Settings is wrong, or the file is not in the chief Drive. |
+| A Handbook change isn't on the site after 10 minutes | **PM&R Hub ▸ Refresh the Handbook on the site now**, then reload the site (⌘+Shift+R or Ctrl+Shift+R). |
 | A guide is missing, shows up twice, or has no schedule code | The doc name and the Rotations-tab name must match exactly (spaces and dashes are forgiven). Check the doc is a Google Doc (not a Word file) inside a folder in Handbooks. |
 | A picture is missing | Run **refreshHandbookNow** and read the "Picture problem" line, if any. Make sure the **Hub pictures** folder still exists. |
 | Chief editor says "Sorry, unable to open the file" | You are signed into more than one Google account. Use a private window signed in only as the chief Gmail. |
