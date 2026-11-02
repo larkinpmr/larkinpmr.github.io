@@ -397,6 +397,31 @@ body.gated > :not(.gate) { visibility: hidden; }
 @media (prefers-reduced-motion: reduce) { .gate.waiting .gate-logo { animation: none; } }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .qlinks { margin: 24px 0 0; }
+.ql-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 8px; } .ql-head .ql-h { margin: 0; }
+.ql-all { font-size: 14px; font-weight: 600; color: var(--accent); text-decoration: none; } .ql-all:hover { text-decoration: underline; }
+.ql-strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
+.qls { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 12px 8px 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; color: var(--ink); text-decoration: none; font-weight: 600; font-size: 14.5px; line-height: 1.25; transition: border-color .15s; }
+.qls:hover { border-color: var(--accent); }
+.qls > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.qls .ql-ic { width: 30px; height: 30px; border-radius: 8px; } .qls .ql-ic svg { width: 17px; height: 17px; }
+.qls-more { justify-content: center; gap: 6px; color: var(--accent); background: var(--accent-soft); border-color: transparent; }
+.qls-more > span:last-child { overflow: visible; }
+@media (min-width: 1200px) { .ql-strip { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); } }
+@media (max-width: 480px) { .ql-strip { grid-template-columns: 1fr 1fr; gap: 6px; } .qls { font-size: 13px; padding: 7px 8px 7px 6px; gap: 7px; } .qls .ql-ic { width: 26px; height: 26px; } .qls .ql-ic svg { width: 15px; height: 15px; }
+  .qls > span:last-child { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; } .ql-all { display: none; } }
+.promos { display: grid; gap: 10px; margin-bottom: 20px; } .promos .dirpromo { margin-bottom: 0; }
+@media (min-width: 900px) { .promos:has(> :nth-child(2)) { grid-template-columns: 1fr 1fr; } }
+.lpromo { background: color-mix(in srgb, var(--sun-soft) 80%, transparent); }
+.linkgroups { columns: 320px; column-gap: 22px; margin-top: 14px; } .lg-col { display: contents; }
+.linkgroups .lg { break-inside: avoid; display: inline-block; width: 100%; margin: 0 0 18px; }
+@media (min-width: 1100px) { .linkgroups { columns: auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 22px; align-items: start; } .lg-col { display: block; } }
+.qls-more.phone-only { display: none; }
+@media (max-width: 480px) { .ql-strip > .qls:nth-child(n+6):not(.qls-more) { display: none; } .qls-more.phone-only { display: flex; } }
+.lg-list { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
+.lg-list li + li { border-top: 1px solid var(--line); }
+.lg-list a { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 14px; text-decoration: none; color: var(--ink); }
+.lg-list a:hover { background: var(--raised); } .lg-list .ar { color: var(--muted); }
+.lg-list .ql-ic { width: 32px; height: 32px; border-radius: 9px; } .lg-list .ql-ic svg { width: 18px; height: 18px; }
 .ql-h { font-size: 13px; font-family: var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin: 0 0 8px; }
 .ql-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
 .ql { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); text-decoration: none; color: var(--ink); min-width: 0; transition: border-color .15s, transform .15s; }
@@ -1803,7 +1828,8 @@ function mergeLive(snap, live) {
   const contacts = rowsOf(tab("contacts"));
   if (contacts.length) d.contacts = contacts.map(r => ({ role: r.role || "", name: r.name || "", phone: r.phone || "", email: r.email || "" }));
   const links = rowsOf(tab("quick links") || tab("links"));
-  if (links.length) d.links = links.filter(r => r.url).map(r => ({ label: r.label || r.url, url: r.url, note: r.note || "" }));
+  if (links.length) d.links = links.filter(r => r.url).map(r => ({ label: r.label || r.url, url: r.url, note: r.note || "",
+    group: r.group || r.category || r.section || "", home: /^(y|yes|x|✓|true|1|home)$/i.test(r.home || r["show on home"] || r.pin || "") }));
   d.announcements = rowsOf(tab("announcements")).filter(r => r.title || r.details).filter(r => { const u = parseLooseDate(r["show until"]); return !u || u >= todayISO; }).map(r => ({ title: r.title, details: r.details, date: r.date }));
   const rots = rowsOf(tab("rotations"));
   if (rots.length) {
@@ -2061,6 +2087,7 @@ function route(keepScroll) {
   else if (h.startsWith("pol-") || h.startsWith("hb-")) { tab = "resources"; html = viewPolicy(h); }
   else if (h.startsWith("tpl-")) { tab = "resources"; html = viewTemplate(h.slice(4)); }
   else if (h === "directory") { tab = "resources"; html = viewDirectory(); }
+  else if (h === "links") { tab = "resources"; html = viewLinks(); }
   else if (h.startsWith("res-")) { tab = "schedule"; html = viewResident(h.slice(4)); }
   else { if (!VIEWS[h]) tab = "home"; html = VIEWS[tab](); if (tab === "policies" || tab === "templates") tab = "resources"; }
   render(html, tab, keepScroll);
@@ -2141,7 +2168,7 @@ hdrObs.observe(document.querySelector("header.top"));
 
 /* ---------- quick finder: Ctrl+K / ⌘K anywhere, "/" jumps to the search box */
 function finderItems() {
-  const items = [["Home", "#home", "Page"], ["Didactics", "#didactics", "Page"], ["Resident Schedule", "#schedule", "Page"], ["Rotation Guides", "#rotations", "Page"], ["Resources", "#resources", "Page"], ["Directory", "#directory", "Page"]];
+  const items = [["Home", "#home", "Page"], ["Didactics", "#didactics", "Page"], ["Resident Schedule", "#schedule", "Page"], ["Rotation Guides", "#rotations", "Page"], ["Resources", "#resources", "Page"], ["Directory", "#directory", "Page"], ["Links", "#links", "Page"]];
   S.rotations.forEach(r => items.push([r.title, "#rot-" + r.id, "Guide", [r.short, ...r.codes].join(" "), r]));
   (S.policies || []).forEach(p => items.push([p.title, "#pol-" + p.id, "Policy"]));
   (S.templates || []).forEach(t => items.push([t.title, "#tpl-" + t.id, "Template"]));
@@ -2686,20 +2713,39 @@ function viewHome() {
   ${quickLinks()}`;
 }
 
-/** Quick links: a compact row of tiles under the welcome area (edited in the Control Panel "Quick Links" tab). */
+/** Quick links. Home: a compact strip of the most-used links (rows marked "yes" in a Home column, else the first 8)
+ *  and an "All links" button; #links lists them all, grouped by the optional Group column (else by kind). */
+const QL_KIND = u => /docs\.google\.com\/spreadsheets/.test(u) ? ["sheet", "Sheet"] : /docs\.google\.com\/document/.test(u) ? ["doc", "Doc"]
+  : /docs\.google\.com\/forms|forms\.gle/.test(u) ? ["form", "Form"] : /drive\.google\.com|docs\.google\.com\/(presentation|file)/.test(u) ? ["drive", "Drive"] : ["web", "Website"];
+const QL_ICON = {
+  sheet: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 9v12"/>',
+  doc: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',
+  drive: '<path d="M8 4h8l5 9-4 7H7l-4-7z"/><path d="M8 4l5 9h8M3 13h10l-6 7"/>',
+  form: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+  web: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>' };
+const qlIcon = k => `<span class="ql-ic ${k}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${QL_ICON[k]}</svg></span>`;
+const QL_HOME_MAX = 8;
 function quickLinks() {
-  if (!S.links || !S.links.length) return "";
-  const kind = u => /docs\.google\.com\/spreadsheets/.test(u) ? ["sheet", "Sheet"] : /docs\.google\.com\/document/.test(u) ? ["doc", "Doc"]
-    : /drive\.google\.com/.test(u) ? ["drive", "Drive"] : /docs\.google\.com\/forms|forms\.gle/.test(u) ? ["form", "Form"] : ["web", "Link"];
-  const icon = {
-    sheet: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 9v12"/>',
-    doc: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',
-    drive: '<path d="M8 4h8l5 9-4 7H7l-4-7z"/><path d="M8 4l5 9h8M3 13h10l-6 7"/>',
-    form: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>',
-    web: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>' };
-  return `<section class="qlinks" aria-label="Quick links"><h2 class="ql-h">Quick links</h2><div class="ql-grid">${S.links.map(l => { const [k, lab] = kind(l.url);
-    return `<a class="ql" href="${esc(l.url)}" target="_blank" rel="noopener"><span class="ql-ic ${k}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${icon[k]}</svg></span>
-      <span class="ql-t"><b>${esc(l.label)}</b><small>${esc(l.note || lab)}</small></span></a>`; }).join("")}</div></section>`;
+  const all = S.links || []; if (!all.length) return "";
+  const marked = all.filter(l => l.home);
+  const shown = (marked.length ? marked : all).slice(0, QL_HOME_MAX), more = all.length > shown.length;
+  return `<section class="qlinks" aria-label="Quick links"><div class="ql-head"><h2 class="ql-h">Quick links</h2>${more ? `<a class="ql-all" href="#links">All ${all.length} links →</a>` : ""}</div>
+    <div class="ql-strip">${shown.map(l => `<a class="qls" href="${esc(l.url)}" target="_blank" rel="noopener"${l.note ? ` title="${esc(l.note)}"` : ""}>${qlIcon(QL_KIND(l.url)[0])}<span>${esc(l.label)}</span></a>`).join("")}
+      ${more || all.length > 5 ? `<a class="qls qls-more${more ? "" : " phone-only"}" href="#links"><span>All ${all.length} links</span><span aria-hidden="true">→</span></a>` : ""}</div></section>`;
+}
+function viewLinks() {
+  const all = S.links || [];
+  const byKind = { sheet: "Google Sheets", doc: "Google Docs", form: "Forms", drive: "Google Drive", web: "Websites" };
+  const groupOf = l => l.group || byKind[QL_KIND(l.url)[0]];
+  const groups = [...new Set(all.map(groupOf))];
+  const sec = g => `<section class="lg"><h2 class="dir-h">${esc(g)}</h2><ul class="lg-list">${all.filter(l => groupOf(l) === g).map(l => { const [k, lab] = QL_KIND(l.url);
+      return `<li><a href="${esc(l.url)}" target="_blank" rel="noopener">${qlIcon(k)}<span class="ql-t"><b>${esc(l.label)}</b><small>${esc(l.note || lab)}</small></span><span class="ar" aria-hidden="true">↗</span></a></li>`; }).join("")}</ul></section>`;
+  // three even columns on wide screens: each group goes to the shortest column so far (keeps the page short, no empty column)
+  const cols = [[], [], []], hgt = [0, 0, 0];
+  groups.forEach(g => { const i = hgt.indexOf(Math.min(...hgt)); cols[i].push(g); hgt[i] += all.filter(l => groupOf(l) === g).length + 1.5; });
+  return `<div class="view-head"><div><div class="eyebrow">Resources · Links</div><h1>Links</h1><p>Every quick link from the Control Panel, in one place.</p></div></div>
+    <a class="crumb" href="#resources">← All resources</a>
+    <div class="linkgroups">${cols.filter(c => c.length).map(c => `<div class="lg-col">${c.map(sec).join("")}</div>`).join("")}</div>`;
 }
 
 let dState = { scope: store.get("hub.d.scope") || "upcoming", month: "all", q: "", more: false, view: store.get("hub.d.view") || "list", cal: todayISO.slice(0, 7) };
@@ -3101,7 +3147,8 @@ function viewResources() {
   const extra = S.extraSections || [];
   const row = (href, title, html, tag) => `<li><a href="#${href}"><span class="rt">${esc(title)}${tag ? `<span class="tag">${tag}</span>` : ""}</span><span class="rs">${esc(summaryOf(html, title, 300))}</span></a></li>`;
   return `<div class="view-head"><div><div class="eyebrow">Resources</div><h1>Resources</h1><p>Program policies, copy-ready note templates and the contact directory.</p></div></div>
-  <a class="dirpromo" href="#directory"><b>Directory</b><span>Every attending, coordinator and site phone number from the rotation guides, tap to call or email.</span><span class="ar" aria-hidden="true">→</span></a>
+  <div class="promos"><a class="dirpromo" href="#directory"><b>Directory</b><span>Every attending, coordinator and site phone number from the rotation guides, tap to call or email.</span><span class="ar" aria-hidden="true">→</span></a>
+  ${(S.links || []).length ? `<a class="dirpromo lpromo" href="#links"><b>Links</b><span>All ${S.links.length} quick links: schedules, forms, Drive folders and websites.</span><span class="ar" aria-hidden="true">→</span></a>` : ""}</div>
   <div class="res">
     <section><h2 class="dir-h">Policies &amp; protocols</h2><ul class="reslist">${S.policies.map(p => row("pol-" + p.id, p.title, p.html, p.edited ? "Updated" : "")).join("")}
       ${extra.map(p => row(p.id, p.title, p.html, "Handbook")).join("")}</ul></section>
