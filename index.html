@@ -249,27 +249,45 @@ header.top::after { content: ""; position: absolute; left: 0; right: 0; bottom: 
 .wm-signed .t .cap { font-size: 1.4em; }
 .wm-signed svg { display: block; width: 15em; height: .7em; margin: -.3em 0 0 1.6em; overflow: visible; } .wm-signed svg path { stroke: var(--wm-cyan); filter: drop-shadow(0 0 3px rgba(59, 224, 227, .8)); }
 .wm-signed .r { margin: .2em 0 0 8em; } .wm-signed .k { color: var(--wm-cyan); text-shadow: var(--wm-cyan-glow); } .wm-signed .yr { color: var(--wm-pink); text-shadow: var(--wm-pink-glow); }
-/* Logos come alive, very slowly: neon logos (tube, signed) breathe like a neon sign warming up;
-   the others get a soft backlight that swells and fades. ~5-6 s per cycle, no flicker; off for "reduce motion". */
+/* Logos come alive, very slowly: neon logos (tube, signed) breathe like a neon sign warming up (16 s per cycle).
+   The others stay still after their opening, except an occasional glint on chrome. Off for "reduce motion". */
 .wm-tube .t, .wm-tube .k, .wm-tube .yr, .wm-signed .t, .wm-signed svg, .wm-signed .k, .wm-signed .yr { animation: wmneon 8s cubic-bezier(.45, 0, .55, 1) infinite alternate; }
 /* same filter list at both ends so the glow fades in and out smoothly (no switching on) */
 @keyframes wmneon { from { filter: brightness(.9) saturate(.92) drop-shadow(0 0 0 color-mix(in srgb, var(--accent) 0%, transparent)); }
   to { filter: brightness(1.15) saturate(1.1) drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 45%, transparent)); } }
-.wm:not(.wm-tube):not(.wm-signed) { position: relative; isolation: isolate; }
-.wm:not(.wm-tube):not(.wm-signed)::before { content: ""; position: absolute; inset: -18% -8% -14% -6%; z-index: -1; pointer-events: none; border-radius: 50%;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 30%, transparent), color-mix(in srgb, var(--sun) 12%, transparent) 60%, transparent);
-  filter: blur(12px); opacity: .35; animation: wmback 8s cubic-bezier(.45, 0, .55, 1) infinite alternate; }
-@keyframes wmback { from { opacity: .3; transform: scale(.97); } to { opacity: .85; transform: scale(1.03); } }
-/* Switching on (first load only, ~1.6 s, a few soft flickers): neon logos flicker themselves; the others flicker their backlight.
+/* Chrome: a glint slides across the metal now and then (about every 9 s) */
+.wm-chrome .t { background-image: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .95) 50%, transparent 60%), var(--wm-chrome); background-size: 300% 100%, 100% 100%; background-repeat: no-repeat; background-position: 150% 0, 0 0; animation: wmglintloop 9s ease-in-out 3s infinite; }
+@keyframes wmglintloop { 0% { background-position: 150% 0, 0 0; } 14%, 100% { background-position: -50% 0, 0 0; } }
+/* Switching on (first load only, ~1.5 s): neon logos flicker on; the other styles have their own opening (below).
    "booted" starts the slow glow at its brightest so it eases down from the moment the sign comes on. */
 /* neon: the tubes ignite in order — "Larkin South Miami" catches first, then "PM&R Hub", the year and the underline */
 .wm.wm-boot.wm-tube .t, .wm.wm-boot.wm-signed .t { animation: wmneon 8s cubic-bezier(.45, 0, .55, 1) infinite alternate, wmon1 var(--boot, 1.6s) linear both; animation-delay: -8s, 0s; }
 .wm.wm-boot.wm-tube .k, .wm.wm-boot.wm-tube .yr, .wm.wm-boot.wm-signed .k, .wm.wm-boot.wm-signed .yr, .wm.wm-boot.wm-signed svg { animation: wmneon 8s cubic-bezier(.45, 0, .55, 1) infinite alternate, wmon2 var(--boot, 1.6s) linear both; animation-delay: -8s, 0s; }
 @keyframes wmon1 { 0%, 6% { opacity: .12; } 9% { opacity: .9; } 13%, 20% { opacity: .25; } 23%, 100% { opacity: 1; } }
 @keyframes wmon2 { 0%, 42% { opacity: .12; } 45% { opacity: .85; } 49%, 57% { opacity: .2; } 60% { opacity: 1; } 64% { opacity: .55; } 68%, 100% { opacity: 1; } }
-.wm.booted .t, .wm.booted .k, .wm.booted .yr, .wm.booted svg, .wm.booted:not(.wm-tube):not(.wm-signed)::before { animation-delay: -8s; }
-.wm.wm-boot.booted:not(.wm-tube):not(.wm-signed)::before { animation: wmflickbg var(--boot, 1.6s) linear both; animation-delay: 0s; }
-@keyframes wmflickbg { 0%, 10% { opacity: 0; } 13% { opacity: .75; } 17%, 32% { opacity: .05; } 35% { opacity: .9; } 40%, 52% { opacity: .3; } 56%, 100% { opacity: .85; } }
+.wm-tube.booted .t, .wm-tube.booted .k, .wm-tube.booted .yr, .wm-signed.booted .t, .wm-signed.booted .k, .wm-signed.booted .yr, .wm-signed.booted svg { animation-delay: -8s; }
+/* The other logos each open their own way, finishing with the countdown (--boot): */
+/* sticker: slapped on at an angle, a little bounce, then the line under it */
+.wm.wm-boot.wm-sticker .t { animation: wmslap var(--boot, 1.5s) cubic-bezier(.2, .8, .3, 1) both; }
+@keyframes wmslap { 0% { opacity: 0; transform: rotate(-14deg) scale(1.45); } 35% { opacity: 1; transform: rotate(-1deg) scale(.94); } 52% { transform: rotate(-6deg) scale(1.04); } 68%, 100% { opacity: 1; transform: rotate(-4deg) scale(1); } }
+/* art deco: letters glide in from wide spacing, then the PM&R HUB box wipes across */
+.wm.wm-boot.wm-deco .t { animation: wmspread var(--boot, 1.5s) cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes wmspread { 0% { opacity: 0; letter-spacing: .75em; } 60%, 100% { opacity: 1; letter-spacing: .2em; } }
+.wm.wm-boot.wm-deco .k { animation: wmwipe var(--boot, 1.5s) cubic-bezier(.6, 0, .2, 1) both; }
+@keyframes wmwipe { 0%, 40% { clip-path: inset(0 100% 0 0); } 85%, 100% { clip-path: inset(0 0 0 0); } }
+/* sunset and formal: the name is drawn in left to right (sunrise / handwriting), then the line under it draws itself */
+.wm.wm-boot.wm-sunset .t, .wm.wm-boot.wm-formal .t { animation: wmwrite var(--boot, 1.5s) cubic-bezier(.45, 0, .3, 1) both; }
+@keyframes wmwrite { 0% { clip-path: inset(-30% 100% -30% -10%); } 70%, 100% { clip-path: inset(-30% -10% -30% -10%); } }
+.wm.wm-boot.wm-sunset svg path, .wm.wm-boot.wm-formal svg path { stroke-dasharray: 340; animation: wmdraw var(--boot, 1.5s) ease-out both; }
+@keyframes wmdraw { 0%, 45% { stroke-dashoffset: 340; } 100% { stroke-dashoffset: 0; } }
+.wm.wm-boot.wm-formal svg circle { animation: wmfade var(--boot, 1.5s) both; }
+/* chrome: a glint sweeps across as it appears */
+.wm.wm-boot.wm-chrome .t { animation: wmglint var(--boot, 1.5s) ease-out both; }
+@keyframes wmglint { 0% { opacity: 0; background-position: 150% 0, 0 0; } 20% { opacity: 1; } 100% { opacity: 1; background-position: -50% 0, 0 0; } }
+/* the second line (PM&R HUB · year) settles in last on all five */
+.wm.wm-boot:not(.wm-tube):not(.wm-signed) .r { animation: wmrise var(--boot, 1.5s) ease-out both; }
+@keyframes wmrise { 0%, 45% { opacity: 0; transform: translateY(.35em); } 85%, 100% { opacity: 1; transform: none; } }
+@keyframes wmfade { 0%, 85% { opacity: 0; } 100% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .wm, .wm *, .wm::before { animation: none !important; } }
 .search { position: relative; flex: 1 1 240px; max-width: 340px; }
 /* Phones zoom the whole page in when a text box with text smaller than 16px is tapped (iPhone), and stay zoomed.
