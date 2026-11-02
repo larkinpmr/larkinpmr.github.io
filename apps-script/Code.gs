@@ -1674,7 +1674,7 @@ const HOWTO_LINES = [
   ['Every Sunday around 7 AM a draft of the weekly email to all residents appears in Gmail ▸ Drafts, and the chief Gmail gets a note. Open it, check it, and press Send. It lists the week\'s Monday (and Thursday) didactics with the Zoom link or the location, this week\'s updates, the SAE countdown, birthdays, a good-luck line when rotations switch, and the helpful links.'],
   ['Weekly Email tab → greeting, standing messages (every week), updates (type = update: used in the next draft only, unless you give a Show until date) and the helpful links (type = link; {year} becomes the academic year) with the PTO steps. Run draftWeeklyEmail to make (or remake) this week\'s draft any time.'],
   ['The signature is the chief Gmail\'s own default signature (Gmail ▸ Settings ▸ Signature), so a new year\'s signature carries over by itself. Every email ends with a small "PM&R Hub" button above the signature (Settings "Hub link" changes the address). The greeting rotates each week through the greeting rows.'],
-  ['Who gets it → the Google Contacts labels "2027 Class", "2028 Class", "2029 Class" (they move up automatically with the Academic Year). Settings "Weekly email to" replaces them, "Weekly email also to" adds people (e.g. the program director), "Weekly email" = off pauses it, "Zoom passcode" adds the passcode under the Zoom link.'],
+  ['Who gets it → the Google Contacts labels "2027 Class", "2028 Class", "2029 Class" (they move up automatically with the Academic Year). Settings "Weekly email to" replaces them, "Weekly email also to" adds people, "Weekly email BCC" blind-copies people (e.g. the program director and coordinator), "Weekly email" = off pauses it, "Zoom passcode" adds the passcode under the Zoom link.'],
   [''],
   ['APPLICANT PAGE (larkinpmr.github.io/apply)'],
   ['A public page for interview season. It shows only the Applicant Page tab: no resident names, schedules or contacts. One row per item; Section says what it is: Headline, Subtitle, Stat (number + label), Highlight (title + text), Rotation (name, one-line blurb, Where, PGY, Group), Week (day + text), Interview (time + what), Graduate (class year + where they went), Contact email.'],
@@ -1858,7 +1858,7 @@ function authRequest_(p) {
  *   installWeeklyEmail   run once: creates the tab and the Sunday 7 AM schedule
  *   draftWeeklyEmail     makes the draft right now (for the coming week; on a Monday, for this week)
  * Settings: "Weekly email" (off to pause) · "Weekly email to" (contact labels or addresses; blank = the three class
- * labels) · "Weekly email also to" (extra labels/addresses, e.g. the program director) · "Zoom passcode" (optional). */
+ * labels) · "Weekly email also to" (extra labels/addresses) · "Weekly email BCC" (blind copies, e.g. PD and PC) · "Zoom passcode" (optional). */
 const WEEKLY_HEAD = ['Type (greeting / standing / update / link / pto step)', 'Text (**bold** and *italic* work)', 'Link (for link rows)', 'Note (shown after the link)', 'Show until (optional date, for updates)', 'Status (filled in by the script)'];
 
 function installWeeklyEmail() {
@@ -2117,7 +2117,9 @@ function draftWeeklyEmail() {
   if (!rcpt.to.length) notes.push('No recipients found: add them in the draft.');
   // re-running replaces this week's earlier draft instead of piling up copies
   GmailApp.getDrafts().forEach(d => { try { if (d.getMessage().getSubject() === subject) d.deleteDraft(); } catch (err) { /* skip */ } });
-  GmailApp.createDraft(rcpt.to.join(', '), subject, P.join('\n\n'), { htmlBody: '<div style="font-family:Arial,sans-serif;font-size:15px;color:#212121">' + H.join('') + '</div>', name: 'Larkin PMR Chief' });
+  // Settings "Weekly email BCC": blind copies (e.g. the program director and coordinator); residents don't see them
+  const bcc = String(settings['Weekly email BCC'] || '').split(/\s*[,;\n]\s*/).map(x => x.trim()).filter(x => /@/.test(x)).join(', ');
+  GmailApp.createDraft(rcpt.to.join(', '), subject, P.join('\n\n'), Object.assign({ htmlBody: '<div style="font-family:Arial,sans-serif;font-size:15px;color:#212121">' + H.join('') + '</div>', name: 'Larkin PMR Chief' }, bcc ? { bcc: bcc } : {}));
   updRows.forEach(u => { if (!u.keep) sh.getRange(u.i + 1, 6).setValue(tag); });
   if (rcpt.missing.length) notes.push('Contact label(s) not found: ' + rcpt.missing.join(', ') + (rcpt.note ? ' — ' + rcpt.note : '') + (rcpt.missing.length === classLabels_(settings).length ? ' The residents on the Approved Emails tab were used instead.' : ''));
   const summary = 'Weekly email draft "' + subject + '" is in Gmail ▸ Drafts for ' + rcpt.to.length + ' recipient(s). Review it and press Send.' + (notes.length ? '\n\nCheck:\n- ' + notes.join('\n- ') : '');
