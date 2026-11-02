@@ -1529,10 +1529,12 @@ function invitationEmail_(x, settings, talks) {
 
 /** Mondays (and on demand): draft an invitation for every guest lecture in the next few weeks that isn't marked
  * Confirmed in the Didactic Schedule and hasn't been invited yet, then tell the chiefs the drafts are ready.
- * Settings: "Invitation lead (weeks)" (blank = 6) · "Automatic invitations" (off to stop). */
+ * Settings: "Invitation lead (weeks)" (blank = 6) · "Invitation drafts" (off to stop; the older name "Automatic invitations" still works).
+ * Nothing is ever sent: these are drafts in the chief Gmail for a chief to review and send. */
 function draftUpcomingInvitations(talks) {
   const settings = panelSettings_();
-  if (/^(off|no|false|0)$/i.test(String(settings['Automatic invitations'] || '').trim())) { Logger.log('Nothing drafted: Settings "Automatic invitations" is set to "' + settings['Automatic invitations'] + '". Clear it (or set it to on) and run this again.'); return; }
+  const drafts = settings['Invitation drafts'] !== undefined && String(settings['Invitation drafts']).trim() !== '' ? ['Invitation drafts', settings['Invitation drafts']] : ['Automatic invitations', settings['Automatic invitations']];
+  if (/^(off|no|false|0)$/i.test(String(drafts[1] || '').trim())) { Logger.log('Nothing drafted: Settings "' + drafts[0] + '" is set to "' + drafts[1] + '". Clear it (or set it to on) and run this again.'); return; }
   talks = Array.isArray(talks) ? talks : readTalks_(settings);
   if (!talks.some(t => t.confKnown)) { Logger.log('Add a "Confirmed" column to the Didactic Schedule first, so the script can tell confirmed guests from planned ones.'); return; }
   const weeks = Number(settings['Invitation lead (weeks)']) || 6;
@@ -1649,7 +1651,7 @@ const HOWTO_LINES = [
   ['Confirmed column in the Didactic Schedule → yes or confirmed = the guest gets a reminder 7 days before. Blank = the guest gets an invitation draft. Anything else (rescheduled, declined…) = nothing.'],
   ['Every Monday → invitation drafts are created in Gmail ▸ Drafts for guest lectures in the next 6 weeks with a blank Confirmed cell, and the chief Gmail gets a note. Open each draft, adjust it, and press Send. When the guest agrees, type yes under Confirmed.'],
   ['Invitations tab → to invite someone by hand, add a row and type yes under "Create draft?". Leave the dates blank to suggest open Mondays.'],
-  ['Settings "Lecture reminders" → test (everything goes to the "Lecture reminder test email"), on (to the lecturers) or off. Optional: Invitation lead (weeks), Lecture reminder days, Automatic invitations (off).'],
+  ['Settings "Lecture reminders" → test (everything goes to the "Lecture reminder test email"), on (to the lecturers) or off. Optional: Invitation lead (weeks), Lecture reminder days, Invitation drafts (off = no Monday drafts; nothing is ever sent without a chief).'],
   ['The chief Gmail is emailed about guests with no email on file (Mondays), emails that failed, reminded lectures that disappear or are canceled, and guest lectures still blank a week out. Every email sent is logged on the Lecture Reminders tab.'],
   ['Lecture Locations tab → what in-person locations are called in emails (for example ISS → full name) and an optional address that becomes a directions link.'],
   [''],
