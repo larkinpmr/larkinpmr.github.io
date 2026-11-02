@@ -258,6 +258,19 @@ header.top::after { content: ""; position: absolute; left: 0; right: 0; bottom: 
 /* Chrome: a glint slides across the metal now and then (about every 9 s) */
 .wm-chrome .t { background-image: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .95) 50%, transparent 60%), var(--wm-chrome); background-size: 300% 100%, 100% 100%; background-repeat: no-repeat; background-position: 150% 0, 0 0; animation: wmglintloop 9s ease-in-out 3s infinite; }
 @keyframes wmglintloop { 0% { background-position: 150% 0, 0 0; } 14%, 100% { background-position: -50% 0, 0 0; } }
+/* Idle "alive" effects for the other styles: same slow 8 s fade up/down as the neon */
+.wm-sticker .t { animation: wmlift 8s cubic-bezier(.45, 0, .55, 1) infinite alternate; }
+@keyframes wmlift { from { transform: rotate(-4deg); text-shadow: .05em .05em 0 var(--wm-shadow), .1em .1em 0 var(--wm-cyanbg); }
+  to { transform: rotate(-3deg) translateY(-.04em); text-shadow: .07em .07em 0 var(--wm-shadow), .14em .14em 0 var(--wm-cyanbg); } }
+.wm-deco .k { animation: wmbox 8s cubic-bezier(.45, 0, .55, 1) infinite alternate; }
+@keyframes wmbox { from { filter: brightness(1); box-shadow: 0 0 0 0 color-mix(in srgb, var(--wm-cyan) 0%, transparent); }
+  to { filter: brightness(1.12); box-shadow: 0 0 .7em 0 color-mix(in srgb, var(--wm-cyan) 50%, transparent); } }
+.wm-sunset .t { background-size: 100% 150%; background-position: 0 0; animation: wmdusk 8s cubic-bezier(.45, 0, .55, 1) infinite alternate; }
+@keyframes wmdusk { from { background-position: 0 0; } to { background-position: 0 100%; } }
+.wm-formal .t .cap { animation: wmcap 8s cubic-bezier(.45, 0, .55, 1) infinite alternate; }
+.wm-formal svg circle { animation: wmcap 8s cubic-bezier(.45, 0, .55, 1) infinite alternate; }
+@keyframes wmcap { from { filter: brightness(.95) drop-shadow(0 0 0 color-mix(in srgb, var(--wm-cyan) 0%, transparent)); }
+  to { filter: brightness(1.15) drop-shadow(0 0 .12em color-mix(in srgb, var(--wm-cyan) 80%, transparent)); } }
 /* Switching on (first load only, ~1.5 s): neon logos flicker on; the other styles have their own opening (below).
    "booted" starts the slow glow at its brightest so it eases down from the moment the sign comes on. */
 /* neon: the tubes ignite in order — "Larkin South Miami" catches first, then "PM&R Hub", the year and the underline */
