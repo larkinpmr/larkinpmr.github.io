@@ -120,15 +120,14 @@ If "Proposed dates" is blank, the draft suggests the next few Monday didactics (
 Every Sunday around 7 AM, a draft of the weekly email to all residents appears in **Gmail ▸ Drafts**, and the chief Gmail gets a note that it's ready. Open it, check it, and press **Send**.
 
 What's in it, in this order:
-- The greeting and **standing messages** (case logs and work hours…).
-- A big **Open the PM&R Hub** button (Settings **Hub link** changes the address).
+- A greeting (it rotates each week through the **greeting** rows on the Weekly Email tab) and the **standing messages** (case logs and work hours…).
 - **DIDACTICS UPDATE**: the week's Monday (and Thursday) sessions, written out: "Didactics this Monday (11/16) will be held virtually at 2:00 PM" with each lecture and presenter, then the Zoom link, meeting ID and passcode (Settings **Virtual lecture link** and **Zoom passcode**), or the in-person location and address (Lecture Locations tab). A week whose only row says "No Didactics" or "Holiday Break" becomes "There will be no didactics this week (Labor Day)." Then a link to the hub's didactic calendar.
 - **WEEKLY UPDATES**: this week's updates, a good-luck line when rotations switch that week, the SAE countdown (the Settings **Countdowns** entry whose name has SAE or in-training), and birthdays that week.
-- **REMINDER HELPFUL LINKS** with the PTO protocol, and the chief Gmail's own signature.
+- **REMINDER HELPFUL LINKS** with the PTO protocol (PTO forms go to **Carola**, the program coordinator), a small **PM&R Hub** button (Settings **Hub link** changes the address), and the chief Gmail's own signature.
 
 The subject follows the usual style: "Virtual Didactics 11/02", "Didactics at ISS 11/09", "Didactics 11/16 & 11/19", "No Didactics 09/07".
 
-**Weekly Email tab** (private): one row per line. Type **greeting**, **standing** (every week), **update** (used in the next Sunday draft only; give a **Show until** date to keep it longer), **link** (label, link, note; `{year}` becomes the academic year) and **pto step** (the bullets under the PTO form). `**bold**` and `*italic*` work. Run **draftWeeklyEmail** to make (or remake) the draft any time; remaking replaces that week's earlier draft.
+**Weekly Email tab** (private): one row per line. Type **greeting** (one per row; a different one is used each week), **standing** (every week), **update** (used in the next Sunday draft only; give a **Show until** date to keep it longer), **link** (label, link, note; `{year}` becomes the academic year) and **pto step** (the bullets under the PTO form). `**bold**` and `*italic*` work. Run **draftWeeklyEmail** to make (or remake) the draft any time; remaking replaces that week's earlier draft.
 
 **Who gets it:** the Google Contacts labels **2027 Class**, **2028 Class** and **2029 Class** in the chief account, addressed directly (no BCC). They move up by themselves when the Academic Year changes in July. Settings **Weekly email to** replaces them (labels or addresses), **Weekly email also to** adds people, **Weekly email** = `off` pauses it. If a label can't be found, the draft uses the residents on the Approved Emails tab and the note says so.
 

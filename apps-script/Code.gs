@@ -1673,7 +1673,7 @@ const HOWTO_LINES = [
   ['WEEKLY SUNDAY EMAIL (a draft, never sent automatically)'],
   ['Every Sunday around 7 AM a draft of the weekly email to all residents appears in Gmail ▸ Drafts, and the chief Gmail gets a note. Open it, check it, and press Send. It lists the week\'s Monday (and Thursday) didactics with the Zoom link or the location, this week\'s updates, the SAE countdown, birthdays, a good-luck line when rotations switch, and the helpful links.'],
   ['Weekly Email tab → greeting, standing messages (every week), updates (type = update: used in the next draft only, unless you give a Show until date) and the helpful links (type = link; {year} becomes the academic year) with the PTO steps. Run draftWeeklyEmail to make (or remake) this week\'s draft any time.'],
-  ['The signature is the chief Gmail\'s own default signature (Gmail ▸ Settings ▸ Signature), so a new year\'s signature carries over by itself. Every email also has a big "Open the PM&R Hub" button (Settings "Hub link" changes the address).'],
+  ['The signature is the chief Gmail\'s own default signature (Gmail ▸ Settings ▸ Signature), so a new year\'s signature carries over by itself. Every email ends with a small "PM&R Hub" button above the signature (Settings "Hub link" changes the address). The greeting rotates each week through the greeting rows.'],
   ['Who gets it → the Google Contacts labels "2027 Class", "2028 Class", "2029 Class" (they move up automatically with the Academic Year). Settings "Weekly email to" replaces them, "Weekly email also to" adds people (e.g. the program director), "Weekly email" = off pauses it, "Zoom passcode" adds the passcode under the Zoom link.'],
   [''],
   ['APPLICANT PAGE (larkinpmr.github.io/apply)'],
@@ -1875,12 +1875,18 @@ function installWeeklyEmail() {
 
 function weeklyTab_() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  if (ss.getSheetByName('Weekly Email')) return ss.getSheetByName('Weekly Email');
+  const have = ss.getSheetByName('Weekly Email');
+  if (have) { weeklyTabUpgrade_(have); return have; }
   const sh = panelSheet_('Weekly Email', WEEKLY_HEAD);
   const did = 'https://docs.google.com/spreadsheets/d/' + (idFromLink_(panelSettings_()['Didactic Schedule Sheet']) || FALLBACK['Didactic Schedule Sheet']) + '/edit?usp=sharing';
   const res = 'https://docs.google.com/spreadsheets/d/' + (idFromLink_(panelSettings_()['Resident Schedule Sheet']) || FALLBACK['Resident Schedule Sheet']) + '/edit?usp=sharing';
   const rows = [
-    ['greeting', 'Hey team,', '', '', '', ''],
+    ['greeting', 'Hey team,', '', '', '', 'One greeting is picked each week, rotating through these rows. Add or delete rows freely.'],
+    ['greeting', 'Hello all,', '', '', '', ''],
+    ['greeting', 'Hi everyone,', '', '', '', ''],
+    ['greeting', 'Good morning team,', '', '', '', ''],
+    ['greeting', 'Happy Sunday, everyone!', '', '', '', ''],
+    ['greeting', 'Hey all, hope you had a great weekend!', '', '', '', ''],
     ['standing', 'Please keep updating **case logs** and **work hours**, thanks!', '', '', '', ''],
     ['update', '', '', '', '', 'Type this week\'s updates in rows like this one (type = update). Each is used in the next Sunday draft only, unless you give a Show until date.'],
     ['link', '{year} DIDACTIC SCHEDULE', did, 'Requires login to Larkin PM&R Google Account (To View)', '', ''],
@@ -1889,14 +1895,14 @@ function weeklyTab_() {
     ['link', '{year} RESIDENT CONTACT LIST', 'https://docs.google.com/spreadsheets/d/1O5VH2Tgy4Hf4XvexGBBnk-POWULqI1N-iiRaEh3E-xU/edit?usp=sharing', 'PLEASE KEEP UPDATED for the most current best contact information.', '', 'Still last year\'s list: paste the new contact list link here when it exists.'],
     ['link', 'PREVIOUS DIDACTICS PRESENTATIONS', 'https://drive.google.com/drive/u/1/folders/1zL-izG0ZJGuEFv6uFm2TCC_dCZQm4oRy', '', '', ''],
     ['link', 'UPDATED PTO FORM', 'https://drive.google.com/file/d/1t6zMBjgmF0tYBxYztc9r9ht5dqvRmYwC/view?usp=sharing', 'this is the most current PTO form to be used!', '', ''],
-    ['pto step', '**PTO Protocol:** *(Reminder: Suleidy must receive the full signed form 30 days in advance to your requested PTO dates)*', '', '', '', ''],
+    ['pto step', '**PTO Protocol:** *(Reminder: Carola must receive the full signed form 30 days in advance to your requested PTO dates)*', '', '', '', ''],
     ['pto step', '1. Discuss PTO dates with your coresident to make sure there are no conflicts', '', '', '', ''],
     ['pto step', '2. **Coresident\'s** Signature *(coresident that will be or is on the rotation with you)*', '', '', '', ''],
     ['pto step', '3. **Attending\'s** Signature', '', '', '', ''],
-    ['pto step', '4. **Chief\'s** Signature (**DO NOT cc Suleidy**)', '', '', '', ''],
-    ['pto step', '5. **Dr. Diaz\'s** Signature: send to ISS residents (*via larkinpmr@gmail.com*, **DO NOT cc Suleidy**) (*make the residents there aware; it is still your responsibility that it is completed*)', '', '', '', ''],
-    ['pto step', '6. ISS residents/Dr. Diaz will scan and **send to chief email with Suleidy cc-ed** (*or if ISS residents send it back to you, then it is your job to send it to chief email with Suleidy cc-ed*)', '', '', '', ''],
-    ['pto step', '***BOTTOM LINE: If Dr. Diaz\'s signature is NOT on the form, DO NOT cc Suleidy on the email yet***', '', '', '', ''],
+    ['pto step', '4. **Chief\'s** Signature (**DO NOT cc Carola**)', '', '', '', ''],
+    ['pto step', '5. **Dr. Diaz\'s** Signature: send to ISS residents (*via larkinpmr@gmail.com*, **DO NOT cc Carola**) (*make the residents there aware; it is still your responsibility that it is completed*)', '', '', '', ''],
+    ['pto step', '6. ISS residents/Dr. Diaz will scan and **send to chief email with Carola cc-ed** (*or if ISS residents send it back to you, then it is your job to send it to chief email with Carola cc-ed*)', '', '', '', ''],
+    ['pto step', '***BOTTOM LINE: If Dr. Diaz\'s signature is NOT on the form, DO NOT cc Carola on the email yet***', '', '', '', ''],
     ['pto step', 'Send your PTO forms in PDF format.', '', '', '', ''],
     ['pto step', 'You need to remind your coresident/attendings of upcoming PTO!!!! No surprises!!!!', '', '', '', ''],
     ['link', 'Resident Forum', 'https://docs.google.com/forms/d/1mgI0tDlqPdYzdq25zvP903DIfGDzi4yCtvV2R6sGNyc/edit?ts=68910345', 'Send in any concerns or issues so they can be addressed.', '', '']
@@ -1905,6 +1911,19 @@ function weeklyTab_() {
   sh.setColumnWidth(1, 150); sh.setColumnWidth(2, 520); sh.setColumnWidth(3, 260); sh.setColumnWidth(4, 320); sh.setColumnWidth(5, 150); sh.setColumnWidth(6, 300);
   sh.getRange(2, 1, rows.length, WEEKLY_HEAD.length).setWrap(true).setVerticalAlignment('top');
   return sh;
+}
+
+/** Existing Weekly Email tabs: the program coordinator is now Carola; a tab with only the original greeting gets the alternatives. */
+function weeklyTabUpgrade_(sh) {
+  const rows = values_(sh);
+  rows.forEach((r, i) => { [1, 3].forEach(c => { if (/Suleidy/.test(r[c] || '')) sh.getRange(i + 1, c + 1).setValue(String(r[c]).replace(/Suleidy/g, 'Carola')); }); });
+  const greets = rows.filter(r => String(r[0] || '').trim().toLowerCase() === 'greeting');
+  if (greets.length === 1 && String(greets[0][1]).trim() === 'Hey team,') {
+    const at = rows.findIndex(r => r === greets[0]) + 2;
+    sh.insertRowsAfter(at - 1, 5);
+    sh.getRange(at, 1, 5, 2).setValues([['greeting', 'Hello all,'], ['greeting', 'Hi everyone,'], ['greeting', 'Good morning team,'], ['greeting', 'Happy Sunday, everyone!'], ['greeting', 'Hey all, hope you had a great weekend!']]);
+    sh.getRange(at - 1, 6).setValue('One greeting is picked each week, rotating through these rows. Add or delete rows freely.');
+  }
 }
 
 /** The chief Gmail's default signature (HTML), as set in Gmail ▸ Settings ▸ Signature. Needs the Gmail API service; '' if unavailable. */
@@ -1984,7 +2003,9 @@ function draftWeeklyEmail() {
   const tag = 'In the ' + mmdd_(mon) + ' draft';
   const kind = r => String(r[0] || '').trim().toLowerCase();
   const until = r => isoDate_(r[4]);
-  const greeting = (rows.find(r => kind(r) === 'greeting') || [, 'Hey team,'])[1] || 'Hey team,';
+  const greets = rows.filter(r => kind(r) === 'greeting' && String(r[1]).trim()).map(r => String(r[1]).trim());
+  const wk = Math.floor(new Date(mon + 'T12:00:00Z').getTime() / (7 * 86400000));   // changes every week; remaking the same week's draft keeps its greeting
+  const greeting = greets.length ? greets[wk % greets.length] : 'Hey team,';
   const standing = rows.filter(r => kind(r) === 'standing' && String(r[1]).trim()).map(r => String(r[1]).trim());
   const updRows = [];
   rows.forEach((r, i) => { if (i && kind(r) === 'update' && String(r[1]).trim()) {
@@ -2005,13 +2026,7 @@ function draftWeeklyEmail() {
   const red = s => '<b style="color:#C00000">' + weeklyInline_(s) + '</b>';
   p('<p>' + weeklyInline_(greeting) + '</p>', weeklyPlain_(greeting));
   standing.forEach(s => p('<p>' + weeklyInline_(s) + '</p>', weeklyPlain_(s)));
-  // a prominent link to the hub: this week's schedule, rotation guides, contacts (and a nudge to sign in / add it to the home screen)
   const hub = String(settings['Hub link'] || 'https://larkinpmr.github.io').trim().replace(/\/+$/, '');
-  p('<table role="presentation" cellpadding="0" cellspacing="0" style="margin:6px 0 14px"><tr><td style="background:#C2185B;border-radius:8px;padding:11px 20px">' +
-    '<a href="' + hub + '" style="color:#ffffff;font-weight:bold;font-size:16px;text-decoration:none">📲 Open the PM&amp;R Hub →</a></td>' +
-    '<td style="padding-left:14px;font-size:14px;color:#444">Your rotation, this week\'s didactics, rotation guides and contacts in one place.<br>' +
-    'Sign in once with your email, then add it to your home screen.</td></tr></table>',
-    'PM&R HUB: ' + hub + '\nYour rotation, this week\'s didactics, rotation guides and contacts in one place. Sign in once with your email, then add it to your home screen.');
   p('<p><b>******DIDACTICS UPDATE******</b></p>', '******DIDACTICS UPDATE******');
   const notes = [];
   if (!live.length) {
@@ -2072,6 +2087,10 @@ function draftWeeklyEmail() {
       n + ') ' + weeklyPlain_(label) + (url ? ' <' + url + '>' : '') + (note ? ' - ' + weeklyPlain_(note) : ''));
   });
   flush();
+  // a small link to the hub, just above the signature
+  p('<p style="margin:18px 0 6px"><a href="' + hub + '" style="display:inline-block;background:#C2185B;color:#ffffff;font-size:13px;font-weight:bold;text-decoration:none;padding:6px 14px;border-radius:6px">PM&amp;R Hub →</a>' +
+    '<span style="font-size:13px;color:#555"> &nbsp;Schedules, rotation guides and contacts. Sign in once with your email and add it to your home screen.</span></p>',
+    'PM&R Hub: ' + hub + ' (schedules, rotation guides and contacts; sign in once with your email and add it to your home screen)');
   const gsig = String(settings['Lecture reminder signature'] || '').trim() ? '' : gmailSignature_();
   if (gsig) p('<br><div>--</div>' + gsig, '--\n' + gsig.replace(/<br\s*\/?>|<\/(div|p)>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/\n{3,}/g, '\n\n').trim());
   else {
