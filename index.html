@@ -2453,8 +2453,8 @@ function meetLink(talks) {
   if (own) return own;
   return talks.some(t => /virtual/i.test(t.location || "")) && S.zoomLink ? S.zoomLink : "";
 }
-/** Live lecture: from 10 minutes before the day's start time until it ends (time from the sheet, else Settings
- *  "Didactics start time", else 2:00 PM; ends at the sheet's end time, else 3 hours later), the Join button breathes and says Live. */
+/** Live lecture: from 10 minutes before the day's start time (the sheet's Time column, else Settings "Didactics start time",
+ *  else 2:00 PM) the Join button breathes and says Live, for LIVE_HOURS (3) hours: sessions are booked for 4 but usually end around 3. */
 function clockMins(s) {
   const m = String(s || "").match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm|a\.m\.|p\.m\.)?(?:\s*[-–to]+\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm|a\.m\.|p\.m\.)?)?/i);
   if (!m) return null;
@@ -2462,11 +2462,12 @@ function clockMins(s) {
   const start = conv(m[1], m[2], m[3], m[6]), end = m[4] ? conv(m[4], m[5], m[6], m[3]) : null;
   return { start, end: end != null && end > start ? end : null };
 }
+const LIVE_HOURS = 3;
 function liveWindow(talks) {
   if (!talks.length || talks[0].date !== todayISO) return null;
   const own = talks.map(t => clockMins(t.time)).filter(Boolean).sort((a, b) => a.start - b.start)[0];
   const t = own || clockMins(S.didStart || "2:00 PM") || { start: 840, end: null };
-  const day = parseISO(todayISO).getTime(), st = day + t.start * 60000, en = day + (t.end != null ? t.end : t.start + 180) * 60000;
+  const day = parseISO(todayISO).getTime(), st = day + t.start * 60000, en = st + LIVE_HOURS * 3600000;   // always 3 hours: sessions are booked for 4 but usually end around 3
   return [st - 10 * 60000, en];
 }
 function liveTick() {
