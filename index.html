@@ -948,8 +948,6 @@ button.addr:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
 .finder-list button.on, .finder-list button:hover { background: var(--accent-soft); } .finder-list small { color: var(--muted); font-size: 12px; }
 .finder-k { display: flex; gap: 14px; padding: 8px 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); } kbd { font: 600 11px/1 var(--mono); border: 1px solid var(--line); border-radius: 4px; padding: 2px 5px; margin-right: 3px; background: var(--raised); }
 .finder-back { z-index: 59; }
-/* 7. schedule crosshair */
-@media (hover: hover) and (pointer: fine) { table.sched tr.xh > *, table.sched td.xh { background-color: color-mix(in srgb, var(--accent-soft) 70%, transparent); } table.sched tr.xh > th.name { color: var(--accent); } }
 /* 9. print: just the page content */
 @media print {
   header.top, .bottomnav, footer, .side, .gtoc, .fab, .printbtn, .pn, .crumb, #gtop, .ready, .gtabs, .toast, .tour-pop { display: none !important; }
@@ -2246,15 +2244,6 @@ document.addEventListener("click", e => {
   e.preventDefault(); openContact(a);
 });
 
-/* ---------- schedule table: hovering a cell highlights its resident row and month column */
-document.addEventListener("mouseover", e => {
-  if (!canHover()) return;
-  const td = e.target.closest("table.sched td, table.sched th.name"), t = e.target.closest("table.sched");
-  document.querySelectorAll("table.sched .xh").forEach(x => x.classList.remove("xh"));
-  if (!td || !t) return;
-  const row = td.parentElement; row.classList.add("xh");
-  if (td.tagName === "TD") { const i = td.cellIndex; t.querySelectorAll("tr").forEach(tr => { const c = tr.cells[i]; if (c && tr.cells.length > i && !tr.classList.contains("pgy")) c.classList.add("xh"); }); }
-});
 /* Phones: swipe left/right on a main tab (Home, Lectures, Schedule, Guides, Resources) to go to the next/previous tab.
  * Deliberately strict so it doesn't fire by accident: only on those five pages (never inside a guide), a long, fast,
  * clearly sideways swipe, not starting at the screen edge (iPhone's back gesture), on a text box, or on anything
