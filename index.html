@@ -502,8 +502,8 @@ body.gated > :not(.gate) { visibility: hidden; }
 .linkgroups { columns: 320px; column-gap: 22px; margin-top: 14px; } .lg-col { display: contents; }
 .linkgroups .lg { break-inside: avoid; display: inline-block; width: 100%; margin: 0 0 18px; }
 @media (min-width: 1100px) { .linkgroups { columns: auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 22px; align-items: start; } .lg-col { display: block; } }
-.qls-more.phone-only { display: none; }
-@media (max-width: 480px) { .ql-strip > .qls:nth-child(n+6):not(.qls-more) { display: none; } .qls-more.phone-only { display: flex; } }
+.ql-strip > .qls[hidden] { display: none; }
+
 .lg-list { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
 .lg-list li + li { border-top: 1px solid var(--line); }
 .lg-list a { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 14px; text-decoration: none; color: var(--ink); }
@@ -2750,7 +2750,7 @@ function fitWhere() {
   panel.style.alignSelf = other.style.alignSelf = "";
   if (btn) btn.hidden = allIn;
 }
-window.addEventListener("resize", () => { clearTimeout(window.__fw); window.__fw = setTimeout(() => { fitWhere(); fitStrips(); }, 150); });
+window.addEventListener("resize", () => { clearTimeout(window.__fw); window.__fw = setTimeout(() => { fitWhere(); fitStrips(); fitQuickLinks(); }, 150); });
 if (document.fonts) { document.fonts.ready.then(() => { fitStrips(); fitWhere(); }); document.fonts.addEventListener && document.fonts.addEventListener("loadingdone", () => fitStrips()); }
 /** Computers: the "who's on this rotation" month strip shows as much of the year as fits on one row without squeezing names —
  *  the whole year on big screens, otherwise this month to June, otherwise this month + the next five. "Show all months" only appears when something is hidden. */
@@ -2993,14 +2993,32 @@ const QL_ICON = {
   form: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>',
   web: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>' };
 const qlIcon = k => `<span class="ql-ic ${k}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${QL_ICON[k]}</svg></span>`;
-const QL_HOME_MAX = 8;
+/* Home shows the links marked "yes" in the Quick Links tab's Home column (none marked = all, in order), as many as fit in
+ * exactly TWO rows on a computer; the last box of the second row is "All N links" (dropped when every link already fits).
+ * Phones: 5 links + "All N links". The fit is measured on the page (fitQuickLinks), so it follows the screen width. */
+const QL_ROWS = 2, QL_PHONE = 5;
 function quickLinks() {
   const all = S.links || []; if (!all.length) return "";
   const marked = all.filter(l => l.home);
-  const shown = (marked.length ? marked : all).slice(0, QL_HOME_MAX), more = all.length > shown.length;
-  return `<section class="qlinks" aria-label="Quick links"><div class="ql-head"><h2 class="ql-h">Quick links</h2>${more ? `<a class="ql-all" href="#links">All ${all.length} links →</a>` : ""}</div>
-    <div class="ql-strip">${shown.map(l => `<a class="qls" href="${esc(l.url)}" target="_blank" rel="noopener"${l.note ? ` title="${esc(l.note)}"` : ""}>${qlIcon(QL_KIND(l.url)[0])}<span>${esc(l.label)}</span></a>`).join("")}
-      ${more || all.length > 5 ? `<a class="qls qls-more${more ? "" : " phone-only"}" href="#links"><span>All ${all.length} links</span><span aria-hidden="true">→</span></a>` : ""}</div></section>`;
+  const shown = marked.length ? marked : all;
+  return `<section class="qlinks" aria-label="Quick links"><div class="ql-head"><h2 class="ql-h">Quick links</h2></div>
+    <div class="ql-strip" data-total="${all.length}">${shown.map(l => `<a class="qls" href="${esc(l.url)}" target="_blank" rel="noopener"${l.note ? ` title="${esc(l.note)}"` : ""}>${qlIcon(QL_KIND(l.url)[0])}<span>${esc(l.label)}</span></a>`).join("")}
+      <a class="qls qls-more" href="#links"><span>All ${all.length} links</span><span aria-hidden="true">→</span></a></div></section>`;
+}
+/** Fill exactly two rows (computers) or 5 + "All links" (phones): hide the links that don't fit; keep "All N links" as the last box
+ *  unless every link is already showing. Re-run on resize and text-size changes. */
+function fitQuickLinks() {
+  document.querySelectorAll(".ql-strip").forEach(strip => {
+    const links = [...strip.querySelectorAll(".qls:not(.qls-more)")], more = strip.querySelector(".qls-more"), total = +strip.dataset.total || links.length;
+    links.forEach(a => a.hidden = false); more.hidden = false;
+    const phoneW = window.matchMedia("(max-width: 480px)").matches;
+    const cols = phoneW ? 2 : Math.max(1, getComputedStyle(strip).gridTemplateColumns.split(" ").filter(Boolean).length);
+    const boxes = phoneW ? QL_PHONE + 1 : cols * QL_ROWS;
+    const allFit = links.length <= boxes && links.length === total && !(phoneW && links.length > QL_PHONE);
+    const keep = allFit ? links.length : boxes - 1;
+    links.forEach((a, i) => a.hidden = i >= keep);
+    more.hidden = allFit;
+  });
 }
 function viewLinks() {
   const all = S.links || [];
@@ -3687,7 +3705,7 @@ function bindView() {
   const dq2 = $("#dirq"); if (dq2) dq2.oninput = () => { dirQ = dq2.value; $("#dirlist").innerHTML = directoryList(); };
   const ms = $("#mesel"); if (ms) ms.onchange = () => { ME = ms.value; store.set("hub.me", ME); route(true); };
   const wm = $(".wmore"); if (wm) wm.onclick = () => { wm.previousElementSibling.classList.add("all"); wm.remove(); };
-  fitWhere(); fitStrips();
+  fitWhere(); fitStrips(); fitQuickLinks();
   const ok = $("#assign-ok"); if (ok) ok.onclick = () => {
     let seen = []; try { seen = JSON.parse(store.get(SEEN_KEY) || "[]"); } catch {}
     const keep = new Set(seen.filter(k => k.slice(0, 10) >= todayISO)); myNewTalks().forEach(t => keep.add(talkKey(t)));
